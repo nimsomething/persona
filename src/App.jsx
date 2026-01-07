@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Welcome from './components/Welcome';
 import Assessment from './components/Assessment';
 import Results from './components/Results';
+import VersionFooter from './components/VersionFooter';
 import questionsData from './data/questions.json';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           onRestart={handleRestart}
         />
       )}
+      <VersionFooter />
     </div>
   );
 }
