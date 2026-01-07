@@ -1032,36 +1032,6 @@ class PDFReportGenerator {
     this.pdf.text(`Page ${this.currentPage}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 10, { align: 'right' });
   }
 }
-  
-  // Utility methods
-  getResilienceColor(score) {
-    if (score >= 80) return '#10b981'; // Green
-    if (score >= 60) return '#f59e0b'; // Yellow
-    return '#ef4444'; // Red
-  }
-  
-  getTopValues(scores) {
-    if (!scores.values_profile) return 'Values';
-    const sorted = Object.entries(scores.values_profile)
-      .sort(([,a], [,b]) => b - a);
-    return sorted[0]?.[0] || 'Values';
-  }
-
-  addPage() {
-    this.pdf.addPage();
-    this.currentPage++;
-    
-    // Add header to new pages
-    this.pdf.setDrawColor(200, 200, 200);
-    this.pdf.setLineWidth(0.3);
-    this.pdf.line(MARGIN, MARGIN - 5, PAGE_WIDTH - MARGIN, MARGIN - 5);
-    
-    // Page number
-    this.pdf.setFontSize(9);
-    this.pdf.setTextColor(100, 100, 100);
-    this.pdf.text(`Page ${this.currentPage}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 10, { align: 'right' });
-  }
-}
 
 // Export function
 export async function generatePDF(userName, results) {
