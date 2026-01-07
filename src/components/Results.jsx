@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import DimensionScorecard from './DimensionScorecard';
-import { generatePDF } from '../utils/pdfGenerator';
+import { generatePDF } from '../utils/pdfGeneratorV2';
+import { calculateOverallResilience, generateCBPersonalizedNarrative } from '../utils/scoring';
+import mbtiService from '../services/mbtiMappingService';
 
 function Results({ userName, results, answers, questions, onRestart }) {
   const [generating, setGenerating] = useState(false);
@@ -9,11 +11,18 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const dimensions = [
     { key: 'assertiveness', name: 'Assertiveness' },
     { key: 'sociability', name: 'Sociability' },
-    { key: 'patience', name: 'Patience' },
-    { key: 'flexibility', name: 'Flexibility' },
     { key: 'conscientiousness', name: 'Conscientiousness' },
-    { key: 'emotional_intelligence', name: 'Emotional Intelligence' }
+    { key: 'flexibility', name: 'Flexibility' },
+    { key: 'emotional_intelligence', name: 'Emotional Intelligence' },
+    { key: 'creativity', name: 'Creativity' },
+    { key: 'risk_appetite', name: 'Risk Appetite' },
+    { key: 'theoretical_orientation', name: 'Theoretical vs Practical' }
   ];
+
+  // Calculate additional v2 features
+  const mbti = mbtiService.calculateMBTI(scores);
+  const resilience = calculateOverallResilience(stressDeltas);
+  const personalizedNarrative = generateCBPersonalizedNarrative(archetype, scores, mbti);
 
   const handleGeneratePDF = async () => {
     setGenerating(true);
