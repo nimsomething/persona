@@ -52,581 +52,791 @@
     "id": 8,
     "dimension": "assertiveness",
     "context": "stress",
-    "text": "During crises, I step up to organize and guide others.",
+    "text": "When stressed, I take control of situations and direct others more than usual.",
     "reverse": false
   },
   {
     "id": 9,
     "dimension": "assertiveness",
     "context": "stress",
-    "text": "When things go wrong, I withdraw rather than taking charge.",
+    "text": "Under stress, I become more willing to let others take the lead.",
     "reverse": true
   },
   {
     "id": 10,
-    "dimension": "assertiveness",
-    "context": "stress",
-    "text": "Under pressure, I communicate my expectations more forcefully.",
+    "dimension": "sociability",
+    "context": "usual",
+    "text": "I enjoy meeting new people and building relationships at work.",
     "reverse": false
   },
   {
     "id": 11,
-    "dimension": "assertiveness",
+    "dimension": "sociability",
     "context": "usual",
-    "text": "I challenge ideas or approaches that I believe are incorrect.",
+    "text": "I feel energized after social interactions with colleagues.",
     "reverse": false
   },
   {
     "id": 12,
-    "dimension": "assertiveness",
-    "context": "usual",
-    "text": "I avoid confrontation even when I disagree with a decision.",
-    "reverse": true
-  },
-  {
-    "id": 13,
-    "dimension": "assertiveness",
-    "context": "stress",
-    "text": "When stressed, I become more passive and less willing to voice my opinion.",
-    "reverse": true
-  },
-  {
-    "id": 14,
-    "dimension": "assertiveness",
-    "context": "stress",
-    "text": "Under pressure, I push harder to ensure my perspective is heard.",
-    "reverse": false
-  },
-  {
-    "id": 15,
-    "dimension": "assertiveness",
-    "context": "usual",
-    "text": "I naturally take responsibility for outcomes, even when they involve others.",
-    "reverse": false
-  },
-  {
-    "id": 16,
-    "dimension": "sociability",
-    "context": "usual",
-    "text": "I enjoy building relationships with colleagues across different teams.",
-    "reverse": false
-  },
-  {
-    "id": 17,
     "dimension": "sociability",
     "context": "usual",
     "text": "I prefer working independently rather than collaborating with others.",
     "reverse": true
   },
   {
-    "id": 18,
+    "id": 13,
     "dimension": "sociability",
     "context": "usual",
-    "text": "I actively seek out opportunities to connect with new people at work.",
+    "text": "I like collaborating and brainstorming with others.",
     "reverse": false
   },
   {
-    "id": 19,
+    "id": 14,
     "dimension": "sociability",
     "context": "usual",
-    "text": "I feel energized after spending time in group discussions or brainstorming sessions.",
+    "text": "I actively maintain connections with colleagues across different teams.",
+    "reverse": false
+  },
+  {
+    "id": 15,
+    "dimension": "sociability",
+    "context": "usual",
+    "text": "Extended periods of solitary work drain my energy.",
+    "reverse": false
+  },
+  {
+    "id": 16,
+    "dimension": "sociability",
+    "context": "stress",
+    "text": "When under pressure, I seek out colleagues for support and collaboration.",
+    "reverse": false
+  },
+  {
+    "id": 17,
+    "dimension": "sociability",
+    "context": "stress",
+    "text": "Under stress, I withdraw from social interactions more than usual.",
+    "reverse": true
+  },
+  {
+    "id": 18,
+    "dimension": "sociability",
+    "context": "stress",
+    "text": "When stressed, I feel more comfortable working alone than with my team.",
+    "reverse": true
+  },
+  {
+    "id": 19,
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I plan my projects carefully and follow through systematically.",
     "reverse": false
   },
   {
     "id": 20,
-    "dimension": "sociability",
+    "dimension": "conscientiousness",
     "context": "usual",
-    "text": "I share personal stories and experiences to build rapport with teammates.",
+    "text": "I pay attention to details and deliver high-quality work.",
     "reverse": false
   },
   {
     "id": 21,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "When under pressure, I isolate myself and avoid social interactions.",
-    "reverse": true
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "Others can count on me to meet deadlines consistently.",
+    "reverse": false
   },
   {
     "id": 22,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "During challenging times, I reach out to others for support and collaboration.",
-    "reverse": false
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I prefer to jump into projects without extensive planning.",
+    "reverse": true
   },
   {
     "id": 23,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "When stressed, I become less patient with social niceties and small talk.",
-    "reverse": true
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I create systems and processes to ensure consistency.",
+    "reverse": false
   },
   {
     "id": 24,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "Under pressure, I lean on my network to help solve problems.",
-    "reverse": false
-  },
-  {
-    "id": 25,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "When deadlines loom, I prefer to work alone rather than coordinate with others.",
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I sometimes struggle to stay organized when juggling multiple tasks.",
     "reverse": true
   },
   {
-    "id": 26,
-    "dimension": "sociability",
-    "context": "usual",
-    "text": "I initiate conversations with colleagues, even those I don't know well.",
+    "id": 25,
+    "dimension": "conscientiousness",
+    "context": "stress",
+    "text": "Under deadline pressure, I become more detail-focused than usual.",
     "reverse": false
   },
   {
+    "id": 26,
+    "dimension": "conscientiousness",
+    "context": "stress",
+    "text": "When stressed, I struggle to stay organized despite usually being methodical.",
+    "reverse": true
+  },
+  {
     "id": 27,
-    "dimension": "sociability",
-    "context": "usual",
-    "text": "I find it draining to attend social events or team gatherings.",
+    "dimension": "conscientiousness",
+    "context": "stress",
+    "text": "Under stress, I sometimes miss details I would normally catch.",
     "reverse": true
   },
   {
     "id": 28,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "When things are difficult, I maintain open communication with my team.",
+    "dimension": "flexibility",
+    "context": "usual",
+    "text": "I embrace new challenges even without a clear plan.",
     "reverse": false
   },
   {
     "id": 29,
-    "dimension": "sociability",
-    "context": "stress",
-    "text": "Under pressure, I become less responsive to messages and interactions.",
-    "reverse": true
+    "dimension": "flexibility",
+    "context": "usual",
+    "text": "I adapt quickly when project requirements change.",
+    "reverse": false
   },
   {
     "id": 30,
-    "dimension": "sociability",
+    "dimension": "flexibility",
     "context": "usual",
-    "text": "I go out of my way to include others in discussions and activities.",
+    "text": "I see setbacks as learning opportunities.",
     "reverse": false
   },
   {
     "id": 31,
-    "dimension": "patience",
+    "dimension": "flexibility",
     "context": "usual",
-    "text": "I remain calm when plans change unexpectedly.",
-    "reverse": false
+    "text": "I prefer established processes and predictable routines.",
+    "reverse": true
   },
   {
     "id": 32,
-    "dimension": "patience",
+    "dimension": "flexibility",
     "context": "usual",
-    "text": "I feel frustrated when I don't have all the information I need.",
-    "reverse": true
+    "text": "I enjoy experimenting with different approaches to find what works.",
+    "reverse": false
   },
   {
     "id": 33,
-    "dimension": "patience",
-    "context": "usual",
-    "text": "I can tolerate uncertainty while waiting for more clarity.",
-    "reverse": false
+    "dimension": "flexibility",
+    "context": "stress",
+    "text": "When under pressure, I become more resistant to change and new ideas.",
+    "reverse": true
   },
   {
     "id": 34,
-    "dimension": "patience",
-    "context": "usual",
-    "text": "I stay composed when others are moving slowly or making mistakes.",
-    "reverse": false
+    "dimension": "flexibility",
+    "context": "stress",
+    "text": "Under stress, I become more rigid in my thinking and approach.",
+    "reverse": true
   },
   {
     "id": 35,
-    "dimension": "patience",
-    "context": "usual",
-    "text": "I become irritated when projects take longer than expected.",
-    "reverse": true
+    "dimension": "flexibility",
+    "context": "stress",
+    "text": "When stressed, I can still adapt to new information and adjust my approach.",
+    "reverse": false
   },
   {
     "id": 36,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "Under pressure, I lose my temper more easily.",
-    "reverse": true
+    "dimension": "emotional_intelligence",
+    "context": "usual",
+    "text": "I notice when colleagues are stressed and offer support.",
+    "reverse": false
   },
   {
     "id": 37,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "When stressed, I remain patient even when things aren't going as planned.",
+    "dimension": "emotional_intelligence",
+    "context": "usual",
+    "text": "I can manage my emotions effectively during conflicts.",
     "reverse": false
   },
   {
     "id": 38,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "During crises, I become impatient with delays or ambiguity.",
-    "reverse": true
+    "dimension": "emotional_intelligence",
+    "context": "usual",
+    "text": "I understand how my mood affects others on my team.",
+    "reverse": false
   },
   {
     "id": 39,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "When under pressure, I maintain a steady and calm demeanor.",
-    "reverse": false
-  },
-  {
-    "id": 40,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "When deadlines are tight, I become more short-tempered with others.",
+    "dimension": "emotional_intelligence",
+    "context": "usual",
+    "text": "I prefer to focus on tasks rather than interpersonal dynamics.",
     "reverse": true
   },
   {
-    "id": 41,
-    "dimension": "patience",
+    "id": 40,
+    "dimension": "emotional_intelligence",
     "context": "usual",
-    "text": "I take time to understand different perspectives before reacting.",
+    "text": "I pick up on subtle emotional cues in conversations.",
     "reverse": false
   },
   {
+    "id": 41,
+    "dimension": "emotional_intelligence",
+    "context": "stress",
+    "text": "When under pressure, I become less aware of how my behavior affects others.",
+    "reverse": true
+  },
+  {
     "id": 42,
-    "dimension": "patience",
-    "context": "usual",
-    "text": "I rush to conclusions when I feel like things are taking too long.",
+    "dimension": "emotional_intelligence",
+    "context": "stress",
+    "text": "Under stress, I become more sensitive to criticism and feedback.",
     "reverse": true
   },
   {
     "id": 43,
-    "dimension": "patience",
+    "dimension": "emotional_intelligence",
     "context": "stress",
-    "text": "Under pressure, I can still wait for the right moment to act.",
+    "text": "When stressed, I can still read and respond to others' emotional needs.",
     "reverse": false
   },
   {
     "id": 44,
-    "dimension": "patience",
-    "context": "stress",
-    "text": "When stressed, I demand immediate answers and results.",
-    "reverse": true
+    "dimension": "creativity",
+    "context": "usual",
+    "text": "I frequently think of novel ways to solve problems.",
+    "reverse": false
   },
   {
     "id": 45,
-    "dimension": "patience",
+    "dimension": "creativity",
     "context": "usual",
-    "text": "I handle setbacks without becoming visibly upset or anxious.",
+    "text": "I'm motivated by a passionate interest in creative work.",
     "reverse": false
   },
   {
     "id": 46,
-    "dimension": "flexibility",
+    "dimension": "creativity",
     "context": "usual",
-    "text": "I adapt easily when priorities shift or plans change.",
+    "text": "I enjoy exploring unconventional approaches to challenges.",
     "reverse": false
   },
   {
     "id": 47,
-    "dimension": "flexibility",
+    "dimension": "creativity",
     "context": "usual",
-    "text": "I prefer sticking to established processes rather than trying new approaches.",
+    "text": "I prefer proven methods over experimental approaches.",
     "reverse": true
   },
   {
     "id": 48,
-    "dimension": "flexibility",
+    "dimension": "creativity",
     "context": "usual",
-    "text": "I welcome new ideas and suggestions, even if they differ from my own.",
+    "text": "I can hyperfocus on interesting projects for extended periods.",
     "reverse": false
   },
   {
     "id": 49,
-    "dimension": "flexibility",
-    "context": "usual",
-    "text": "I embrace change as an opportunity for growth and improvement.",
+    "dimension": "creativity",
+    "context": "stress",
+    "text": "Under pressure, I generate more creative solutions than usual.",
     "reverse": false
   },
   {
     "id": 50,
-    "dimension": "flexibility",
-    "context": "usual",
-    "text": "I resist changes to routines or methods I'm comfortable with.",
+    "dimension": "creativity",
+    "context": "stress",
+    "text": "When stressed, I become more conventional in my thinking.",
     "reverse": true
   },
   {
     "id": 51,
-    "dimension": "flexibility",
+    "dimension": "creativity",
     "context": "stress",
-    "text": "When under pressure, I become more rigid in my thinking and approach.",
+    "text": "Under stress, I struggle to think of new approaches.",
     "reverse": true
   },
   {
     "id": 52,
-    "dimension": "flexibility",
-    "context": "stress",
-    "text": "During crises, I pivot quickly to adjust to new circumstances.",
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I'm willing to pursue opportunities even if they might fail.",
     "reverse": false
   },
   {
     "id": 53,
-    "dimension": "flexibility",
-    "context": "stress",
-    "text": "When stressed, I cling to familiar methods rather than trying alternatives.",
-    "reverse": true
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I feel energized by venturing into unknown territory.",
+    "reverse": false
   },
   {
     "id": 54,
-    "dimension": "flexibility",
-    "context": "stress",
-    "text": "Under pressure, I remain open to changing course if needed.",
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I see failure as a learning step rather than a setback.",
     "reverse": false
   },
   {
     "id": 55,
-    "dimension": "flexibility",
-    "context": "stress",
-    "text": "When things go wrong, I struggle to let go of my original plan.",
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I prefer safe, predictable outcomes over uncertain possibilities.",
     "reverse": true
   },
   {
     "id": 56,
-    "dimension": "flexibility",
+    "dimension": "risk_appetite",
     "context": "usual",
-    "text": "I experiment with different ways of doing things to find better solutions.",
-    "reverse": false
+    "text": "I make decisions based on careful analysis of potential outcomes.",
+    "reverse": true
   },
   {
     "id": 57,
-    "dimension": "flexibility",
-    "context": "usual",
-    "text": "I feel uncomfortable when working in unfamiliar or ambiguous situations.",
+    "dimension": "risk_appetite",
+    "context": "stress",
+    "text": "When under pressure, I become more risk-averse than usual.",
     "reverse": true
   },
   {
     "id": 58,
-    "dimension": "flexibility",
+    "dimension": "risk_appetite",
     "context": "stress",
-    "text": "Under pressure, I can shift strategies without losing focus.",
+    "text": "Under stress, I take bigger risks to get results quickly.",
     "reverse": false
   },
   {
     "id": 59,
-    "dimension": "flexibility",
+    "dimension": "risk_appetite",
     "context": "stress",
-    "text": "When stressed, I resist input that challenges my current approach.",
+    "text": "When stressed, I stick with familiar approaches rather than experimenting.",
     "reverse": true
   },
   {
     "id": 60,
-    "dimension": "flexibility",
+    "dimension": "values_autonomy",
     "context": "usual",
-    "text": "I thrive in environments where change and innovation are constant.",
+    "text": "Having freedom to choose how I work is important to me.",
     "reverse": false
   },
   {
     "id": 61,
-    "dimension": "conscientiousness",
+    "dimension": "values_mastery",
     "context": "usual",
-    "text": "I double-check my work to ensure accuracy before submitting it.",
+    "text": "I'm driven by developing my skills and expertise.",
     "reverse": false
   },
   {
     "id": 62,
-    "dimension": "conscientiousness",
+    "dimension": "values_purpose",
     "context": "usual",
-    "text": "I often miss small details because I focus on the big picture.",
-    "reverse": true
+    "text": "My work needs to have meaningful impact.",
+    "reverse": false
   },
   {
     "id": 63,
-    "dimension": "conscientiousness",
+    "dimension": "values_security",
     "context": "usual",
-    "text": "I create detailed plans and schedules for my projects.",
+    "text": "Job stability and predictability matter to me.",
     "reverse": false
   },
   {
     "id": 64,
-    "dimension": "conscientiousness",
+    "dimension": "values_recognition",
     "context": "usual",
-    "text": "I follow through on commitments reliably and consistently.",
+    "text": "Being appreciated for my work motivates me.",
     "reverse": false
   },
   {
     "id": 65,
-    "dimension": "conscientiousness",
+    "dimension": "values_expression",
     "context": "usual",
-    "text": "I tend to work in a spontaneous way rather than planning ahead.",
-    "reverse": true
+    "text": "I need to authentically express myself at work.",
+    "reverse": false
   },
   {
     "id": 66,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "Under pressure, I become even more meticulous about details.",
+    "dimension": "work_pace",
+    "context": "usual",
+    "text": "I thrive in fast-paced, constantly changing environments.",
     "reverse": false
   },
   {
     "id": 67,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "When stressed, I cut corners to get things done faster.",
+    "dimension": "work_structure",
+    "context": "usual",
+    "text": "I prefer knowing exactly what's expected rather than figuring it out.",
     "reverse": true
   },
   {
     "id": 68,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "During crises, I maintain high standards for quality and accuracy.",
+    "dimension": "work_autonomy",
+    "context": "usual",
+    "text": "I'm most productive when I can organize my own work.",
     "reverse": false
   },
   {
     "id": 69,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "When deadlines are tight, I skip planning and just start working.",
-    "reverse": true
+    "dimension": "work_social",
+    "context": "usual",
+    "text": "I prefer working in teams and collaborative settings.",
+    "reverse": false
   },
   {
     "id": 70,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "Under pressure, I stay organized and methodical in my approach.",
+    "dimension": "work_sensory",
+    "context": "usual",
+    "text": "I do my best work in a quiet, low-distraction environment.",
     "reverse": false
   },
   {
     "id": 71,
-    "dimension": "conscientiousness",
+    "dimension": "theoretical_orientation",
     "context": "usual",
-    "text": "I organize my workspace and files systematically.",
+    "text": "I enjoy developing frameworks and understanding underlying principles.",
     "reverse": false
   },
   {
     "id": 72,
-    "dimension": "conscientiousness",
+    "dimension": "theoretical_orientation",
     "context": "usual",
-    "text": "I leave tasks incomplete if something more interesting comes along.",
-    "reverse": true
+    "text": "I like to fully understand how something works before applying it.",
+    "reverse": false
   },
   {
     "id": 73,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "When stressed, I prioritize getting things done over getting them perfect.",
+    "dimension": "theoretical_orientation",
+    "context": "usual",
+    "text": "I care more about results than the process used to get there.",
     "reverse": true
   },
   {
     "id": 74,
-    "dimension": "conscientiousness",
-    "context": "stress",
-    "text": "Under pressure, I maintain my attention to important details.",
-    "reverse": false
+    "dimension": "theoretical_orientation",
+    "context": "usual",
+    "text": "I learn best by doing and adjusting as I go.",
+    "reverse": true
   },
   {
     "id": 75,
-    "dimension": "conscientiousness",
+    "dimension": "theoretical_orientation",
     "context": "usual",
-    "text": "I prepare thoroughly for meetings and presentations.",
-    "reverse": false
+    "text": "I prefer practical application over abstract theory.",
+    "reverse": true
   },
   {
     "id": 76,
-    "dimension": "emotional_intelligence",
+    "dimension": "assertiveness",
     "context": "usual",
-    "text": "I notice when colleagues are upset or struggling, even if they don't say so.",
+    "text": "I comfortably share my ideas even when my opinion differs from others.",
     "reverse": false
   },
   {
     "id": 77,
-    "dimension": "emotional_intelligence",
+    "dimension": "assertiveness",
     "context": "usual",
-    "text": "I find it difficult to understand why people react emotionally to situations.",
-    "reverse": true
+    "text": "I naturally take initiative when I see something that needs doing.",
+    "reverse": false
   },
   {
     "id": 78,
-    "dimension": "emotional_intelligence",
-    "context": "usual",
-    "text": "I adjust my communication style based on how others are feeling.",
+    "dimension": "assertiveness",
+    "context": "stress",
+    "text": "When stressed, I become more aggressive in pushing my ideas forward.",
     "reverse": false
   },
   {
     "id": 79,
-    "dimension": "emotional_intelligence",
+    "dimension": "sociability",
     "context": "usual",
-    "text": "I am aware of how my emotions affect my decisions and behavior.",
+    "text": "I enjoy participating in team-building activities and social events.",
     "reverse": false
   },
   {
     "id": 80,
-    "dimension": "emotional_intelligence",
+    "dimension": "sociability",
     "context": "usual",
-    "text": "I struggle to manage my emotions during difficult conversations.",
-    "reverse": true
+    "text": "I feel comfortable approaching colleagues I don't know well.",
+    "reverse": false
   },
   {
     "id": 81,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "Under pressure, I become less attuned to others' feelings and needs.",
-    "reverse": true
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I review my work carefully before submitting it.",
+    "reverse": false
   },
   {
     "id": 82,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "When stressed, I still take time to consider how others are feeling.",
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I create detailed plans for complex projects.",
     "reverse": false
   },
   {
     "id": 83,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "During crises, I lose awareness of my own emotional state.",
-    "reverse": true
+    "dimension": "flexibility",
+    "context": "usual",
+    "text": "I quickly recover when projects don't go as planned.",
+    "reverse": false
   },
   {
     "id": 84,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "When under pressure, I remain sensitive to team dynamics and morale.",
+    "dimension": "flexibility",
+    "context": "usual",
+    "text": "I enjoy learning new skills and technologies.",
     "reverse": false
   },
   {
     "id": 85,
     "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "When stressed, I become impatient with others' emotional responses.",
-    "reverse": true
+    "context": "usual",
+    "text": "I can tell when someone is struggling even if they don't say so directly.",
+    "reverse": false
   },
   {
     "id": 86,
     "dimension": "emotional_intelligence",
     "context": "usual",
-    "text": "I help others work through conflicts by understanding different perspectives.",
+    "text": "I adjust my communication style based on who I'm talking to.",
     "reverse": false
   },
   {
     "id": 87,
-    "dimension": "emotional_intelligence",
+    "dimension": "creativity",
     "context": "usual",
-    "text": "I focus on tasks and outcomes rather than on how people are feeling.",
-    "reverse": true
+    "text": "I connect ideas from different fields to solve problems.",
+    "reverse": false
   },
   {
     "id": 88,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "Under pressure, I maintain my ability to empathize with others.",
+    "dimension": "creativity",
+    "context": "usual",
+    "text": "I enjoy projects that allow for creative expression.",
     "reverse": false
   },
   {
     "id": 89,
-    "dimension": "emotional_intelligence",
-    "context": "stress",
-    "text": "When stressed, I dismiss emotional concerns as distractions from the work.",
-    "reverse": true
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I'm comfortable making decisions with incomplete information.",
+    "reverse": false
   },
   {
     "id": 90,
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I view unexpected challenges as opportunities rather than threats.",
+    "reverse": false
+  },
+  {
+    "id": 91,
+    "dimension": "work_pace",
+    "context": "usual",
+    "text": "I prefer a steady, predictable work pace over constant urgency.",
+    "reverse": true
+  },
+  {
+    "id": 92,
+    "dimension": "work_structure",
+    "context": "usual",
+    "text": "I can work effectively with minimal supervision and direction.",
+    "reverse": false
+  },
+  {
+    "id": 93,
+    "dimension": "work_sensory",
+    "context": "usual",
+    "text": "I can focus effectively even in busy, open office environments.",
+    "reverse": true
+  },
+  {
+    "id": 94,
+    "dimension": "theoretical_orientation",
+    "context": "usual",
+    "text": "I enjoy reading about new theories and concepts in my field.",
+    "reverse": false
+  },
+  {
+    "id": 95,
+    "dimension": "theoretical_orientation",
+    "context": "usual",
+    "text": "I focus on what works in practice rather than theoretical perfection.",
+    "reverse": true
+  },
+  {
+    "id": 96,
+    "dimension": "assertiveness",
+    "context": "usual",
+    "text": "I feel comfortable delegating tasks to others when needed.",
+    "reverse": false
+  },
+  {
+    "id": 97,
+    "dimension": "sociability",
+    "context": "usual",
+    "text": "I build relationships easily with people from different backgrounds.",
+    "reverse": false
+  },
+  {
+    "id": 98,
     "dimension": "emotional_intelligence",
     "context": "usual",
-    "text": "I create an environment where people feel safe expressing their concerns.",
+    "text": "I can stay calm and helpful when others are emotional.",
     "reverse": false
+  },
+  {
+    "id": 99,
+    "dimension": "creativity",
+    "context": "usual",
+    "text": "I find inspiration in unexpected places and experiences.",
+    "reverse": false
+  },
+  {
+    "id": 100,
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I start new projects before finishing current ones.",
+    "reverse": false
+  },
+  {
+    "id": 101,
+    "dimension": "conscientiousness",
+    "context": "stress",
+    "text": "When stressed, I triple-check my work to avoid errors.",
+    "reverse": false
+  },
+  {
+    "id": 102,
+    "dimension": "flexibility",
+    "context": "stress",
+    "text": "Under pressure, I become more open to unconventional solutions.",
+    "reverse": false
+  },
+  {
+    "id": 103,
+    "dimension": "emotional_intelligence",
+    "context": "stress",
+    "text": "When stressed, I find it harder to understand others' perspectives.",
+    "reverse": true
+  },
+  {
+    "id": 104,
+    "dimension": "creativity",
+    "context": "stress",
+    "text": "Under pressure, I rely on tried-and-true methods rather than experimenting.",
+    "reverse": true
+  },
+  {
+    "id": 105,
+    "dimension": "risk_appetite",
+    "context": "stress",
+    "text": "When stressed, I avoid taking any risks, even calculated ones.",
+    "reverse": true
+  },
+  {
+    "id": 106,
+    "dimension": "assertiveness",
+    "context": "usual",
+    "text": "I feel confident presenting my ideas to senior leadership.",
+    "reverse": false
+  },
+  {
+    "id": 107,
+    "dimension": "sociability",
+    "context": "usual",
+    "text": "I initiate conversations with colleagues I don't know well.",
+    "reverse": false
+  },
+  {
+    "id": 108,
+    "dimension": "conscientiousness",
+    "context": "usual",
+    "text": "I keep detailed notes and documentation for my projects.",
+    "reverse": false
+  },
+  {
+    "id": 109,
+    "dimension": "flexibility",
+    "context": "usual",
+    "text": "I can shift priorities quickly when business needs change.",
+    "reverse": false
+  },
+  {
+    "id": 110,
+    "dimension": "emotional_intelligence",
+    "context": "usual",
+    "text": "I can de-escalate tense situations between colleagues.",
+    "reverse": false
+  },
+  {
+    "id": 111,
+    "dimension": "creativity",
+    "context": "usual",
+    "text": "I enjoy brainstorming sessions where no idea is too wild.",
+    "reverse": false
+  },
+  {
+    "id": 112,
+    "dimension": "risk_appetite",
+    "context": "usual",
+    "text": "I invest time in learning new skills even if the payoff is uncertain.",
+    "reverse": false
+  },
+  {
+    "id": 113,
+    "dimension": "work_pace",
+    "context": "usual",
+    "text": "I can handle multiple urgent priorities simultaneously.",
+    "reverse": false
+  },
+  {
+    "id": 114,
+    "dimension": "work_autonomy",
+    "context": "usual",
+    "text": "I prefer clear direction and specific instructions for my tasks.",
+    "reverse": true
+  },
+  {
+    "id": 115,
+    "dimension": "work_sensory",
+    "context": "usual",
+    "text": "I work well with background music or ambient noise.",
+    "reverse": true
+  },
+  {
+    "id": 116,
+    "dimension": "theoretical_orientation",
+    "context": "usual",
+    "text": "I prefer learning through hands-on practice rather than studying theory.",
+    "reverse": true
+  },
+  {
+    "id": 117,
+    "dimension": "assertiveness",
+    "context": "stress",
+    "text": "When stressed, I second-guess my decisions more than usual.",
+    "reverse": true
+  },
+  {
+    "id": 118,
+    "dimension": "sociability",
+    "context": "stress",
+    "text": "Under pressure, I become more talkative and social than normal.",
+    "reverse": false
+  },
+  {
+    "id": 119,
+    "dimension": "conscientiousness",
+    "context": "stress",
+    "text": "When stressed, I become less organized and more scattered.",
+    "reverse": true
+  },
+  {
+    "id": 120,
+    "dimension": "flexibility",
+    "context": "stress",
+    "text": "Under stress, I have difficulty adjusting to unexpected changes.",
+    "reverse": true
   }
 ]

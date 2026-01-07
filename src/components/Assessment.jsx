@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import ProgressBar from './ProgressBar';
 import Question from './Question';
 import { calculateDimensionScores, determineArchetype, calculateStressDeltas, calculateAdaptabilityScore } from '../utils/scoring';
+import storageService from '../services/storageService';
 
 function Assessment({ userName, questions, onComplete }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [startTime] = useState(Date.now());
+  const [sessionRecovered, setSessionRecovered] = useState(false);
 
   const questionsPerPage = 5;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
@@ -16,11 +18,32 @@ function Assessment({ userName, questions, onComplete }) {
   const progress = (Object.keys(answers).length / questions.length) * 100;
   const estimatedTimeRemaining = Math.max(0, Math.ceil((questions.length - Object.keys(answers).length) * 0.25));
 
+  // Auto-recover existing session on mount
+  useEffect(() => {
+    const existingSession = storageService.shouldResumeSession();
+    if (existingSession && !sessionRecovered) {
+      // Auto-resume the session without user prompt
+      setAnswers(existingSession.responses || {});
+      setCurrentIndex(existingSession.currentQuestion || 0);
+      setSessionRecovered(true);
+    }
+  }, [sessionRecovered]);
+
+  // Auto-save effect - save every 3 questions answered
+  useEffect(() => {
+    const answeredCount = Object.keys(answers).length;
+    
+    // Save if we've answered 3 more questions since last save
+    if (answeredCount > 0 && answeredCount % 3 === 0) {
+      storageService.autoSave(userName, currentIndex, answers);
+    }
+  }, [answers, currentIndex, userName]);
+
   const handleAnswer = (questionId, value) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: value
-    }));
+    setAnswers(prev => {
+      const newAnswers = { ...prev, [questionId]: value };
+      return newAnswers;
+    });
   };
 
   const handleNext = () => {

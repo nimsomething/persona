@@ -38,12 +38,88 @@
     ]
   },
   {
+    "id": "visionary",
+    "name": "The Visionary",
+    "primaryDimensions": ["creativity", "flexibility"],
+    "icon": "🌟",
+    "shortDescription": "Boundary-pushing innovators who transform ideas into breakthrough solutions.",
+    "narrative": "As a Visionary, you see connections and possibilities that others miss. Your mind naturally generates novel solutions to complex problems, and you have the adaptability to pursue them even when the path forward is unclear. You don't just think outside the box—you question whether the box was ever necessary. Your combination of creative thinking and flexibility makes you a powerful force for innovation and transformation.",
+    "strengths": [
+      "Generating breakthrough ideas that challenge conventional thinking",
+      "Adapting quickly as you learn and discover new possibilities",
+      "Inspiring others to see potential in what currently seems impossible",
+      "Connecting disparate concepts to create something entirely new"
+    ],
+    "blindSpots": [
+      "May generate more ideas than you can realistically execute",
+      "Can become frustrated with necessary processes or practical constraints",
+      "Might lose interest once the initial creative challenge is solved"
+    ],
+    "careerPaths": [
+      "Product Innovation and R&D Leadership",
+      "Creative Direction and Design Strategy",
+      "Entrepreneurship and Startup Founding",
+      "Strategic Foresight and Future Planning"
+    ],
+    "teamRole": "You help teams see beyond current limitations and imagine what's possible. You bring fresh perspectives that break through groupthink and challenge comfortable assumptions. While others execute today's work, you're already thinking about tomorrow's opportunities.",
+    "leadershipStyle": "You inspire people toward ambitious visions rather than directing detailed execution. You create space for experimentation and don't punish failure when it leads to learning. Your team values your ability to see potential in them and their ideas.",
+    "stressTriggers": [
+      "Rigid environments that discourage experimentation",
+      "Being forced to follow established methods without room for innovation",
+      "Excessive focus on short-term results over long-term potential"
+    ],
+    "copingStrategies": [
+      "Partner with detail-oriented colleagues who can help execute your ideas",
+      "Set specific criteria for which ideas to pursue versus which to set aside",
+      "Build in time for creative exploration even during busy periods",
+      "Learn to value incremental progress alongside breakthrough moments"
+    ]
+  },
+  {
+    "id": "craftsman",
+    "name": "The Craftsman",
+    "primaryDimensions": ["conscientiousness", "creativity"],
+    "icon": "⚒️",
+    "shortDescription": "Dedicated artisans who blend meticulous execution with creative excellence.",
+    "narrative": "As a Craftsman, you combine painstaking attention to detail with genuine creative flair. You're not satisfied with merely completing tasks—you strive for excellence in execution while bringing artistry and intentionality to your work. Whether you're designing systems, creating content, or building products, you care deeply about both how things work and how they feel. Your dedication to craft sets the quality standard for everyone around you.",
+    "strengths": [
+      "Producing work that demonstrates exceptional attention to detail and artistry",
+      "Developing innovative solutions within practical constraints",
+      "Maintaining high standards while bringing creativity to routine tasks",
+      "Creating systems and processes that balance efficiency with elegance"
+    ],
+    "blindSpots": [
+      "May spend excessive time perfecting details that don't significantly impact outcomes",
+      "Can become frustrated when others don't share your commitment to quality",
+      "Might resist delegation because others won't meet your standards"
+    ],
+    "careerPaths": [
+      "Technical Architecture and Systems Design",
+      "UX/UI Design and Product Craft",
+      "Content Creation and Editorial Leadership",
+      "Quality Assurance and Excellence Programs"
+    ],
+    "teamRole": "You set the quality bar for your team and inspire others to care about excellence. You notice details others miss and ensure the final product reflects well on everyone involved. While others rush toward deadlines, you advocate for taking time to get things right.",
+    "leadershipStyle": "You mentor others toward mastery rather than merely assigning tasks. You demonstrate excellence through your own work and provide detailed guidance when coaching others. Your team learns from watching how thoughtfully you approach challenges.",
+    "stressTriggers": [
+      "Pressure to compromise quality for speed",
+      "Working with teammates who cut corners or overlook details",
+      "Projects where craftsmanship isn't valued or appreciated"
+    ],
+    "copingStrategies": [
+      "Identify which aspects of quality genuinely matter versus perfectionism",
+      "Partner with pragmatic colleagues who help balance excellence with practicality",
+      "Educate stakeholders about why craftsmanship saves time and resources long-term",
+      "Celebrate incremental improvements rather than demanding perfection immediately"
+    ]
+  },
+  {
     "id": "connector",
     "name": "The Connector",
     "primaryDimensions": ["sociability", "emotional_intelligence"],
     "icon": "🤝",
     "shortDescription": "Relationship builders who create strong networks through empathy and engagement.",
-    "narrative": "As a Connector, you excel at building bridges between people and ideas. You don't just network—you genuinely understand what motivates different individuals and how to bring them together effectively. Your combination of social energy and emotional awareness makes you a natural facilitator and team builder. People feel heard and valued in your presence.",
+    "narrative": "As a Connector, you excel at building bridges between people and ideas. You don't just network—you genuinely understand what motivates different individuals and how to bring them together effectively. Your combination of social energy and emotional awareness makes you a natural facilitator and team builder. People feel heard and valued in your presence, and you have an uncanny ability to match people with opportunities and each other.",
     "strengths": [
       "Building genuine relationships across diverse teams and stakeholder groups",
       "Reading emotional undercurrents in meetings and addressing unspoken concerns",
@@ -76,169 +152,55 @@
     ]
   },
   {
-    "id": "stabilizer",
-    "name": "The Stabilizer",
-    "primaryDimensions": ["patience", "conscientiousness"],
-    "icon": "⚓",
-    "shortDescription": "Steady contributors who provide reliability and quality through calm consistency.",
-    "narrative": "As a Stabilizer, you bring calm consistency to dynamic environments. You're the person who stays composed when others are reactive, who maintains quality standards when others are rushing, and who thinks things through when others are jumping to conclusions. Your combination of patience and thoroughness makes you invaluable during uncertain times.",
+    "id": "catalyst",
+    "name": "The Catalyst",
+    "primaryDimensions": ["sociability", "assertiveness"],
+    "icon": "⚡",
+    "shortDescription": "Dynamic mobilizers who drive action through confident engagement.",
+    "narrative": "As a Catalyst, you combine social energy with confident direction to mobilize people toward bold goals. You're not just a networker—you're someone who builds relationships specifically to drive action and results. You know how to read a room, identify what needs to happen, and inspire people to make it happen. Your ability to connect with others while maintaining clear direction makes you particularly effective at leading change and building momentum.",
     "strengths": [
-      "Maintaining composure and clear thinking during crises or uncertainty",
-      "Producing consistently high-quality work without cutting corners under pressure",
-      "Taking time to understand all aspects of a situation before responding",
-      "Providing a calming presence that helps others stay focused and rational"
+      "Building coalitions and getting buy-in for ambitious initiatives",
+      "Reading group dynamics and adjusting your approach to move people forward",
+      "Inspiring confidence and commitment through personal connection and clear direction",
+      "Turning relationships into productive collaborations and partnerships"
     ],
     "blindSpots": [
-      "May move too slowly when quick action is needed",
-      "Can be resistant to necessary changes that disrupt established processes",
-      "Might be perceived as overly cautious or risk-averse"
+      "May move people toward action before they're fully ready or committed",
+      "Can become frustrated when others don't share your sense of urgency",
+      "Might prioritize relationship-building over relationship depth"
     ],
     "careerPaths": [
-      "Quality Assurance and Compliance",
-      "Financial Planning and Risk Management",
-      "Operations and Process Management",
-      "Technical Specialization and Subject Matter Expertise"
-    ],
-    "teamRole": "You're the steady hand that keeps teams grounded. When others are panicking about deadlines or reacting to changes, you provide perspective and stability. Your team knows they can count on you to deliver quality work consistently, regardless of external pressures.",
-    "leadershipStyle": "You lead through example and steady guidance. You don't overreact to setbacks or get swept up in hype. Your team appreciates your predictability and rational approach, though they may sometimes want you to move faster or take bigger risks.",
-    "stressTriggers": [
-      "Constant changes and pivots without time to adapt",
-      "Pressure to make hasty decisions without adequate analysis",
-      "Chaotic environments with conflicting priorities and demands"
-    ],
-    "copingStrategies": [
-      "Recognize when 'good enough' decisions need to be made quickly",
-      "Communicate your need for processing time while still meeting deadlines",
-      "Practice making smaller decisions quickly to build comfort with uncertainty",
-      "Focus on what you can control when external chaos is unavoidable"
-    ]
-  },
-  {
-    "id": "innovator",
-    "name": "The Innovator",
-    "primaryDimensions": ["flexibility", "assertiveness"],
-    "icon": "💡",
-    "shortDescription": "Bold experimenters who drive change through confident adaptability.",
-    "narrative": "As an Innovator, you thrive on change and challenge. You don't just adapt to new situations—you actively seek them out. Your combination of flexibility and assertiveness means you're willing to take bold action on untested ideas. You're energized by problems that don't have established solutions and confident enough to chart new territory.",
-    "strengths": [
-      "Pivoting quickly when circumstances change or initial approaches don't work",
-      "Championing new ideas and approaches even when they face resistance",
-      "Experimenting with multiple solutions simultaneously to find what works best",
-      "Energizing teams to embrace change rather than fear it"
-    ],
-    "blindSpots": [
-      "May change direction too frequently, leaving others confused or exhausted",
-      "Can be impatient with necessary processes or established best practices",
-      "Might overlook practical implementation challenges in pursuit of innovation"
-    ],
-    "careerPaths": [
-      "Entrepreneurship and Business Development",
-      "Innovation and Product Development",
+      "Sales Leadership and Business Development",
       "Change Management and Transformation",
-      "Strategic Growth Roles"
+      "Political and Community Organizing",
+      "Strategic Partnerships and Alliances"
     ],
-    "teamRole": "You're the catalyst for evolution and improvement. You challenge the status quo constructively and push teams to try new approaches. Your energy for change helps organizations avoid stagnation, though you need to ensure others can keep pace with your pivots.",
-    "leadershipStyle": "You lead by example, showing willingness to try new things and learn from failures. Your team is never bored—you constantly introduce new challenges and opportunities. However, you need to balance innovation with the stability some team members need to do their best work.",
+    "teamRole": "You're the energizer who gets people moving and keeps momentum going. You identify blockers and either remove them yourself or connect people who can work together to solve problems. Your team appreciates your ability to maintain energy and optimism even during challenging periods.",
+    "leadershipStyle": "You lead through inspiration and activation. You build relationships quickly and use them to drive toward results. Your team knows what needs to happen and feels motivated to make it happen, though they may sometimes need you to slow down and provide more detailed guidance.",
     "stressTriggers": [
-      "Bureaucracy and rigid processes that slow down action",
-      "Environments resistant to change or new ideas",
-      "Repetitive work without opportunities for creativity or improvement"
+      "Slow-moving processes or bureaucratic obstacles that prevent action",
+      "Team members who don't engage or commit to shared goals",
+      "Working in isolation without opportunities to energize and mobilize others"
     ],
     "copingStrategies": [
-      "Document your thinking process so others can follow your pivots",
-      "Create space for experimentation while maintaining some consistent structure",
-      "Partner with detail-oriented colleagues who can help with implementation",
-      "Recognize that some proven processes exist for good reasons"
-    ]
-  },
-  {
-    "id": "advocate",
-    "name": "The Advocate",
-    "primaryDimensions": ["emotional_intelligence", "sociability"],
-    "icon": "🌟",
-    "shortDescription": "Empathetic champions who elevate others through understanding and engagement.",
-    "narrative": "As an Advocate, you combine deep empathy with active engagement to champion others' success. You don't just understand what people are experiencing—you actively work to create environments where they can thrive. Your ability to connect authentically while remaining attuned to emotional dynamics makes you a powerful force for positive culture and inclusion.",
-    "strengths": [
-      "Championing underrepresented voices and ensuring everyone has a seat at the table",
-      "Building psychological safety where people feel comfortable taking risks",
-      "Navigating sensitive situations with emotional intelligence and care",
-      "Inspiring loyalty and commitment through genuine investment in others"
-    ],
-    "blindSpots": [
-      "May take on too much emotional labor, leading to burnout",
-      "Can struggle with situations requiring tough love or accountability",
-      "Might be perceived as too focused on feelings rather than results"
-    ],
-    "careerPaths": [
-      "Diversity, Equity, and Inclusion Leadership",
-      "Human Resources and Employee Experience",
-      "Coaching and Talent Development",
-      "Non-profit Leadership and Social Impact"
-    ],
-    "teamRole": "You're the conscience and heart of your team. You ensure no one is left behind or overlooked. You create space for difficult conversations about team dynamics. Your colleagues seek you out when they need support or when situations require emotional intelligence.",
-    "leadershipStyle": "You lead with empathy and authenticity. Your team knows you genuinely care about their development and wellbeing. You create strong cultures where people want to contribute their best work. You may need to balance this with holding people accountable to standards.",
-    "stressTriggers": [
-      "Toxic team dynamics or interpersonal conflicts you can't resolve",
-      "Environments that dismiss or devalue emotional intelligence",
-      "Situations requiring you to deliver news that will hurt people"
-    ],
-    "copingStrategies": [
-      "Establish clear boundaries between empathy and taking on others' problems",
-      "Practice self-care consistently, not just when you're depleted",
-      "Remember that accountability and high standards can coexist with caring",
-      "Seek support from peers when you're carrying heavy emotional loads"
-    ]
-  },
-  {
-    "id": "leader",
-    "name": "The Leader",
-    "primaryDimensions": ["assertiveness", "emotional_intelligence"],
-    "icon": "👑",
-    "shortDescription": "Confident guides who inspire action through decisive empathy.",
-    "narrative": "As a Leader, you combine the confidence to make tough calls with the emotional intelligence to bring people along. You don't just tell people what to do—you help them understand why it matters and how they fit into the bigger picture. Your ability to be both decisive and empathetic makes you effective at mobilizing teams toward ambitious goals.",
-    "strengths": [
-      "Making difficult decisions while considering impact on people involved",
-      "Inspiring others to commit to challenging goals and initiatives",
-      "Balancing directness with sensitivity to how messages will land",
-      "Building trust through consistent follow-through and authentic care"
-    ],
-    "blindSpots": [
-      "May struggle when quick action and deep empathy seem to conflict",
-      "Can become frustrated when others don't share your drive or urgency",
-      "Might take on too much personal responsibility for team outcomes"
-    ],
-    "careerPaths": [
-      "Executive Leadership and General Management",
-      "Sales Leadership and Revenue Operations",
-      "Product Leadership and Strategy",
-      "Military and Public Service Leadership"
-    ],
-    "teamRole": "You're the natural leader others look to during uncertainty. You provide clear direction while making people feel valued and understood. Your team will follow you through difficult challenges because you've earned their trust and respect.",
-    "leadershipStyle": "You lead with a balance of conviction and care. You set ambitious expectations while supporting people's growth. You're willing to have tough conversations but do so with respect and empathy. Your team knows where they stand and feels genuinely valued.",
-    "stressTriggers": [
-      "Being unable to influence outcomes or direction",
-      "Team members who don't take ownership or show commitment",
-      "Situations requiring you to implement decisions you disagree with"
-    ],
-    "copingStrategies": [
-      "Delegate more to develop others and preserve your energy for key decisions",
-      "Recognize that not everyone processes or commits at your pace",
-      "Build a support network of peers who understand leadership challenges",
-      "Make time for strategic thinking rather than staying in execution mode"
+      "Practice patience and give people adequate time to process and commit",
+      "Develop deeper relationships rather than constantly building new ones",
+      "Balance your drive for action with appreciation for thoughtful deliberation",
+      "Focus on quality of engagement rather than quantity of connections"
     ]
   },
   {
     "id": "analyst",
     "name": "The Analyst",
-    "primaryDimensions": ["conscientiousness", "patience"],
+    "primaryDimensions": ["conscientiousness", "risk_appetite"],
     "icon": "🔍",
-    "shortDescription": "Thorough thinkers who deliver insights through careful analysis and steady focus.",
-    "narrative": "As an Analyst, you bring together careful attention to detail with the patience to dig deeply into complex problems. You don't rush to conclusions—you systematically gather data, consider multiple angles, and arrive at well-reasoned insights. Your combination of thoroughness and composure makes you the go-to person when accuracy and depth matter more than speed.",
+    "shortDescription": "Thorough thinkers who deliver insights through careful analysis and measured judgment.",
+    "narrative": "As an Analyst, you bring together meticulous attention to detail with careful, risk-aware judgment. You don't just gather data—you dive deep to uncover insights others miss, and you do so with a clear understanding of potential pitfalls and consequences. Your combination of thoroughness and caution makes you invaluable when decisions carry significant consequences. You're the person others turn to when they need to understand all the angles before moving forward.",
     "strengths": [
       "Conducting thorough analysis that uncovers insights others miss",
+      "Identifying risks and potential problems before they materialize",
       "Maintaining focus on complex problems without rushing to premature solutions",
-      "Producing accurate, well-documented work that withstands scrutiny",
-      "Staying calm and methodical even when analyzing complicated or ambiguous situations"
+      "Producing accurate, well-documented work that withstands scrutiny"
     ],
     "blindSpots": [
       "May over-analyze situations where quick decisions are needed",
@@ -247,8 +209,8 @@
     ],
     "careerPaths": [
       "Data Analysis and Business Intelligence",
+      "Financial Analysis and Risk Management",
       "Research and Development",
-      "Financial Analysis and Investment Research",
       "Technical Architecture and Systems Design"
     ],
     "teamRole": "You're the expert who ensures decisions are based on solid evidence rather than assumptions. Your team relies on you to catch errors, identify patterns, and provide the depth of analysis needed for important decisions. You help prevent costly mistakes through thorough examination.",
@@ -266,41 +228,79 @@
     ]
   },
   {
-    "id": "catalyst",
-    "name": "The Catalyst",
-    "primaryDimensions": ["flexibility", "sociability"],
-    "icon": "⚡",
-    "shortDescription": "Dynamic collaborators who energize teams through adaptability and connection.",
-    "narrative": "As a Catalyst, you bring people together and help them navigate change. You combine social energy with adaptability, making you particularly effective at helping teams evolve and collaborate in new ways. You thrive in dynamic environments where you can connect people, ideas, and opportunities. Your enthusiasm for change is contagious.",
+    "id": "creator",
+    "name": "The Creator",
+    "primaryDimensions": ["creativity", "emotional_intelligence"],
+    "icon": "🎨",
+    "shortDescription": "Empathetic innovators who craft meaningful experiences through creative insight.",
+    "narrative": "As a Creator, you blend imaginative thinking with deep empathy to craft experiences, solutions, and works that resonate on an emotional level. You're not just creative—you're creatively attuned to how people feel and what they need. Whether you're designing products, creating content, or solving problems, you naturally consider both innovation and human impact. Your work doesn't just function well; it connects with people.",
     "strengths": [
-      "Building bridges between different groups and helping them work together",
-      "Energizing teams during transitions or periods of change",
-      "Bringing fresh perspectives by connecting ideas from different contexts",
-      "Creating momentum and enthusiasm even in uncertain situations"
+      "Designing solutions that are both innovative and emotionally resonant",
+      "Understanding user needs and translating them into creative approaches",
+      "Bringing artistry and humanity to technical or routine work",
+      "Creating experiences that people remember and value"
     ],
     "blindSpots": [
-      "May struggle with follow-through on initiatives once the excitement fades",
-      "Can become scattered when pulled in too many directions",
-      "Might underestimate others' need for stability or processing time"
+      "May prioritize creative vision over practical constraints",
+      "Can become emotionally attached to your creations, making feedback difficult",
+      "Might struggle with aspects of work that feel purely functional or administrative"
     ],
     "careerPaths": [
-      "Business Development and Partnerships",
-      "Product Marketing and Go-To-Market Strategy",
-      "Organizational Development and Culture",
-      "Community Building and Network Development"
+      "UX/UI Design and Product Experience",
+      "Content Creation and Creative Direction",
+      "Brand Strategy and Experience Design",
+      "Innovation Consulting with Human Focus"
     ],
-    "teamRole": "You're the energizer who keeps teams engaged and connected, especially during change. You help people see possibilities rather than obstacles. You facilitate collaboration across boundaries. Your team appreciates your ability to maintain energy and optimism.",
-    "leadershipStyle": "You lead through inspiration and connection. You're excited about what's possible and share that enthusiasm generously. You build diverse networks and bring people together in unexpected ways. You need to balance this energy with ensuring consistent execution.",
+    "teamRole": "You bring humanity and creativity to everything your team does. You ensure solutions aren't just functional but meaningful. You notice how people respond to what you create and use those insights to make things better. Your team values your ability to make work more engaging and impactful.",
+    "leadershipStyle": "You lead through inspiration and empathy. You help people connect with the deeper purpose behind their work and bring their own creativity forward. Your team feels valued as whole people, not just workers, which unlocks their full potential.",
     "stressTriggers": [
-      "Isolation or lack of collaboration opportunities",
-      "Rigid structures that prevent adaptation or experimentation",
-      "Monotonous work without variety or social interaction"
+      "Environments that dismiss creativity or emotional factors as unimportant",
+      "Working on projects that feel purely functional without human impact",
+      "Receiving criticism that feels dismissive of your creative vision"
     ],
     "copingStrategies": [
-      "Partner with detail-oriented colleagues who excel at follow-through",
-      "Build routines and systems to handle necessary repetitive work",
-      "Recognize when teams need stability rather than more change",
-      "Schedule regular collaboration time to maintain your energy"
+      "Seek roles and projects where creativity and empathy are valued",
+      "Develop thicker skin around feedback while staying connected to your vision",
+      "Partner with pragmatic colleagues who can help with execution details",
+      "Remember that constraints often spark more creative solutions than complete freedom"
+    ]
+  },
+  {
+    "id": "maverick",
+    "name": "The Maverick",
+    "primaryDimensions": ["assertiveness", "risk_appetite"],
+    "icon": "🔥",
+    "shortDescription": "Bold trailblazers who chart new territory through confident risk-taking.",
+    "narrative": "As a Maverick, you combine confident leadership with comfort for risk and uncertainty. You're not reckless—you're calculated in your willingness to pursue opportunities others deem too uncertain. You trust your instincts and aren't afraid to challenge conventional wisdom or established practices. Your combination of bold direction and risk tolerance makes you particularly effective at pioneering new initiatives and disrupting stagnant situations.",
+    "strengths": [
+      "Championing bold initiatives that others consider too risky",
+      "Making decisive moves with incomplete information when opportunities arise",
+      "Learning quickly from failures and adjusting course without hesitation",
+      "Inspiring confidence in uncertain ventures through personal conviction"
+    ],
+    "blindSpots": [
+      "May underestimate genuine risks or fail to adequately prepare for challenges",
+      "Can become impatient with necessary caution or thorough planning",
+      "Might alienate risk-averse colleagues who feel pressured to move faster than they're comfortable"
+    ],
+    "careerPaths": [
+      "Entrepreneurship and Venture Creation",
+      "Business Development and Strategic Growth",
+      "Innovation Leadership and Disruption",
+      "Turnaround Management and Transformation"
+    ],
+    "teamRole": "You're the catalyst for bold action and breakthrough thinking. You challenge comfortable assumptions and push boundaries constructively. While others analyze risks, you're willing to try approaches that seem unconventional but promising.",
+    "leadershipStyle": "You lead through bold vision and personal conviction. You're willing to take calculated risks and stand by your decisions. Your team learns to embrace uncertainty and trust their instincts. However, you need to balance your appetite for risk with appreciation for thoughtful preparation.",
+    "stressTriggers": [
+      "Overly cautious environments where bold ideas are dismissed without consideration",
+      "Bureaucratic processes that slow down action and innovation",
+      "Working with people who focus on why things won't work rather than how they might"
+    ],
+    "copingStrategies": [
+      "Develop stronger risk assessment skills to complement your natural boldness",
+      "Partner with analytical colleagues who can identify pitfalls you might miss",
+      "Practice patience with others who need more time to get comfortable with uncertainty",
+      "Remember that calculated risks include preparing for multiple scenarios"
     ]
   }
 ]

@@ -103,110 +103,6 @@
       ]
     }
   },
-  "patience": {
-    "name": "Patience",
-    "description": "Your ability to remain calm under pressure and tolerate ambiguity or delays.",
-    "lowScore": {
-      "range": [0, 33],
-      "narrative": "You operate with a sense of urgency and have limited tolerance for delays, ambiguity, or slow processes. You want clarity, action, and results—preferably now. This drive creates momentum and prevents teams from getting stuck in analysis paralysis, but it can also lead to impatience when situations require careful consideration or when working with people who move at a different pace. You may feel frustrated in environments with significant uncertainty or frequent changes.",
-      "stressBehavior": "Under pressure, your impatience typically intensifies. You become more demanding of quick answers, less tolerant of delays or mistakes, and more likely to push people to move faster. This urgency can be helpful in crisis situations but may damage relationships or lead to hasty decisions if not managed carefully.",
-      "scenarios": [
-        "Team Meeting: When discussion becomes detailed or goes off track, you become visibly impatient and push to reach conclusions quickly. You may interrupt or redirect conversations that feel unproductive.",
-        "Conflict Situation: You want to resolve issues immediately and can become frustrated when others need time to process or when solutions aren't straightforward. You prefer quick, decisive action to prolonged discussion.",
-        "Leadership Moment: When your team faces an ambiguous situation, you push for rapid decisions even with incomplete information, which creates momentum but sometimes leads to needing course corrections later."
-      ],
-      "developmentTips": [
-        "Build in processing time before reacting to delays or setbacks—your initial reaction is often more intense than the situation warrants.",
-        "Recognize that some problems genuinely require time and deliberation to solve well.",
-        "Practice tolerance for ambiguity by deliberately working on complex, uncertain challenges where quick answers don't exist.",
-        "Communicate your need for clarity and action while respecting that others may need different pacing."
-      ]
-    },
-    "mediumScore": {
-      "range": [34, 66],
-      "narrative": "You show reasonable patience in most situations while still maintaining standards for timely action and clarity. You can tolerate some ambiguity and delays without becoming overly frustrated, but you also push back when patience crosses into unnecessary waiting or avoidance. This balanced approach allows you to adapt to different situations—staying calm when circumstances require patience while maintaining momentum when delays are unjustified.",
-      "stressBehavior": "Under pressure, your patience may decrease, leading you to push harder for clarity and resolution. However, you're less likely to lose your composure entirely compared to those with lower patience scores. The key is recognizing when stress is eroding your patience and managing that reaction consciously.",
-      "scenarios": [
-        "Team Meeting: You participate in thorough discussions when warranted but also speak up when conversations become unnecessarily prolonged. You balance patience for the process with keeping things moving.",
-        "Conflict Situation: You give people reasonable time to respond and work through issues but set clear expectations for when resolution needs to occur. You don't let conflicts fester indefinitely.",
-        "Leadership Moment: When facing uncertainty, you gather available information without endless analysis, then move forward even if some ambiguity remains. You balance patience with action."
-      ],
-      "developmentTips": [
-        "Develop clearer frameworks for when patience is valuable versus when urgency is appropriate.",
-        "Notice your triggers for impatience and whether they're rational responses or automatic reactions.",
-        "Practice extending patience in low-stakes situations to build capacity for high-stakes ambiguity.",
-        "Communicate your expectations for timing clearly rather than assuming others share your sense of pacing."
-      ]
-    },
-    "highScore": {
-      "range": [67, 100],
-      "narrative": "You maintain composure and calm even in uncertain or frustrating situations. You're comfortable with ambiguity and don't feel compelled to rush toward answers before sufficient consideration. This patience allows you to think clearly when others are reactive and to persist through complex problems that don't have quick solutions. You're the steady presence that helps teams stay rational during challenges. However, your high patience may sometimes be perceived as passivity or lack of urgency.",
-      "stressBehavior": "Under pressure, you typically maintain your composure and may actually become even more patient and methodical. However, others who are feeling urgency may find your steady pace frustrating. In extreme stress, your patience might shift to withdrawal or resignation rather than active calm.",
-      "scenarios": [
-        "Team Meeting: You listen calmly to all perspectives, even when discussion becomes heated or circular. You help de-escalate tensions and bring rational thinking to emotional situations.",
-        "Conflict Situation: You take time to understand all sides of an issue and don't rush toward resolution before everyone has processed the situation. You remain calm even when others are upset or frustrated.",
-        "Leadership Moment: When your team faces uncertainty, you provide steady guidance without panic or rushed decisions. You help people stay focused on what can be controlled rather than reacting to every development."
-      ],
-      "developmentTips": [
-        "Recognize situations that genuinely require faster action, even if you're comfortable with the current pace.",
-        "Balance your patience with ensuring momentum—sometimes 'good enough' decisions made timely are better than perfect decisions made late.",
-        "Communicate your thinking process so others understand your patience is strategic rather than passive.",
-        "Be aware that your calm can sometimes be misread as lack of concern or urgency about important issues."
-      ]
-    }
-  },
-  "flexibility": {
-    "name": "Flexibility",
-    "description": "Your adaptability and openness to change, new approaches, and uncertainty.",
-    "lowScore": {
-      "range": [0, 33],
-      "narrative": "You prefer established processes, clear structures, and consistency in how work gets done. Change—especially unexpected change—feels disruptive and uncomfortable. You value having predictable routines and methods you can rely on. This preference for stability allows you to develop deep expertise in established approaches and to create reliable, consistent results. However, it can make you resistant to necessary changes or innovations, and you may struggle in highly dynamic environments.",
-      "stressBehavior": "Under pressure, you typically cling more tightly to familiar methods and become more resistant to changes or new approaches. Stress reduces your capacity to adapt, making you more rigid in your thinking and less open to alternative solutions. You may dismiss new ideas more quickly or insist on following established procedures even when they're not working.",
-      "scenarios": [
-        "Team Meeting: When someone proposes a significant change to how your team operates, your first instinct is to identify risks and reasons why the current approach is better. You need substantial evidence before accepting new methods.",
-        "Conflict Situation: When forced to work in unfamiliar ways, you become frustrated and may push back strongly, arguing for return to proven approaches. You find it difficult to let go of how things 'should' be done.",
-        "Leadership Moment: When circumstances require pivoting strategy or approach, you need significant time to adjust and may struggle to help your team embrace the change enthusiastically."
-      ],
-      "developmentTips": [
-        "Practice making small changes to your routines deliberately to build comfort with adaptability.",
-        "Recognize that resistance to all change may cause you to miss valuable improvements.",
-        "Ask yourself whether your preference for the current approach is based on evidence or simply comfort with familiarity.",
-        "Partner with more flexible colleagues who can help you evaluate new approaches objectively."
-      ]
-    },
-    "mediumScore": {
-      "range": [34, 66],
-      "narrative": "You show reasonable adaptability while also valuing some consistency and structure. You're open to change when you understand the rationale and can see potential benefits, but you're not someone who changes just for the sake of novelty. This balanced approach allows you to evolve and improve while maintaining enough stability to be effective. You can work in both stable and dynamic environments, though you may have preferences for one over the other.",
-      "stressBehavior": "Under pressure, you may become somewhat more rigid and less open to changes, though not extremely so. Your adaptability decreases as stress increases, leading you to rely more heavily on familiar approaches when you're feeling overwhelmed. Recognition of this pattern helps you push back against it when necessary.",
-      "scenarios": [
-        "Team Meeting: When change is proposed, you consider both benefits and risks thoughtfully. You're open to new approaches but also ask practical questions about implementation and impact.",
-        "Conflict Situation: When required to work differently, you adapt after an initial adjustment period. You may need time to process changes but ultimately make the transition reasonably well.",
-        "Leadership Moment: When circumstances shift, you can pivot your approach, though you prefer to make thoughtful transitions rather than abrupt changes. You help your team understand the reasons for change."
-      ],
-      "developmentTips": [
-        "Pay attention to whether you're being appropriately cautious about change or unnecessarily resistant.",
-        "Develop frameworks for evaluating when change is beneficial versus when stability is more valuable.",
-        "Practice adapting more quickly in low-stakes situations to build confidence for high-stakes changes.",
-        "Notice whether certain types of changes are harder for you than others and why."
-      ]
-    },
-    "highScore": {
-      "range": [67, 100],
-      "narrative": "You thrive on change and adapt easily to new situations, approaches, and requirements. You're comfortable with uncertainty and may actually find stable, repetitive environments boring or constraining. You embrace new ideas readily and are often an early adopter of different methods or technologies. This flexibility makes you valuable in dynamic environments and during organizational changes, though it can sometimes make you impatient with necessary processes or resistant to maintaining consistency.",
-      "stressBehavior": "Under pressure, you typically maintain or even increase your flexibility, pivoting quickly as circumstances change. However, this can sometimes lead to changing direction too frequently, confusing others who are trying to keep up with your shifts. In extreme stress, you might become scattered, pursuing multiple different approaches without following through on any.",
-      "scenarios": [
-        "Team Meeting: When change is proposed, you're often an enthusiastic early supporter, seeing opportunities rather than obstacles. You help others get comfortable with new directions.",
-        "Conflict Situation: When plans need to change, you pivot easily and may become impatient with colleagues who need more time to adjust. You don't understand why others find change so difficult.",
-        "Leadership Moment: When circumstances shift, you change course quickly and expect your team to adapt at the same pace. You may need to provide more support for those who need time to transition."
-      ],
-      "developmentTips": [
-        "Recognize that some stability and consistency is necessary for team effectiveness—not all change is improvement.",
-        "Give others more time and support to adapt to changes that feel easy to you.",
-        "Ensure you're following through on initiatives rather than abandoning them when something newer seems more interesting.",
-        "Balance your love of change with appreciation for proven processes and approaches that work."
-      ]
-    }
-  },
   "conscientiousness": {
     "name": "Conscientiousness",
     "description": "Your attention to detail, planning, organization, and follow-through.",
@@ -256,6 +152,58 @@
         "Delegate more and resist the urge to redo others' work—coaching them to improve is more sustainable.",
         "Set time limits for planning and checking to prevent perfectionism from becoming procrastination.",
         "Recognize that your attention to detail is a strength, but it becomes a weakness if it prevents action or collaboration."
+      ]
+    }
+  },
+  "flexibility": {
+    "name": "Flexibility/Adaptability",
+    "description": "Your openness to change, resilience under pressure, and comfort with novelty.",
+    "lowScore": {
+      "range": [0, 33],
+      "narrative": "You prefer established processes, clear structures, and consistency in how work gets done. Change—especially unexpected change—feels disruptive and uncomfortable. You value having predictable routines and methods you can rely on. This preference for stability allows you to develop deep expertise in established approaches and to create reliable, consistent results. However, it can make you resistant to necessary changes or innovations, and you may struggle in highly dynamic environments.",
+      "stressBehavior": "Under pressure, you typically cling more tightly to familiar methods and become more resistant to changes or new approaches. Stress reduces your capacity to adapt, making you more rigid in your thinking and less open to alternative solutions. You may dismiss new ideas more quickly or insist on following established procedures even when they're not working.",
+      "scenarios": [
+        "Team Meeting: When someone proposes a significant change to how your team operates, your first instinct is to identify risks and reasons why the current approach is better. You need substantial evidence before accepting new methods.",
+        "Conflict Situation: When forced to work in unfamiliar ways, you become frustrated and may push back strongly, arguing for return to proven approaches. You find it difficult to let go of how things 'should' be done.",
+        "Leadership Moment: When circumstances require pivoting strategy or approach, you need significant time to adjust and may struggle to help your team embrace the change enthusiastically."
+      ],
+      "developmentTips": [
+        "Practice making small changes to your routines deliberately to build comfort with adaptability.",
+        "Recognize that resistance to all change may cause you to miss valuable improvements.",
+        "Ask yourself whether your preference for the current approach is based on evidence or simply comfort with familiarity.",
+        "Partner with more flexible colleagues who can help you evaluate new approaches objectively."
+      ]
+    },
+    "mediumScore": {
+      "range": [34, 66],
+      "narrative": "You show reasonable adaptability while also valuing some consistency and structure. You're open to change when you understand the rationale and can see potential benefits, but you're not someone who changes just for the sake of novelty. This balanced approach allows you to evolve and improve while maintaining enough stability to be effective. You can work in both stable and dynamic environments, though you may have preferences for one over the other.",
+      "stressBehavior": "Under pressure, you may become somewhat more rigid and less open to changes, though not extremely so. Your adaptability decreases as stress increases, leading you to rely more heavily on familiar approaches when you're feeling overwhelmed. Recognition of this pattern helps you push back against it when necessary.",
+      "scenarios": [
+        "Team Meeting: When change is proposed, you consider both benefits and risks thoughtfully. You're open to new approaches but also ask practical questions about implementation and impact.",
+        "Conflict Situation: When required to work differently, you adapt after an initial adjustment period. You may need time to process changes but ultimately make the transition reasonably well.",
+        "Leadership Moment: When circumstances shift, you can pivot your approach, though you prefer to make thoughtful transitions rather than abrupt changes. You help your team understand the reasons for change."
+      ],
+      "developmentTips": [
+        "Pay attention to whether you're being appropriately cautious about change or unnecessarily resistant.",
+        "Develop frameworks for evaluating when change is beneficial versus when stability is more valuable.",
+        "Practice adapting more quickly in low-stakes situations to build confidence for high-stakes changes.",
+        "Notice whether certain types of changes are harder for you than others and why."
+      ]
+    },
+    "highScore": {
+      "range": [67, 100],
+      "narrative": "You thrive on change and adapt easily to new situations, approaches, and requirements. You're comfortable with uncertainty and may actually find stable, repetitive environments boring or constraining. You embrace new ideas readily and are often an early adopter of different methods or technologies. This flexibility makes you valuable in dynamic environments and during organizational changes, though it can sometimes make you impatient with necessary processes or resistant to maintaining consistency.",
+      "stressBehavior": "Under pressure, you typically maintain or even increase your flexibility, pivoting quickly as circumstances change. However, this can sometimes lead to changing direction too frequently, confusing others who are trying to keep up with your shifts. In extreme stress, you might become scattered, pursuing multiple different approaches without following through on any.",
+      "scenarios": [
+        "Team Meeting: When change is proposed, you're often an enthusiastic early supporter, seeing opportunities rather than obstacles. You help others get comfortable with new directions.",
+        "Conflict Situation: When plans need to change, you pivot easily and may become impatient with colleagues who need more time to adjust. You don't understand why others find change so difficult.",
+        "Leadership Moment: When circumstances shift, you change course quickly and expect your team to adapt at the same pace. You may need to provide more support for those who need time to transition."
+      ],
+      "developmentTips": [
+        "Recognize that some stability and consistency is necessary for team effectiveness—not all change is improvement.",
+        "Give others more time and support to adapt to changes that feel easy to you.",
+        "Ensure you're following through on initiatives rather than abandoning them when something newer seems more interesting.",
+        "Balance your love of change with appreciation for proven processes and approaches that work."
       ]
     }
   },
@@ -309,6 +257,99 @@
         "Remember that understanding how someone feels doesn't mean you have to fix it or take responsibility for it.",
         "Use your emotional intelligence strategically rather than letting it overwhelm your judgment or capacity."
       ]
+    }
+  },
+  "creativity": {
+    "name": "Creativity/Innovation",
+    "description": "Your tendency to generate novel ideas, comfort with ambiguity, and divergent thinking.",
+    "lowScore": {
+      "range": [0, 33],
+      "narrative": "You prefer proven methods and practical solutions over novel or experimental approaches. You're comfortable working within established frameworks and may find ambiguity or open-ended problems frustrating. You probably prefer clear requirements and known solutions to situations requiring creative problem-solving. This preference for the tried-and-true allows you to work efficiently and produce reliable results, but it may limit your ability to see innovative solutions or adapt to novel challenges.",
+      "stressBehavior": "Under pressure, you become even more reliant on familiar methods and less open to creative approaches. You may dismiss innovative ideas more quickly and insist on following established procedures even when they're not working well. Stress reduces your capacity for creative thinking, making you more rigid in your problem-solving approach.",
+      "scenarios": [
+        "Team Meeting: When someone proposes an unconventional solution, you quickly identify potential problems and challenges, preferring to stick with proven approaches rather than experimenting with something new.",
+        "Conflict Situation: When facing a novel problem without clear solutions, you may feel frustrated and prefer to wait for more information or guidance rather than trying creative approaches.",
+        "Leadership Moment: You provide reliable, consistent direction based on best practices, but may struggle when your team needs innovative solutions to unprecedented challenges."
+      ],
+      "developmentTips": [
+        "Practice brainstorming without immediately evaluating ideas—separate generation from judgment.",
+        "Work with more creative colleagues who can help you see possibilities beyond established methods.",
+        "Remember that creative solutions often seem risky at first but can lead to significant improvements.",
+        "Start with small experiments in low-stakes situations to build comfort with creative problem-solving."
+      ]
+    },
+    "mediumScore": {
+      "range": [34, 66],
+      "narrative": "You show reasonable creativity while also valuing practical solutions. You can think of novel approaches when needed but also work effectively within established frameworks. You're open to new ideas but also consider practical constraints and implementation challenges. This balanced approach allows you to be innovative when it matters while maintaining efficiency and reliability in routine work.",
+      "stressBehavior": "Under pressure, your creativity typically decreases as you focus on getting things done efficiently. You may become more conventional in your thinking and less willing to experiment with unproven approaches. Recognizing this pattern helps you consciously make space for creative thinking even when you're feeling stressed about deadlines or outcomes.",
+      "scenarios": [
+        "Team Meeting: You contribute both practical solutions and creative ideas, helping the team consider new approaches while keeping implementation realities in mind.",
+        "Conflict Situation: When standard approaches aren't working, you can think of alternative solutions, though you may need some time and space to get creative rather than having ideas flow immediately.",
+        "Leadership Moment: You encourage innovation in your team while also ensuring that creative ideas are practical and can be implemented effectively."
+      ],
+      "developmentTips": [
+        "Build in time for creative thinking even during busy periods—creativity needs space to emerge.",
+        "Develop techniques for creative problem-solving, such as mind mapping or design thinking methods.",
+        "Surround yourself with diverse perspectives that can spark new ways of thinking.",
+        "Notice when you're defaulting to conventional approaches and consciously push yourself to consider alternatives."
+      ]
+    },
+    "highScore": {
+      "range": [67, 100],
+      "narrative": "You naturally generate novel ideas and enjoy exploring unconventional approaches to problems. You're comfortable with ambiguity and may actually find open-ended challenges energizing. You probably think of multiple solutions to every problem and enjoy brainstorming sessions where no idea is too wild. This creative thinking allows you to see opportunities others miss and develop innovative solutions, though it can sometimes make it hard to focus on implementation or stick with proven methods when they're most appropriate.",
+      "stressBehavior": "Under pressure, your response can vary. Some people become even more creative when stressed, generating novel solutions to urgent problems. Others experience creative blocks and become more conventional in their thinking. You may also generate so many ideas that you struggle to choose and commit to one approach when quick decisions are needed.",
+      "scenarios": [
+        "Team Meeting: You frequently suggest novel approaches and help the team see problems from completely different angles. You may need to be reminded to focus on practical implementation details.",
+        "Conflict Situation: When standard solutions aren't working, you quickly think of creative alternatives and help others get unstuck by showing them new possibilities.",
+        "Leadership Moment: You foster a culture of innovation in your team, encouraging experimentation and making people feel safe trying new approaches, even if they might fail."
+      ],
+      "developmentTips": [
+        "Develop criteria for evaluating which creative ideas to pursue so you don't get overwhelmed by possibilities.",
+        "Partner with implementation-focused colleagues who can help turn your ideas into reality.",
+        "Remember that not every situation requires creative solutions—sometimes proven methods are most appropriate.",
+        "Build systems to capture your ideas so you don't lose them while staying focused on current priorities."
+      ]
+    }
+  },
+  "risk_appetite": {
+    "name": "Risk Appetite",
+    "description": "Your comfort with uncertainty, willingness to take chances, and tolerance for failure.",
+    "lowScore": {
+      "range": [0, 33],
+      "narrative": "You prefer safe, predictable outcomes and carefully analyze decisions to minimize risk. You're uncomfortable with uncertainty and prefer to have as much information as possible before making important choices. You probably avoid situations where failure is a significant possibility and prefer proven approaches over experimental ones. This risk awareness helps you prevent costly mistakes, but it may cause you to miss valuable opportunities or move too slowly in fast-moving situations.",
+      "stressBehavior": "Under pressure, you become even more risk-averse, seeking additional information and analysis before making decisions. You may avoid taking any action that feels uncertain, which can lead to missed opportunities or slow response times when quick decisions are needed. Your natural caution intensifies, sometimes to the point of paralysis.",
+      "scenarios": [
+        "Team Meeting: When considering a new initiative, you focus heavily on what could go wrong and what risks need to be mitigated, sometimes to the point of discouraging others from pursuing promising opportunities.",
+        "Conflict Situation: When facing an uncertain decision, you may delay action while seeking more information, which can frustrate colleagues who feel the team is moving too slowly.",
+        "Leadership Moment: You protect your team from unnecessary risks and ensure decisions are well-considered, but you may need to push yourself to take calculated risks when opportunities warrant them."
+      ],
+      "developmentTips": [
+        "Recognize that some risk is necessary for growth and that perfect information rarely exists.",
+        "Practice making smaller decisions with incomplete information to build comfort with uncertainty.",
+        "Distinguish between reckless risk-taking and calculated risks with reasonable potential rewards.",
+        "Remember that avoiding all risk often carries its own costs in missed opportunities."
+      ]
+    },
+    "mediumScore": {
+      "range": [34, 66],
+      "narrative": "You show a balanced approach to risk, willing to take chances when the potential rewards justify the potential downsides, but also careful to avoid unnecessary gambles. You can work with uncertainty but also appreciate having good information and analysis to inform decisions. This measured approach allows you to pursue opportunities while protecting against major setbacks.",
+      "stressBehavior": "Under pressure, you may become more risk-averse, preferring to stick with safe, familiar approaches rather than taking chances when you're already feeling stressed. Alternatively, some people become more willing to take risks when stressed, seeing bold moves as the only way out of difficult situations. Awareness of your stress pattern helps you maintain balanced judgment.",
+      "scenarios": [
+        "Team Meeting: You evaluate new opportunities by carefully weighing potential benefits against possible risks, helping the team make informed decisions about which chances to take.",
+        "Conflict Situation: When facing a difficult decision, you can take calculated risks when the situation warrants it, but you also know when caution is the better approach.",
+        "Leadership Moment: You encourage appropriate risk-taking in your team while also ensuring that major decisions are well-considered and potential downsides are understood."
+      ],
+      "developmentTips": [
+        "Develop clear criteria for when risk-taking is appropriate versus when caution is warranted.",
+        "Build your ability to assess risks more accurately through experience and learning from both successes and failures.",
+        "Remember that your risk tolerance may change under stress, so check your judgment when making important decisions during high-pressure periods.",
+        "Surround yourself with people who have different risk tolerances to help you see opportunities and threats you might miss."
+      ]
+    },
+    "highScore": {
+      "range": [67, 100],
+      "narrative": "You're comfortable with uncertainty and willing to pursue opportunities even when outcomes are uncertain. You see failure as a learning opportunity rather than a setback and are energized by venturing into unknown territory. This comfort with risk allows you to seize opportunities others might miss and to innovate in ways that require trying unproven approaches. However, you may sometimes underestimate genuine risks or move forward without adequate preparation.",
+      "stressBehavior": "Under pressure, your response to risk can vary. Some people become even more willing to take big risks when stressed, seeing bold action as the way to resolve difficult situations. Others may experience a reversal and become more risk-averse when the pressure becomes extreme. You may also take bigger risks to get quick results when you feel time pressure."
     }
   }
 }
