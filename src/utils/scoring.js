@@ -235,11 +235,11 @@ export function getScoreColor(score) {
 export function generateCBPersonalizedNarrative(archetype, scores, mbti) {
   const narrative = [];
   
-  const primArchetype = archetype.name;
-  const valuesProfile = scores.values_profile;
+  const primArchetype = archetype?.name || 'Professional';
+  const valuesProfile = scores?.values_profile || {};
   
   // Primary archetype narrative with specific scores
-  narrative.push(`As a ${primArchetype}, your assertiveness (${scores.assertiveness_usual}th percentile) drives you to take charge when needed.`);
+  narrative.push(`As a ${primArchetype}, your assertiveness (${scores?.assertiveness_usual ?? 50}th percentile) drives you to take charge when needed.`);
   
   // Values integration
   const topValues = Object.entries(valuesProfile)
@@ -252,13 +252,13 @@ export function generateCBPersonalizedNarrative(archetype, scores, mbti) {
   }
   
   // Work style preferences
-  const workStyle = scores.work_style_profile;
+  const workStyle = scores?.work_style_profile || {};
   if (workStyle.pace > 70) {
     narrative.push("Fast-paced environments energize you, where rapid changes and urgent priorities keep you engaged.");
   }
   
   // Theoretical vs practical orientation
-  const theoretical = scores.theoretical_orientation_usual;
+  const theoretical = scores?.theoretical_orientation_usual ?? 50;
   if (theoretical > 70) {
     narrative.push("You naturally gravitate toward understanding underlying principles and developing conceptual frameworks.");
   } else if (theoretical < 30) {
@@ -269,10 +269,10 @@ export function generateCBPersonalizedNarrative(archetype, scores, mbti) {
 }
 
 export function calculateOverallResilience(deltas) {
-  const adaptability = calculateAdaptabilityScore(deltas);
+  const adaptability = calculateAdaptabilityScore(deltas || {});
   
   // Count significant changes (>25 percentile points)
-  const significantChanges = Object.values(deltas).filter(delta => Math.abs(delta) > 25).length;
+  const significantChanges = Object.values(deltas || {}).filter(delta => Math.abs(delta) > 25).length;
   
   let resilienceLevel;
   if (adaptability >= 80 && significantChanges <= 1) {

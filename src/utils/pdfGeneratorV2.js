@@ -104,7 +104,11 @@ class PDFReportGenerator {
     this.pdf.setLineWidth(1);
     this.pdf.line(MARGIN, MARGIN + 15, MARGIN + 40, MARGIN + 15);
     
-    const { archetype, mbti, resilience, personalizedNarrative } = results;
+    // Robustly handle results
+    const archetype = results.archetype || { name: 'Archetype', icon: '👤', narrative: '', strengths: [] };
+    const mbti = results.mbti || { type: 'N/A', confidence: 0, profile: { name: 'Unknown' } };
+    const resilience = results.resilience || { score: 0, level: 'Analytical' };
+    const personalizedNarrative = results.personalizedNarrative || '';
     
     this.pdf.setFontSize(12);
     this.pdf.setTextColor(0, 0, 0);
@@ -115,20 +119,35 @@ class PDFReportGenerator {
     // Archetype Overview
     this.pdf.setFontSize(18);
     this.pdf.setTextColor(30, 58, 138);
-    this.pdf.text(`${archetype.icon} ${archetype.name}`, MARGIN, y);
+    this.pdf.text(`${archetype.icon || '👤'} ${archetype.name || 'Your Profile'}`, MARGIN, y);
     y += 10;
     
     this.pdf.setFontSize(11);
     this.pdf.setTextColor(0, 0, 0);
-    const descriptionLines = this.pdf.splitTextToSize(archetype.narrative, CONTENT_WIDTH);
+    const descriptionLines = this.pdf.splitTextToSize(archetype.narrative || '', CONTENT_WIDTH);
     this.pdf.text(descriptionLines, MARGIN, y);
-    y += descriptionLines.length * 5 + 8;
+    y += (descriptionLines.length || 1) * 5 + 8;
     
     // Key Metrics Grid
     const metrics = [
-      { label: 'Resilience Score', value: `${resilience.score}/100`, subtext: resilience.level, color: this.getResilienceColor(resilience.score) },
-      { label: 'MBTI Confidence', value: `${mbti.confidence}%`, subtext: mbti.type, color: DIMENSION_COLORS.assertiveness.primary },
-      { label: 'Top Values', value: this.getTopValues(results.scores), subtext: 'Core motivators', color: DIMENSION_COLORS.sociability.primary }
+      { 
+        label: 'Resilience Score', 
+        value: `${resilience.score ?? 0}/100`, 
+        subtext: resilience.level || 'Normal', 
+        color: this.getResilienceColor(resilience.score ?? 0) 
+      },
+      { 
+        label: 'MBTI Confidence', 
+        value: `${mbti.confidence ?? 0}%`, 
+        subtext: mbti.type || 'N/A', 
+        color: DIMENSION_COLORS.assertiveness.primary 
+      },
+      { 
+        label: 'Top Values', 
+        value: this.getTopValues(results.scores || {}), 
+        subtext: 'Core motivators', 
+        color: DIMENSION_COLORS.sociability.primary 
+      }
     ];
     
     metrics.forEach((metric, i) => {
@@ -222,7 +241,7 @@ class PDFReportGenerator {
       this.pdf.text(dim.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()), labelX, labelY, { align: 'center' });
       
       // Data point (usual behavior)
-      const usualScore = results.scores[`${dim}_usual`] || 50;
+      const usualScore = (results.scores && results.scores[`${dim}_usual`] !== undefined) ? results.scores[`${dim}_usual`] : 50;
       const dataRadius = radius * (usualScore / 100);
       const dataX = centerX + Math.cos(angle) * dataRadius;
       const dataY = centerY + Math.sin(angle) * dataRadius;
@@ -231,7 +250,7 @@ class PDFReportGenerator {
       this.pdf.circle(dataX, dataY, 2, 'F');
       
       // Stress behavior point
-      const stressScore = results.scores[`${dim}_stress`] || 50;
+      const stressScore = (results.scores && results.scores[`${dim}_stress`] !== undefined) ? results.scores[`${dim}_stress`] : 50;
       const stressRadius = radius * (stressScore / 100);
       const stressX = centerX + Math.cos(angle) * stressRadius;
       const stressY = centerY + Math.sin(angle) * stressRadius;
@@ -256,7 +275,8 @@ class PDFReportGenerator {
   addProfileNarrative(results) {
     this.addPage();
     
-    const { archetype, scores } = results;
+    const archetype = results.archetype || { name: 'Assessment Profile' };
+    const scores = results.scores || {};
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -264,7 +284,7 @@ class PDFReportGenerator {
     this.pdf.text('Detailed Profile Analysis', MARGIN, MARGIN + 10);
     
     // Theoretical vs Practical orientation analysis
-    const theoretical = scores.theoretical_orientation_usual;
+    const theoretical = scores.theoretical_orientation_usual ?? 50;
     let orientationLabel, orientationDesc;
     
     if (theoretical > 70) {
@@ -294,8 +314,8 @@ class PDFReportGenerator {
     y += orientationLines.length * 5 + 10;
     
     // Risk appetite and creativity combination
-    const riskAppetite = scores.risk_appetite_usual;
-    const creativity = scores.creativity_usual;
+    const riskAppetite = scores.risk_appetite_usual ?? 50;
+    const creativity = scores.creativity_usual ?? 50;
     
     if (creativity > 70 && riskAppetite > 70) {
       this.pdf.setFontSize(14);
@@ -338,7 +358,7 @@ class PDFReportGenerator {
   addStrengthsAndShadows(results) {
     this.addPage();
     
-    const { archetype } = results;
+    const archetype = results.archetype || { name: 'Your Profile', strengths: [], blindSpots: [] };
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -365,12 +385,14 @@ class PDFReportGenerator {
     this.pdf.setFont('helvetica', 'normal');
     
     let strengthsY = y + 15;
-    if (archetype.strengths) {
+    if (archetype.strengths && archetype.strengths.length > 0) {
       archetype.strengths.slice(0, 4).forEach(strength => {
         const strengthLines = this.pdf.splitTextToSize(strength, columnWidth - 10);
         this.pdf.text(strengthLines, MARGIN + 5, strengthsY);
-        strengthsY += strengthLines.length * 4 + 8;
+        strengthsY += (strengthLines.length || 1) * 4 + 8;
       });
+    } else {
+      this.pdf.text('Consistent strengths identified through assessment.', MARGIN + 5, strengthsY);
     }
     
     // Right column - Blind spots
@@ -388,12 +410,14 @@ class PDFReportGenerator {
     this.pdf.setFont('helvetica', 'normal');
     
     let blindSpotsY = y + 15;
-    if (archetype.blindSpots) {
+    if (archetype.blindSpots && archetype.blindSpots.length > 0) {
       archetype.blindSpots.slice(0, 3).forEach(spot => {
         const spotLines = this.pdf.splitTextToSize(spot, columnWidth - 10);
         this.pdf.text(spotLines, MARGIN + columnWidth + 15, blindSpotsY);
-        blindSpotsY += spotLines.length * 4 + 8;
+        blindSpotsY += (spotLines.length || 1) * 4 + 8;
       });
+    } else {
+      this.pdf.text('Developmental areas for continued growth.', MARGIN + columnWidth + 15, blindSpotsY);
     }
     
     y += 130;
@@ -414,7 +438,7 @@ class PDFReportGenerator {
   addWorkEnvironmentSection(results) {
     this.addPage();
     
-    const { scores } = results;
+    const scores = results.scores || {};
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -429,7 +453,7 @@ class PDFReportGenerator {
     y += 10;
     
     const values = scores.values_profile;
-    if (values) {
+    if (values && Object.keys(values).length > 0) {
       const sortedValues = Object.entries(values).sort(([,a], [,b]) => b - a);
       
       sortedValues.forEach(([key, score], index) => {
@@ -442,13 +466,17 @@ class PDFReportGenerator {
           
           // Bar
           this.pdf.setFillColor(59, 130, 246);
-          this.pdf.rect(MARGIN + 40, y - 3, score * 0.8, 6, 'F');
+          this.pdf.rect(MARGIN + 40, y - 3, (score || 0) * 0.8, 6, 'F');
           
           // Score
-          this.pdf.text(`${score}%`, MARGIN + 45 + score * 0.8, y);
+          this.pdf.text(`${score || 0}%`, MARGIN + 45 + (score || 0) * 0.8, y);
           y += 8;
         }
       });
+    } else {
+      this.pdf.setFontSize(10);
+      this.pdf.text('Standard professional values align with your profile.', MARGIN, y);
+      y += 10;
     }
     
     y += 10;
@@ -487,7 +515,8 @@ class PDFReportGenerator {
   addCreativityAngle(results) {
     this.addPage();
     
-    const { scores, archetype } = results;
+    const scores = results.scores || {};
+    const archetype = results.archetype || { id: 'unknown', name: 'Profile' };
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -497,8 +526,8 @@ class PDFReportGenerator {
     let y = MARGIN + 25;
     
     // Creativity profile analysis
-    const creativity = scores.creativity_usual;
-    const theoretical = scores.theoretical_orientation_usual;
+    const creativity = scores.creativity_usual ?? 50;
+    const theoretical = scores.theoretical_orientation_usual ?? 50;
     
     let creativeType, creativeDesc;
     
@@ -567,7 +596,7 @@ class PDFReportGenerator {
   addTeamDynamicsMatrix(results) {
     this.addPage();
     
-    const { archetype } = results;
+    const archetype = results.archetype || { id: 'unknown', name: 'Profile' };
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -604,7 +633,7 @@ class PDFReportGenerator {
     const archetypes = ['strategist', 'visionary', 'craftsman', 'connector', 'catalyst', 'analyst', 'creator', 'maverick'];
     const compatibilityData = [
       ['Your Type', 'Synergy', 'Potential Challenges', 'Best Collaboration'],
-      [`${archetype.name}`, 'High', 'Managing different paces', 'Clear communication'],
+      [`${archetype.name || 'Your Profile'}`, 'High', 'Managing different paces', 'Clear communication'],
       [archetype.id === 'strategist' ? 'Visionary' : 'Strategist', 'Medium', 'Different planning styles', 'Complementary strengths']
     ];
     
@@ -636,7 +665,9 @@ class PDFReportGenerator {
   addStressStrategy(results) {
     this.addPage();
     
-    const { archetype, scores, stressDeltas } = results;
+    const archetype = results.archetype || { id: 'unknown', name: 'Profile', copingStrategies: [] };
+    const scores = results.scores || {};
+    const stressDeltas = results.stressDeltas || {};
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -662,6 +693,9 @@ class PDFReportGenerator {
       const stressLines = this.pdf.splitTextToSize(stressDesc, CONTENT_WIDTH);
       this.pdf.text(stressLines, MARGIN, y);
       y += stressLines.length * 5 + 10;
+    } else {
+      this.pdf.text('Your profile remains remarkably consistent under pressure.', MARGIN, y);
+      y += 10;
     }
     
     // Recovery strategies
@@ -794,7 +828,11 @@ class PDFReportGenerator {
   addMBTISection(results) {
     this.addPage();
     
-    const { mbti } = results;
+    const mbti = results.mbti || { 
+      type: 'N/A', 
+      confidence: 0, 
+      profile: { name: 'Unknown', description: '', cognitiveStack: [] } 
+    };
     
     this.pdf.setFontSize(22);
     this.pdf.setTextColor(30, 58, 138);
@@ -807,27 +845,27 @@ class PDFReportGenerator {
     this.pdf.setFontSize(48);
     this.pdf.setTextColor(99, 102, 241);
     this.pdf.setFont('helvetica', 'bold');
-    this.pdf.text(mbti.type, PAGE_WIDTH / 2, y, { align: 'center' });
+    this.pdf.text(mbti.type || 'N/A', PAGE_WIDTH / 2, y, { align: 'center' });
     y += 15;
     
     // Profile name
     this.pdf.setFontSize(18);
     this.pdf.setTextColor(0, 0, 0);
-    this.pdf.text(mbti.profile.name, PAGE_WIDTH / 2, y, { align: 'center' });
+    this.pdf.text(mbti.profile?.name || 'Unknown Type', PAGE_WIDTH / 2, y, { align: 'center' });
     y += 8;
     
     // Confidence
     this.pdf.setFontSize(11);
     this.pdf.setTextColor(100, 100, 100);
-    this.pdf.text(`Confidence: ${mbti.confidence}%`, PAGE_WIDTH / 2, y, { align: 'center' });
+    this.pdf.text(`Confidence: ${mbti.confidence ?? 0}%`, PAGE_WIDTH / 2, y, { align: 'center' });
     y += 15;
     
     // Description
     this.pdf.setFontSize(11);
     this.pdf.setTextColor(0, 0, 0);
-    const descLines = this.pdf.splitTextToSize(mbti.profile.description, CONTENT_WIDTH);
+    const descLines = this.pdf.splitTextToSize(mbti.profile?.description || 'Your cognitive preferences analysis.', CONTENT_WIDTH);
     this.pdf.text(descLines, MARGIN, y);
-    y += descLines.length * 5 + 15;
+    y += (descLines.length || 1) * 5 + 15;
     
     // Cognitive functions
     this.pdf.setFontSize(14);
@@ -838,11 +876,16 @@ class PDFReportGenerator {
     this.pdf.setFontSize(9);
     this.pdf.setFont('helvetica', 'normal');
     
-    mbti.profile.cognitiveStack.forEach((func, i) => {
-      const funcName = `${func} (${i === 0 ? 'Dominant' : i === 1 ? 'Auxiliary' : i === 2 ? 'Tertiary' : 'Inferior'})`;
-      this.pdf.text(`${i + 1}. ${funcName}`, MARGIN + 5, y);
+    if (mbti.profile?.cognitiveStack) {
+      mbti.profile.cognitiveStack.forEach((func, i) => {
+        const funcName = `${func} (${i === 0 ? 'Dominant' : i === 1 ? 'Auxiliary' : i === 2 ? 'Tertiary' : 'Inferior'})`;
+        this.pdf.text(`${i + 1}. ${funcName}`, MARGIN + 5, y);
+        y += 6;
+      });
+    } else {
+      this.pdf.text('Cognitive function stack analysis unavailable.', MARGIN + 5, y);
       y += 6;
-    });
+    }
     
     y += 10;
     
@@ -857,7 +900,7 @@ class PDFReportGenerator {
     const complementText = 'Your MBTI type provides insights into your cognitive preferences that complement your dimensional scores. This dual perspective offers a more complete picture of your operating style.';
     const complementLines = this.pdf.splitTextToSize(complementText, CONTENT_WIDTH);
     this.pdf.text(complementLines, MARGIN, y);
-    y += complementLines.length * 4 + 10;
+    y += (complementLines.length || 1) * 4 + 10;
     
     // Disclaimer
     this.pdf.setFontSize(10);
@@ -871,12 +914,17 @@ class PDFReportGenerator {
   addArchetypeDeepDive(results) {
     this.addPage();
     
-    const { archetype } = results;
+    const archetype = results.archetype || { 
+      name: 'Profile', 
+      narrative: 'Complete profile analysis based on assessment results.',
+      careerPaths: [],
+      leadershipStyle: 'Strategic and adaptive'
+    };
     
     this.pdf.setFontSize(26);
     this.pdf.setTextColor(30, 58, 138);
     this.pdf.setFont('helvetica', 'bold');
-    this.pdf.text(`${archetype.name} Deep Dive`, MARGIN, MARGIN + 10);
+    this.pdf.text(`${archetype.name || 'Your Profile'} Deep Dive`, MARGIN, MARGIN + 10);
     
     let y = MARGIN + 25;
     
@@ -885,10 +933,10 @@ class PDFReportGenerator {
     this.pdf.setTextColor(0, 0, 0);
     this.pdf.setFont('helvetica', 'normal');
     
-    const fullNarrative = archetype.narrative + ' ' + (archetype.teamRole || '');
+    const fullNarrative = (archetype.narrative || '') + ' ' + (archetype.teamRole || '');
     const narrativeLines = this.pdf.splitTextToSize(fullNarrative, CONTENT_WIDTH);
     this.pdf.text(narrativeLines, MARGIN, y);
-    y += narrativeLines.length * 5 + 15;
+    y += (narrativeLines.length || 1) * 5 + 15;
     
     // Career paths
     this.pdf.setFontSize(16);
@@ -899,11 +947,14 @@ class PDFReportGenerator {
     this.pdf.setFontSize(10);
     this.pdf.setFont('helvetica', 'normal');
     
-    if (archetype.careerPaths) {
+    if (archetype.careerPaths && archetype.careerPaths.length > 0) {
       archetype.careerPaths.forEach((path, i) => {
         this.pdf.text(`${i + 1}. ${path}`, MARGIN + 5, y);
         y += 6;
       });
+    } else {
+      this.pdf.text('Professional development paths aligned with your strengths.', MARGIN + 5, y);
+      y += 6;
     }
     
     y += 10;
@@ -925,7 +976,8 @@ class PDFReportGenerator {
   addVisualSummary(results) {
     this.addPage();
     
-    const { archetype, scores } = results;
+    const archetype = results.archetype || { icon: '👤', name: 'Profile' };
+    const scores = results.scores || {};
     
     this.pdf.setFontSize(28);
     this.pdf.setTextColor(30, 58, 138);
@@ -940,19 +992,19 @@ class PDFReportGenerator {
     
     this.pdf.setFontSize(24);
     this.pdf.setTextColor(255, 255, 255);
-    this.pdf.text(archetype.icon, PAGE_WIDTH / 2, y + 20, { align: 'center' });
+    this.pdf.text(archetype.icon || '👤', PAGE_WIDTH / 2, y + 20, { align: 'center' });
     
     this.pdf.setFontSize(14);
     this.pdf.setTextColor(0, 0, 0);
-    this.pdf.text(archetype.name, PAGE_WIDTH / 2, y + 45, { align: 'center' });
+    this.pdf.text(archetype.name || 'Your Profile', PAGE_WIDTH / 2, y + 45, { align: 'center' });
     
     y += 70;
     
     // Top strengths grid
     const strengths = [
-      { name: 'Assertiveness', score: scores.assertiveness_usual, icon: '💪' },
-      { name: 'Conscientiousness', score: scores.conscientiousness_usual, icon: '⚡' },
-      { name: 'Creativity', score: scores.creativity_usual, icon: '🎨' }
+      { name: 'Assertiveness', score: scores.assertiveness_usual ?? 50, icon: '💪' },
+      { name: 'Conscientiousness', score: scores.conscientiousness_usual ?? 50, icon: '⚡' },
+      { name: 'Creativity', score: scores.creativity_usual ?? 50, icon: '🎨' }
     ];
     
     strengths.forEach((strength, i) => {
