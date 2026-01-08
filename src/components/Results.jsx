@@ -27,7 +27,14 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const handleGeneratePDF = async () => {
     setGenerating(true);
     try {
-      await generatePDF(userName, results);
+      // Create a combined results object with all calculated metrics
+      const fullResults = {
+        ...results,
+        mbti,
+        resilience,
+        personalizedNarrative
+      };
+      await generatePDF(userName, fullResults);
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('There was an error generating your PDF. Please try again.');
