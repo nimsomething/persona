@@ -1,13 +1,28 @@
 import { useState } from 'react';
 import { APP_VERSION_LABEL } from '../utils/appMeta';
 
-function Welcome({ onStart }) {
+function Welcome({ onStart, recoveredAssessment, storageError, onViewRecoveredAssessment }) {
   const [name, setName] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim()) {
       onStart(name.trim());
+    }
+  };
+
+  const formatDate = (isoString) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return isoString;
     }
   };
 
@@ -25,6 +40,44 @@ function Welcome({ onStart }) {
             A research-grounded profile for creative professionals and team dynamics
           </p>
         </div>
+
+        {storageError && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start">
+              <span className="text-xl mr-2">⚠️</span>
+              <div>
+                <h3 className="font-semibold text-red-800 mb-1">Storage Issue</h3>
+                <p className="text-sm text-red-700">{storageError.message}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {recoveredAssessment && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+            <div className="flex items-start mb-3">
+              <span className="text-2xl mr-2">✅</span>
+              <div>
+                <h3 className="font-semibold text-green-800 mb-1">Previous Assessment Found</h3>
+                <p className="text-sm text-green-700">
+                  We found a completed assessment for <strong>{recoveredAssessment.userName}</strong>
+                </p>
+                <p className="text-xs text-green-600 mt-1">
+                  Completed on {formatDate(recoveredAssessment.completedAt)}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onViewRecoveredAssessment}
+              className="w-full mt-3 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition"
+            >
+              View Previous Results
+            </button>
+            <p className="text-xs text-green-600 text-center mt-2">
+              or start a new assessment below
+            </p>
+          </div>
+        )}
 
         <div className="space-y-6 mb-8">
           <div className="bg-blue-50 rounded-lg p-6">

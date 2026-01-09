@@ -5,20 +5,26 @@ A comprehensive Birkman-style personality assessment tool that measures 6 core d
 ## Features
 
 ### Assessment
-- **90 questions** covering 6 core personality dimensions
+- **90-120 questions** measuring 8 core dimensions and profiles
 - **Dual-profile testing**: Measures both usual behavior and stress behavior
 - **5-point Likert scale** format for nuanced responses
 - **Progress tracking** with estimated time remaining
 - **Mobile-responsive design** works on all devices
 - **Question navigation** allows reviewing and changing answers
+- **Auto-save functionality**: Progress saved every 3 questions
+- **Session recovery**: Resume interrupted assessments automatically
+- **Results persistence**: View previous assessments after refresh
+- **Comprehensive logging**: Debug mode for troubleshooting (add `?debug=true` to URL)
 
-### Six Core Dimensions
+### Eight Core Dimensions
 1. **Assertiveness** - Initiative, confidence, directness
 2. **Sociability** - Openness, engagement, relationship-building
-3. **Patience** - Tolerance for ambiguity, calm under pressure
+3. **Conscientiousness** - Attention to detail, reliability, planning
 4. **Flexibility** - Adaptability, openness to change
-5. **Conscientiousness** - Attention to detail, reliability, planning
-6. **Emotional Intelligence** - Empathy, self-awareness, interpersonal sensitivity
+5. **Emotional Intelligence** - Empathy, self-awareness, interpersonal sensitivity
+6. **Creativity** - Innovation, original thinking, artistic expression
+7. **Risk Appetite** - Comfort with uncertainty, decision-making under risk
+8. **Theoretical Orientation** - Preference for abstract concepts vs. practical application
 
 ### Eight Archetypes
 - **The Strategist** (high assertiveness + conscientiousness)
@@ -128,20 +134,54 @@ src/
 │   ├── Assessment.jsx   # Main assessment flow
 │   ├── Question.jsx     # Individual question component
 │   ├── ProgressBar.jsx  # Progress indicator
-│   ├── Results.jsx      # Results display
-│   ├── Welcome.jsx      # Welcome screen
-│   └── DimensionScorecard.jsx  # Score visualization
+│   ├── Results.jsx      # Results display with error handling
+│   ├── Welcome.jsx      # Welcome screen with recovery UI
+│   ├── DimensionScorecard.jsx  # Score visualization
+│   └── VersionFooter.jsx      # Version display
+├── services/            # Business logic and services
+│   ├── loggerService.js        # Centralized logging system
+│   ├── storageService.js       # localStorage management
+│   └── mbtiMappingService.js   # MBTI calculation
 ├── data/               # JSON data files
 │   ├── questions.json              # Question bank
 │   ├── archetypes.json             # Archetype definitions
 │   └── dimensionDescriptions.json  # Dimension content
 ├── utils/              # Utility functions
 │   ├── scoring.js      # Scoring logic
-│   └── pdfGenerator.js # PDF generation
-├── App.jsx             # Main app component
+│   ├── pdfGeneratorV2.js # PDF generation with error handling
+│   ├── appMeta.js      # App version metadata
+│   └── debug.js        # Debug utilities
+├── App.jsx             # Main app component with recovery logic
 ├── main.jsx            # Entry point
 └── index.css           # Global styles
 ```
+
+## Debugging and Logging
+
+### Enabling Debug Mode
+
+Add `?debug=true` to the URL to enable detailed logging:
+
+```
+http://localhost:5173/?debug=true
+```
+
+### Debug Features
+
+- Detailed console logs with timestamps and categories
+- Storage operations logged for troubleshooting
+- Logger exposed to window as `window.__logger`
+- Export debug logs as JSON for analysis
+
+### Log Categories
+
+- `storage`: localStorage operations
+- `assessment`: Assessment lifecycle events
+- `pdf`: PDF generation events
+- `ui`: UI interactions
+- `app`: Application-level events
+
+For more details, see [VERSIONING.md](VERSIONING.md).
 
 ## Customization
 

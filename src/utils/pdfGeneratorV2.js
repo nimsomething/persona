@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import logger from '../services/loggerService';
 
 // Dimension colors for consistent visual identity
 const DIMENSION_COLORS = {
@@ -27,29 +28,49 @@ class PDFReportGenerator {
   }
 
   async generate(userName, results) {
-    this.pdf = new jsPDF();
-    this.userName = userName;
-    
-    // Create comprehensive report with all sections
-    this.addCoverPage();
-    this.addExecutiveSummary(results);
-    this.addDimensionDashboard(results);
-    this.addProfileNarrative(results);
-    this.addStrengthsAndShadows(results);
-    this.addWorkEnvironmentSection(results);
-    this.addCreativityAngle(results);
-    this.addTeamDynamicsMatrix(results);
-    this.addStressStrategy(results);
-    this.addDevelopmentPlaybook(results);
-    this.addMBTISection(results);
-    this.addArchetypeDeepDive(results);
-    this.addVisualSummary(results);
-    
-    // Save the PDF
-    const fileName = `${userName.replace(/\s+/g, '_')}_Personality_Assessment_v2.pdf`;
-    this.pdf.save(fileName);
-    
-    return fileName;
+    try {
+      // Validate inputs
+      if (!userName || typeof userName !== 'string') {
+        throw new Error('Invalid user name provided');
+      }
+      if (!results || typeof results !== 'object') {
+        throw new Error('Invalid results data provided');
+      }
+
+      logger.debug('PDF generation starting', { userName, archetype: results.archetype?.name }, 'pdf');
+
+      this.pdf = new jsPDF();
+      this.userName = userName;
+
+      // Create comprehensive report with all sections
+      this.addCoverPage();
+      this.addExecutiveSummary(results);
+      this.addDimensionDashboard(results);
+      this.addProfileNarrative(results);
+      this.addStrengthsAndShadows(results);
+      this.addWorkEnvironmentSection(results);
+      this.addCreativityAngle(results);
+      this.addTeamDynamicsMatrix(results);
+      this.addStressStrategy(results);
+      this.addDevelopmentPlaybook(results);
+      this.addMBTISection(results);
+      this.addArchetypeDeepDive(results);
+      this.addVisualSummary(results);
+
+      // Save the PDF
+      const fileName = `${userName.replace(/\s+/g, '_')}_Personality_Assessment_v2.pdf`;
+      this.pdf.save(fileName);
+      logger.debug('PDF saved successfully', { fileName }, 'pdf');
+
+      return fileName;
+    } catch (error) {
+      logger.error('PDF generation failed', {
+        userName,
+        error: error.message,
+        stack: error.stack
+      }, 'pdf');
+      throw new Error(`Failed to generate PDF: ${error.message}`);
+    }
   }
 
   addCoverPage() {
