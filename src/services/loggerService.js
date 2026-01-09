@@ -74,6 +74,7 @@ class LoggerService {
     }
 
     const logEntry = this.formatMessage(level, message, category, context);
+    const categoryTag = category ? `[${category.toUpperCase()}]` : '';
 
     // Console output with styling
     const style = `color: ${levelConfig.color}; font-weight: bold;`;
