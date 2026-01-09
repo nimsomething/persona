@@ -3,6 +3,7 @@ import ProgressBar from './ProgressBar';
 import Question from './Question';
 import { calculateDimensionScores, determineArchetype, calculateStressDeltas, calculateAdaptabilityScore } from '../utils/scoring';
 import storageService from '../services/storageService';
+import logger from '../services/loggerService';
 
 function Assessment({ userName, questions, onComplete }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -26,16 +27,24 @@ function Assessment({ userName, questions, onComplete }) {
       setAnswers(existingSession.responses || {});
       setCurrentIndex(existingSession.currentQuestion || 0);
       setSessionRecovered(true);
+      logger.logAssessmentEvent('session recovered', userName, {
+        questionIndex: existingSession.currentQuestion,
+        answersCount: Object.keys(existingSession.responses || {}).length
+      });
     }
-  }, [sessionRecovered]);
+  }, [sessionRecovered, userName]);
 
   // Auto-save effect - save every 3 questions answered
   useEffect(() => {
     const answeredCount = Object.keys(answers).length;
-    
+
     // Save if we've answered 3 more questions since last save
     if (answeredCount > 0 && answeredCount % 3 === 0) {
       storageService.autoSave(userName, currentIndex, answers);
+      logger.logAssessmentEvent('auto-save triggered', userName, {
+        questionIndex: currentIndex,
+        answersCount: answeredCount
+      });
     }
   }, [answers, currentIndex, userName]);
 
@@ -65,7 +74,7 @@ function Assessment({ userName, questions, onComplete }) {
     const archetype = determineArchetype(scores);
     const stressDeltas = calculateStressDeltas(scores);
     const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
-    
+
     const results = {
       scores,
       archetype,
@@ -73,7 +82,14 @@ function Assessment({ userName, questions, onComplete }) {
       adaptabilityScore,
       completionTime: Date.now() - startTime
     };
-    
+
+    logger.logAssessmentEvent('completed', userName, {
+      archetype: archetype.name,
+      adaptabilityScore,
+      completionTime: `${(results.completionTime / 1000).toFixed(2)}s`,
+      answersCount: Object.keys(answers).length
+    });
+
     onComplete(answers, results);
   };
 

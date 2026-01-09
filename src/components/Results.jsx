@@ -1,12 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DimensionScorecard from './DimensionScorecard';
 import { generatePDF } from '../utils/pdfGeneratorV2';
 import { calculateOverallResilience, generateCBPersonalizedNarrative } from '../utils/scoring';
 import mbtiService from '../services/mbtiMappingService';
+import storageService from '../services/storageService';
+import logger from '../services/loggerService';
 
 function Results({ userName, results, answers, questions, onRestart }) {
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState(null);
   const { scores, archetype, stressDeltas, adaptabilityScore } = results;
+
+  // Save completed assessment to localStorage on mount
+  useEffect(() => {
+    if (results && userName) {
+      const saved = storageService.saveCompletedAssessment(userName, results);
+      if (!saved) {
+        logger.warn('Failed to save completed assessment on mount', { userName }, 'results');
+        setError({
+          type: 'storage',
+          message: 'Your results may not be saved if you refresh the page. Please download the PDF report.'
+        });
+      }
+    }
+  }, [results, userName]);
 
   const dimensions = [
     { key: 'assertiveness', name: 'Assertiveness' },
@@ -25,7 +42,10 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const personalizedNarrative = generateCBPersonalizedNarrative(archetype, scores, mbti);
 
   const handleGeneratePDF = async () => {
+    setError(null);
     setGenerating(true);
+    logger.logPDFGeneration('started', userName);
+
     try {
       // Create a combined results object with all calculated metrics
       const fullResults = {
@@ -34,10 +54,29 @@ function Results({ userName, results, answers, questions, onRestart }) {
         resilience,
         personalizedNarrative
       };
-      await generatePDF(userName, fullResults);
+
+      await logger.measureAsyncOperation(
+        'PDF generation',
+        () => generatePDF(userName, fullResults),
+        'pdf'
+      );
+
+      logger.logPDFGeneration('completed', userName, {
+        archetype: archetype.name,
+        dimensionsCount: dimensions.length
+      });
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('There was an error generating your PDF. Please try again.');
+      logger.logPDFGeneration('failed', userName, {
+        error: error.message,
+        stack: error.stack,
+        archetype: archetype.name
+      });
+
+      setError({
+        type: 'pdf',
+        message: `Unable to generate PDF: ${error.message || 'An unexpected error occurred'}`,
+        details: error.message
+      });
     } finally {
       setGenerating(false);
     }
@@ -54,6 +93,38 @@ function Results({ userName, results, answers, questions, onRestart }) {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-5xl mx-auto">
+        {error && (
+          <div className={`rounded-lg p-4 mb-6 ${
+            error.type === 'storage' ? 'bg-yellow-50 border border-yellow-200' : 'bg-red-50 border border-red-200'
+          }`}>
+            <div className="flex items-start">
+              <span className="text-2xl mr-3">
+                {error.type === 'storage' ? '⚠️' : '❌'}
+              </span>
+              <div>
+                <h3 className={`font-semibold mb-1 ${
+                  error.type === 'storage' ? 'text-yellow-800' : 'text-red-800'
+                }`}>
+                  {error.type === 'storage' ? 'Storage Warning' : 'Error'}
+                </h3>
+                <p className={`text-sm ${
+                  error.type === 'storage' ? 'text-yellow-700' : 'text-red-700'
+                }`}>
+                  {error.message}
+                </p>
+                {error.type === 'pdf' && (
+                  <button
+                    onClick={() => setError(null)}
+                    className="mt-2 text-sm underline text-red-600 hover:text-red-800"
+                  >
+                    Dismiss
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
