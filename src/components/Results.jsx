@@ -1,18 +1,43 @@
 import { useState, useEffect } from 'react';
 import DimensionScorecard from './DimensionScorecard';
-import { generatePDF } from '../utils/pdfGeneratorV2';
+import { generatePDFV3 as generatePDF } from '../utils/pdfGeneratorV3';
 import { calculateOverallResilience, generateCBPersonalizedNarrative } from '../utils/scoring';
 import mbtiService from '../services/mbtiMappingService';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
 
+// v3 Tab Components
+import DashboardTab from './results/DashboardTab';
+import BirkmanColorsTab from './results/BirkmanColorsTab';
+import ComponentsTab from './results/ComponentsTab';
+import InternalStatesTab from './results/InternalStatesTab';
+import CareersTab from './results/CareersTab';
+import DownloadTab from './results/DownloadTab';
+
 function Results({ userName, results, answers, questions, onRestart }) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
   
+  // Handle missing results gracefully
+  if (!results) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Results Not Found</h2>
+          <p className="text-gray-600 mb-6">We couldn't find the assessment results. Please try taking the assessment again.</p>
+          <button onClick={onRestart} className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold">
+            Return to Welcome
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Handle both v2 and v3 result structures
   const scores = results.dimensions || results.scores || {};
-  const archetype = results.archetype;
+  const archetype = results.archetype || { name: 'Professional', icon: '👤', shortDescription: 'Strategic professional', narrative: 'You are a balanced professional.' };
   const stressDeltas = results.stressDeltas || {};
   const adaptabilityScore = results.adaptabilityScore || 50;
   const birkmanColor = results.birkman_color;
@@ -23,13 +48,17 @@ function Results({ userName, results, answers, questions, onRestart }) {
   // Save completed assessment to localStorage on mount
   useEffect(() => {
     if (results && userName) {
-      const saved = storageService.saveCompletedAssessment(userName, results);
-      if (!saved) {
-        logger.warn('Failed to save completed assessment on mount', { userName }, 'results');
-        setError({
-          type: 'storage',
-          message: 'Your results may not be saved if you refresh the page. Please download the PDF report.'
-        });
+      try {
+        const saved = storageService.saveCompletedAssessment(userName, results);
+        if (!saved) {
+          logger.warn('Failed to save completed assessment on mount', { userName }, 'results');
+          setError({
+            type: 'storage',
+            message: 'Your results may not be saved if you refresh the page. Please download the PDF report.'
+          });
+        }
+      } catch (err) {
+        logger.error('Error saving assessment', { error: err.message });
       }
     }
   }, [results, userName]);
@@ -94,16 +123,76 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const topStrengths = dimensions
     .map(dim => ({
       ...dim,
-      score: scores[`${dim.key}_usual`]
+      score: scores[`${dim.key}_usual`] || 50
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
 
+  const tabs = [
+    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'colors', label: 'Birkman Colors', icon: '🎨' },
+    { id: 'components', label: '9 Components', icon: '🧩' },
+    { id: 'states', label: 'Internal States', icon: '🔋' },
+    { id: 'careers', label: 'Career Guidance', icon: '🚀' },
+    { id: 'download', label: 'Download PDF', icon: '📄' }
+  ];
+
+  const renderActiveTab = () => {
+    const tabProps = {
+      userName,
+      results: { ...results, mbti, resilience, personalizedNarrative },
+      archetype,
+      scores,
+      adaptabilityScore,
+      topStrengths,
+      dimensions,
+      generating,
+      onGeneratePDF: handleGeneratePDF,
+      isV3
+    };
+
+    switch (activeTab) {
+      case 'dashboard': return <DashboardTab {...tabProps} />;
+      case 'colors': return <BirkmanColorsTab {...tabProps} />;
+      case 'components': return <ComponentsTab {...tabProps} />;
+      case 'states': return <InternalStatesTab {...tabProps} />;
+      case 'careers': return <CareersTab {...tabProps} />;
+      case 'download': return <DownloadTab {...tabProps} />;
+      default: return <DashboardTab {...tabProps} />;
+    }
+  };
+
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen py-8 px-4 bg-gray-50">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+          <div>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tight">
+              {userName}'s <span className="text-blue-600">Results</span>
+            </h1>
+            <p className="text-gray-500 mt-1 font-medium">
+              V3.0 Assessment • {new Date().toLocaleDateString()}
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={onRestart}
+              className="px-6 py-2 rounded-xl font-bold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 transition shadow-sm"
+            >
+              Restart
+            </button>
+            <button
+              onClick={() => setActiveTab('download')}
+              className="px-6 py-2 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition shadow-md"
+            >
+              Get Report
+            </button>
+          </div>
+        </div>
+
         {error && (
-          <div className={`rounded-lg p-4 mb-6 ${
+          <div className={`rounded-2xl p-4 mb-8 ${
             error.type === 'storage' ? 'bg-yellow-50 border border-yellow-200' : 'bg-red-50 border border-red-200'
           }`}>
             <div className="flex items-start">
@@ -111,206 +200,47 @@ function Results({ userName, results, answers, questions, onRestart }) {
                 {error.type === 'storage' ? '⚠️' : '❌'}
               </span>
               <div>
-                <h3 className={`font-semibold mb-1 ${
+                <h3 className={`font-bold mb-1 ${
                   error.type === 'storage' ? 'text-yellow-800' : 'text-red-800'
                 }`}>
                   {error.type === 'storage' ? 'Storage Warning' : 'Error'}
                 </h3>
-                <p className={`text-sm ${
+                <p className={`text-sm font-medium ${
                   error.type === 'storage' ? 'text-yellow-700' : 'text-red-700'
                 }`}>
                   {error.message}
                 </p>
-                {error.type === 'pdf' && (
-                  <button
-                    onClick={() => setError(null)}
-                    className="mt-2 text-sm underline text-red-600 hover:text-red-800"
-                  >
-                    Dismiss
-                  </button>
-                )}
               </div>
             </div>
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              {userName}'s Results
-            </h1>
-            <p className="text-lg text-gray-600">
-              Assessment completed successfully
-            </p>
-          </div>
-
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 mb-8">
-            <div className="text-center mb-6">
-              <div className="text-6xl mb-4">{archetype.icon}</div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                {archetype.name}
-              </h2>
-              <p className="text-lg text-gray-700">
-                {archetype.shortDescription}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg p-6 mb-6">
-              <h3 className="font-semibold text-gray-900 mb-3">About Your Archetype:</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {archetype.narrative}
-              </p>
-            </div>
-
-            {isV3 && birkmanColor && (
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-6 mb-6 border-2 border-indigo-200">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🎨</span>
-                  Your Birkman Color Profile
-                </h3>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-12 h-12 rounded-full shadow-md"
-                      style={{ 
-                        backgroundColor: birkmanColor.primary === 'Red' ? '#EF4444' :
-                                       birkmanColor.primary === 'Green' ? '#10B981' :
-                                       birkmanColor.primary === 'Yellow' ? '#F59E0B' : '#3B82F6'
-                      }}
-                    />
-                    <div>
-                      <div className="font-bold text-lg text-gray-900">{birkmanColor.primary}</div>
-                      <div className="text-sm text-gray-600">Primary</div>
-                    </div>
-                  </div>
-                  <div className="text-2xl text-gray-400">+</div>
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-10 h-10 rounded-full shadow-md"
-                      style={{ 
-                        backgroundColor: birkmanColor.secondary === 'Red' ? '#EF4444' :
-                                       birkmanColor.secondary === 'Green' ? '#10B981' :
-                                       birkmanColor.secondary === 'Yellow' ? '#F59E0B' : '#3B82F6'
-                      }}
-                    />
-                    <div>
-                      <div className="font-semibold text-gray-900">{birkmanColor.secondary}</div>
-                      <div className="text-xs text-gray-600">Secondary</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-sm text-gray-700">
-                  <strong>Color Spectrum:</strong> Red {birkmanColor.spectrum.Red}% • Green {birkmanColor.spectrum.Green}% • Yellow {birkmanColor.spectrum.Yellow}% • Blue {birkmanColor.spectrum.Blue}%
-                </div>
-              </div>
-            )}
-
-            {isV3 && components && (
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-6 mb-6 border-2 border-blue-200">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <span className="text-2xl">🧩</span>
-                  Your 9 Personality Components
-                </h3>
-                <div className="grid grid-cols-3 gap-2 text-sm">
-                  {Object.entries(components).map(([key, value]) => (
-                    <div key={key} className="bg-white rounded p-2">
-                      <div className="font-semibold text-gray-900 capitalize text-xs">
-                        {key.replace(/_/g, ' ')}
-                      </div>
-                      <div className="text-blue-600 font-bold">{value}</div>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-600 mt-3">
-                  ✨ Full component analysis available in your 32-page PDF report
-                </p>
-              </div>
-            )}
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg p-6">
-                <h3 className="font-semibold text-gray-900 mb-3">Your Top Strengths:</h3>
-                <ul className="space-y-2">
-                  {topStrengths.map(strength => (
-                    <li key={strength.key} className="flex items-start">
-                      <span className="text-green-600 mr-2 mt-1">✓</span>
-                      <span className="text-gray-700">
-                        <span className="font-medium">{strength.name}</span> ({strength.score}th percentile)
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-lg p-6">
-                <h3 className="font-semibold text-gray-900 mb-3">Adaptability Score:</h3>
-                <div className="flex items-center mb-2">
-                  <div className="text-4xl font-bold text-blue-600">{adaptabilityScore}</div>
-                  <div className="text-gray-600 ml-2">/100</div>
-                </div>
-                <p className="text-sm text-gray-600">
-                  {adaptabilityScore >= 80
-                    ? 'You maintain consistency under stress—your behavior changes minimally when pressure increases.'
-                    : adaptabilityScore >= 60
-                    ? 'You show moderate behavioral changes under stress, which is typical for most professionals.'
-                    : 'You experience significant behavioral shifts under stress—awareness of these changes can help you manage them.'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <DimensionScorecard scores={scores} dimensions={dimensions} />
-
-          <div className="mt-8 space-y-4">
+        {/* Tab Navigation */}
+        <div className="flex flex-wrap gap-2 mb-8 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 sticky top-4 z-20">
+          {tabs.map(tab => (
             <button
-              onClick={handleGeneratePDF}
-              disabled={generating}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition ${
-                generating
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transform hover:scale-105'
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-blue-600 text-white shadow-lg scale-[1.02]'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
               }`}
             >
-              {generating ? 'Generating PDF...' : 'Download Full PDF Report'}
+              <span>{tab.icon}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
+          ))}
+        </div>
 
-            <button
-              onClick={onRestart}
-              className="w-full py-3 px-6 rounded-lg font-semibold text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition"
-            >
-              Take Assessment Again
-            </button>
-          </div>
+        {/* Active Tab Content */}
+        <div className="min-h-[600px]">
+          {renderActiveTab()}
+        </div>
 
-          <div className="mt-8 bg-blue-50 rounded-lg p-6">
-            <h3 className="font-semibold text-gray-900 mb-3">What's in Your Full Report:</h3>
-            <ul className="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Detailed dimension profiles with workplace scenarios</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Complete archetype portrait and team role</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Team dynamics matrix with all 8 archetypes</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Career coaching and development guidance</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Stress triggers and coping strategies</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Personalized recommendations for growth</span>
-              </li>
-            </ul>
-          </div>
+        {/* Version Info Footer */}
+        <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 text-xs">
+          Birkman-Style Personality Assessment V3.0 • Built for cto.new • Comprehensive Professional Report
         </div>
       </div>
     </div>
