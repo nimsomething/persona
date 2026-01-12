@@ -10,16 +10,18 @@ This project follows semantic versioning (SemVer) with the format `MAJOR.MINOR.P
 - **MINOR**: New functionality added in a backward-compatible manner
 - **PATCH**: Bug fixes and small improvements
 
-### Current Version: 2.0.1
+### Current Version: 3.0.0
 
-- **2.0.0**: Initial v2 release with enhanced features
+- **3.0.0**: Major v3 release with Birkman color model, 9 components, and 32-page report
 - **2.0.1**: Bug fixes and improvements to persistence, logging, and error handling
+- **2.0.0**: Initial v2 release with enhanced features
 
 ### Version History
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.0.1 | Current | • Fixed localStorage persistence bug<br>• Added centralized logging service<br>• Improved error handling and user messaging<br>• Enhanced version tracking |
+| 3.0.0 | Current | • Birkman Color Model (Red, Green, Yellow, Blue)<br>• 9 Personality Components<br>• Internal States (Interests, Needs, Stress)<br>• Career Guidance & Alignment<br>• Expanded 32-page PDF report<br>• v2→v3 upgrade path (20 questions)<br>• Full backward compatibility with v2 |
+| 2.0.1 | Previous | • Fixed localStorage persistence bug<br>• Added centralized logging service<br>• Improved error handling and user messaging<br>• Enhanced version tracking |
 | 2.0.0 | Previous | • Major v2 release with dual profiles<br>• MBTI integration<br>• PDF generation<br>• Enhanced scoring |
 
 ## Logging System

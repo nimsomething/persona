@@ -9,7 +9,16 @@ import logger from '../services/loggerService';
 function Results({ userName, results, answers, questions, onRestart }) {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
-  const { scores, archetype, stressDeltas, adaptabilityScore } = results;
+  
+  // Handle both v2 and v3 result structures
+  const scores = results.dimensions || results.scores || {};
+  const archetype = results.archetype;
+  const stressDeltas = results.stressDeltas || {};
+  const adaptabilityScore = results.adaptabilityScore || 50;
+  const birkmanColor = results.birkman_color;
+  const components = results.components;
+  const birkmanStates = results.birkman_states;
+  const isV3 = !!components;
 
   // Save completed assessment to localStorage on mount
   useEffect(() => {
@@ -152,6 +161,71 @@ function Results({ userName, results, answers, questions, onRestart }) {
                 {archetype.narrative}
               </p>
             </div>
+
+            {isV3 && birkmanColor && (
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-6 mb-6 border-2 border-indigo-200">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="text-2xl">🎨</span>
+                  Your Birkman Color Profile
+                </h3>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-12 h-12 rounded-full shadow-md"
+                      style={{ 
+                        backgroundColor: birkmanColor.primary === 'Red' ? '#EF4444' :
+                                       birkmanColor.primary === 'Green' ? '#10B981' :
+                                       birkmanColor.primary === 'Yellow' ? '#F59E0B' : '#3B82F6'
+                      }}
+                    />
+                    <div>
+                      <div className="font-bold text-lg text-gray-900">{birkmanColor.primary}</div>
+                      <div className="text-sm text-gray-600">Primary</div>
+                    </div>
+                  </div>
+                  <div className="text-2xl text-gray-400">+</div>
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-10 h-10 rounded-full shadow-md"
+                      style={{ 
+                        backgroundColor: birkmanColor.secondary === 'Red' ? '#EF4444' :
+                                       birkmanColor.secondary === 'Green' ? '#10B981' :
+                                       birkmanColor.secondary === 'Yellow' ? '#F59E0B' : '#3B82F6'
+                      }}
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-900">{birkmanColor.secondary}</div>
+                      <div className="text-xs text-gray-600">Secondary</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-gray-700">
+                  <strong>Color Spectrum:</strong> Red {birkmanColor.spectrum.Red}% • Green {birkmanColor.spectrum.Green}% • Yellow {birkmanColor.spectrum.Yellow}% • Blue {birkmanColor.spectrum.Blue}%
+                </div>
+              </div>
+            )}
+
+            {isV3 && components && (
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-6 mb-6 border-2 border-blue-200">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="text-2xl">🧩</span>
+                  Your 9 Personality Components
+                </h3>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  {Object.entries(components).map(([key, value]) => (
+                    <div key={key} className="bg-white rounded p-2">
+                      <div className="font-semibold text-gray-900 capitalize text-xs">
+                        {key.replace(/_/g, ' ')}
+                      </div>
+                      <div className="text-blue-600 font-bold">{value}</div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-600 mt-3">
+                  ✨ Full component analysis available in your 32-page PDF report
+                </p>
+              </div>
+            )}
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg p-6">

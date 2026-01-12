@@ -838,5 +838,185 @@
     "context": "stress",
     "text": "Under stress, I have difficulty adjusting to unexpected changes.",
     "reverse": true
+  },
+  {
+    "id": 121,
+    "dimension": "birkman_validation",
+    "context": "upgrade",
+    "text": "I prefer taking immediate action to solve problems rather than analyzing them first.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["Red", "Yellow"]
+  },
+  {
+    "id": 122,
+    "dimension": "birkman_validation",
+    "context": "upgrade",
+    "text": "I need time to think through decisions and understand all the details before acting.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["Green", "Blue"]
+  },
+  {
+    "id": 123,
+    "dimension": "birkman_validation",
+    "context": "upgrade",
+    "text": "I energize groups and naturally bring people together in social settings.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["Yellow"]
+  },
+  {
+    "id": 124,
+    "dimension": "birkman_validation",
+    "context": "upgrade",
+    "text": "I prefer supporting others quietly behind the scenes rather than being in the spotlight.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["Blue", "Green"]
+  },
+  {
+    "id": 125,
+    "dimension": "birkman_validation",
+    "context": "upgrade",
+    "text": "I'm competitive and motivated by winning, achieving results, and being recognized.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["Red", "Yellow"]
+  },
+  {
+    "id": 126,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I feel energized after spending time in large groups or social gatherings.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["social_energy"]
+  },
+  {
+    "id": 127,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I prefer jobs that involve physical activity and hands-on work rather than desk work.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["physical_energy"]
+  },
+  {
+    "id": 128,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I openly express my emotions and enthusiasm in professional settings.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["emotional_energy"]
+  },
+  {
+    "id": 129,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I'm very aware of how others perceive me and adjust my behavior accordingly.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["self_consciousness"]
+  },
+  {
+    "id": 130,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I naturally take charge in group situations and drive decisions forward.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["assertiveness"]
+  },
+  {
+    "id": 131,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I strongly prefer doing things my own way and resist when others try to change my methods.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["insistence"]
+  },
+  {
+    "id": 132,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "External rewards like bonuses, promotions, and recognition strongly motivate me.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["incentives"]
+  },
+  {
+    "id": 133,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I get bored easily with routine and constantly seek new challenges and variety.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["restlessness"]
+  },
+  {
+    "id": 134,
+    "dimension": "component_focus",
+    "context": "upgrade",
+    "text": "I enjoy exploring abstract concepts and theoretical frameworks more than practical tasks.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["thought"]
+  },
+  {
+    "id": 135,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "The activities I'm most interested in involve working with people and building relationships.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["interests"]
+  },
+  {
+    "id": 136,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "I typically behave in a fast-paced, results-driven manner in my daily work.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["usual_behavior"]
+  },
+  {
+    "id": 137,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "I need an environment where I have autonomy and control over my work methods.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["needs"]
+  },
+  {
+    "id": 138,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "When my needs aren't met, I become withdrawn and less communicative.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["stress_behavior"]
+  },
+  {
+    "id": 139,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "I'm naturally drawn to analytical, detail-oriented work that requires precision.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["interests"]
+  },
+  {
+    "id": 140,
+    "dimension": "internal_states",
+    "context": "upgrade",
+    "text": "When stressed, I become more directive and push harder for results.",
+    "reverse": false,
+    "upgrade_only": true,
+    "targets": ["stress_behavior"]
   }
 ]

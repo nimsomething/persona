@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { APP_VERSION_LABEL } from '../utils/appMeta';
 
-function Welcome({ onStart, recoveredAssessment, storageError, onViewRecoveredAssessment }) {
+function Welcome({ onStart, onStartUpgrade, recoveredAssessment, storageError, onViewRecoveredAssessment, canUpgrade }) {
   const [name, setName] = useState('');
+  const [showUpgradeDetails, setShowUpgradeDetails] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,13 +32,13 @@ function Welcome({ onStart, recoveredAssessment, storageError, onViewRecoveredAs
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8 md:p-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-3 flex-wrap">
-            <span>Personality Assessment</span>
-            <span className="text-sm md:text-base font-semibold text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
+            <span>Birkman Personality Assessment</span>
+            <span className="text-sm md:text-base font-semibold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
               {APP_VERSION_LABEL}
             </span>
           </h1>
           <p className="text-xl text-gray-600">
-            A research-grounded profile for creative professionals and team dynamics
+            Discover your personality strengths & how you thrive in your career
           </p>
         </div>
 
@@ -54,48 +55,98 @@ function Welcome({ onStart, recoveredAssessment, storageError, onViewRecoveredAs
         )}
 
         {recoveredAssessment && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-6">
             <div className="flex items-start mb-3">
-              <span className="text-2xl mr-2">✅</span>
+              <span className="text-2xl mr-2">🎉</span>
               <div>
-                <h3 className="font-semibold text-green-800 mb-1">Previous Assessment Found</h3>
-                <p className="text-sm text-green-700">
-                  We found a completed assessment for <strong>{recoveredAssessment.userName}</strong>
+                <h3 className="font-semibold text-blue-900 mb-1">Welcome Back!</h3>
+                <p className="text-sm text-blue-800">
+                  We found your assessment for <strong>{recoveredAssessment.userName}</strong>
                 </p>
-                <p className="text-xs text-green-600 mt-1">
-                  Completed on {formatDate(recoveredAssessment.completedAt)}
+                <p className="text-xs text-blue-600 mt-1">
+                  Completed on {formatDate(recoveredAssessment.completedAt)} • {recoveredAssessment.version}
                 </p>
               </div>
             </div>
-            <button
-              onClick={onViewRecoveredAssessment}
-              className="w-full mt-3 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition"
-            >
-              View Previous Results
-            </button>
-            <p className="text-xs text-green-600 text-center mt-2">
-              or start a new assessment below
-            </p>
+
+            {canUpgrade ? (
+              <div className="space-y-3 mt-4">
+                <button
+                  onClick={onStartUpgrade}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-lg"
+                >
+                  ⭐ Upgrade to v3.0 (15 min)
+                </button>
+                <p className="text-xs text-blue-700 text-center">
+                  Get Birkman color analysis, 9-component breakdown, and 32-page report!
+                </p>
+                
+                <button
+                  onClick={() => setShowUpgradeDetails(!showUpgradeDetails)}
+                  className="text-xs text-blue-600 hover:text-blue-800 underline w-full"
+                >
+                  {showUpgradeDetails ? 'Hide details' : "What's new in v3?"}
+                </button>
+
+                {showUpgradeDetails && (
+                  <div className="bg-white rounded p-3 text-xs text-gray-700 space-y-1">
+                    <p className="font-semibold text-sm text-gray-900">V3 Enhancements:</p>
+                    <p>✓ Birkman Color Model (Red, Green, Yellow, Blue)</p>
+                    <p>✓ 9 Personality Components with gap analysis</p>
+                    <p>✓ Internal States (Interests, Needs, Stress)</p>
+                    <p>✓ Career Guidance & Alignment</p>
+                    <p>✓ Expanded 32-page PDF (up from 13 pages)</p>
+                    <p className="text-blue-600 font-semibold mt-2">Your v2 data is preserved!</p>
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={onViewRecoveredAssessment}
+                    className="flex-1 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition text-sm"
+                  >
+                    View v2 Report
+                  </button>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="flex-1 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition text-sm"
+                  >
+                    Start Fresh
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={onViewRecoveredAssessment}
+                className="w-full mt-3 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+              >
+                View Previous Results
+              </button>
+            )}
           </div>
         )}
 
         <div className="space-y-6 mb-8">
-          <div className="bg-blue-50 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">What to expect (v2):</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">What You'll Learn (v3.0):</h2>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
+                <span className="text-indigo-600 mr-2">✓</span>
                 <span>
-                  90–120 questions measuring 10 core dimensions and profiles (traits, values, and work style)
+                  <strong>Your Birkman Color Type</strong> - Red, Green, Yellow, or Blue personality profile
                 </span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Dual Usual/Stress profiles showing how you behave under pressure</span>
+                <span className="text-indigo-600 mr-2">✓</span>
+                <span><strong>9 Personality Components</strong> - Deep dive into your behavioral patterns</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                <span>Classified into 8 personality archetypes with your unique blend</span>
+                <span className="text-indigo-600 mr-2">✓</span>
+                <span><strong>Internal States</strong> - Your interests, needs, and stress behavior</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-600 mr-2">✓</span>
+                <span><strong>Career Guidance</strong> - Personalized career alignment & work environment</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>

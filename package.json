@@ -1,8 +1,9 @@
 {
-  "name": "birkman-personality-assessment",
+  "name": "birkman-personality-assessment-v3",
   "private": true,
-  "version": "2.0.1",
+  "version": "3.0.0",
   "type": "module",
+  "description": "Birkman-inspired personality assessment with v3 enhancements including Birkman color model, 9 personality components, and 32-page report",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
