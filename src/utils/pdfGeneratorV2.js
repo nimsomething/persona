@@ -1038,7 +1038,7 @@ class PDFReportGenerator {
       this.pdf.setTextColor(59, 130, 246);
       this.pdf.text(strength.icon, x + 5, y + 10);
       this.pdf.setTextColor(0, 0, 0);
-      this.pdf.text(strength.score, x + 25, y + 10);
+      this.pdf.text(String(strength.score), x + 25, y + 10);
       
       this.pdf.setFontSize(8);
       this.pdf.text(strength.name, x + 5, y + 25);
