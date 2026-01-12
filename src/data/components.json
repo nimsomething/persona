@@ -1,0 +1,311 @@
+[
+  {
+    "id": "social_energy",
+    "name": "Social Energy",
+    "definition": "Your preference for social interaction versus solitary work. This measures how you recharge—through connection with others or through quiet reflection.",
+    "extreme_low": "Highly introverted; prefers working alone; drains energy from social interaction",
+    "extreme_high": "Highly extroverted; energized by constant social interaction; may struggle working alone",
+    "usual_behavior_description": "How socially engaged you typically are in your day-to-day work and life",
+    "needs_description": "The amount of social interaction you need to feel energized and fulfilled",
+    "stress_triggers": [
+      "Gap: Too much social interaction when you need solitude (or vice versa)",
+      "Forced collaboration when you prefer independent work",
+      "Isolation when you crave social connection",
+      "Being in the spotlight when you prefer working behind the scenes"
+    ],
+    "scale_labels": {
+      "low": "Prefers working alone, recharges through solitude",
+      "high": "Energized by people, thrives in social settings"
+    },
+    "extreme_low": "Completely isolated work with no human interaction",
+    "extreme_high": "Constant social interaction with no time for independent work",
+    "usual_behavior_description": "How much social interaction and collaboration you naturally seek in your daily work",
+    "needs_description": "The amount of social interaction and teamwork you require to feel energized and fulfilled"
+  },
+  {
+    "id": "physical_energy",
+    "name": "Physical Energy",
+    "definition": "Your preference for physical activity, hands-on work, and kinesthetic engagement versus sedentary, desk-based work.",
+    "extreme_low": "Prefers sedentary, desk-based work with minimal physical activity",
+    "extreme_high": "Requires physical movement, hands-on work, and active engagement",
+    "usual_behavior_description": {
+      "low": "You typically prefer work that involves mental focus over physical activity. You're comfortable in office or desk-based settings and don't require much physical movement throughout your day.",
+      "medium": "You appreciate a balance between physical activity and sedentary work. You function well in environments that allow some movement but don't require constant physical engagement.",
+      "high": "You thrive when your work involves physical activity, movement, or hands-on tasks. Sitting at a desk all day can feel constraining for you."
+    },
+    "needs_description": "The level of physical activity and movement you need in your work environment to feel energized and satisfied.",
+    "stress_triggers": [
+      "Being confined to a desk for extended periods without movement",
+      "Work that doesn't allow for physical activity or hands-on engagement",
+      "Environments that require sitting still for long periods"
+    ],
+    "scale_labels": {
+      "low": "Prefers sedentary, desk-based work",
+      "medium": "Balanced need for movement and desk work",
+      "high": "Thrives with physical activity and movement"
+    }
+  },
+  {
+    "id": "emotional_energy",
+    "name": "Emotional Energy",
+    "definition": "Your typical level of emotional expressiveness and enthusiasm in daily interactions. This reflects how openly you display feelings and how emotionally engaged you are with your work.",
+    "extreme_low": "Reserved, controlled emotional expression, prefers rational analysis",
+    "extreme_high": "Highly expressive, passionate, wears emotions openly",
+    "usual_behavior_description": "How emotionally expressive and enthusiastic you typically appear to others in your daily work.",
+    "needs_description": "The level of emotional expression and passion you need from your work environment and colleagues to feel energized.",
+    "stress_triggers": [
+      "Being forced to suppress emotions or maintain constant composure",
+      "Working in emotionally flat or overly reserved environments",
+      "Lack of authentic expression or emotional connection"
+    ],
+    "scale_labels": {
+      "low": "Reserved & Composed",
+      "medium": "Balanced Expression",
+      "high": "Expressive & Passionate"
+    },
+    "extreme_low": "Highly reserved, prefer minimal emotional display in professional settings",
+    "extreme_high": "Highly expressive, wear emotions openly, energized by emotional connection",
+    "usual_behavior_description": "How much emotion and enthusiasm you typically display in your daily interactions",
+    "needs_description": "The level of emotional expressiveness and passion you need from your environment to feel engaged",
+    "stress_triggers": [
+      "Mismatch between your natural expression and environment expectations",
+      "Being forced to be overly formal when you prefer warmth",
+      "Being pushed to share feelings when you prefer reserve"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Self-Consciousness",
+    "definition": "Your awareness of and concern about how others perceive you. This reflects your sensitivity to social evaluation and your comfort with being in the spotlight.",
+    "extreme_low": "Highly self-assured, rarely concerned with others' opinions, comfortable being the center of attention",
+    "extreme_high": "Very self-aware and sensitive to others' perceptions, may overthink social situations",
+    "usual_behavior_description": "How self-conscious or self-assured you typically appear to others in your day-to-day interactions.",
+    "needs_description": "The level of privacy, autonomy, or public recognition you require to feel comfortable and perform at your best.",
+    "stress_triggers": [
+      "Being put on the spot unexpectedly",
+      "Public criticism or negative feedback",
+      "High-visibility situations without preparation",
+      "Feeling judged or evaluated constantly"
+    ],
+    "scale_labels": {
+      "low": "Confident & Uninhibited",
+      "medium": "Situationally Aware",
+      "high": "Reflective & Self-Aware"
+    }
+  },
+  {
+    "id": "assertiveness",
+    "name": "Assertiveness",
+    "definition": "Your tendency to take charge, express opinions directly, and influence others. High assertiveness indicates comfort with leadership and directiveness; low indicates preference for following or supporting.",
+    "extreme_low": "Very passive, avoids leadership, prefers others to decide",
+    "extreme_high": "Very directive, takes charge immediately, may dominate",
+    "usual_behavior_description": "How assertive you typically appear to others in your day-to-day interactions.",
+    "needs_description": "The level of assertiveness you need from your environment and others around you to feel comfortable and perform optimally.",
+    "stress_triggers": [
+      "Being forced into leadership roles when you prefer following",
+      "Having your authority questioned or undermined",
+      "Environments that don't match your natural assertiveness level",
+      "Pressure to be more or less directive than feels natural"
+    ],
+    "scale_labels": {
+      "low": "Prefers following others' lead",
+      "medium": "Balanced between leading and following",
+      "high": "Takes charge and leads naturally"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Social Energy",
+    "definition": "Your preference for social interaction and group activities versus solitary work. Measures how much you derive energy from being around others.",
+    "extreme_low": "Strongly prefers working alone; finds frequent social interaction draining; needs significant alone time to recharge.",
+    "extreme_high": "Gains energy from constant social interaction; uncomfortable with extended periods of solitary work; seeks collaborative environments.",
+    "usual_behavior_description": "How social and collaborative you typically are in your day-to-day work and interactions.",
+    "needs_description": "The level of social interaction and collaboration you require to feel energized and fulfilled.",
+    "stress_triggers": [
+      "Too much forced social interaction (for low scorers)",
+      "Too much isolation or solo work (for high scorers)",
+      "Mismatch between preferred interaction level and actual work environment",
+      "Being in roles that don't match your social energy needs"
+    ],
+    "scale_labels": {
+      "low": "Prefer independent work, recharge alone",
+      "mid": "Balance between solo and collaborative work",
+      "high": "Thrive on team interaction and collaboration"
+    },
+    "extreme_low": "Strongly prefers working alone, minimal social interaction, independent tasks",
+    "extreme_high": "Thrives in constant collaboration, energized by group work, avoids solo tasks",
+    "usual_behavior_description": "How socially engaged you typically are in work settings—from independent work to constant collaboration",
+    "needs_description": "The amount of social interaction and collaborative work you need to perform at your best",
+    "stress_triggers": [
+      "Mismatch between actual and needed social interaction",
+      "Forced collaboration when you need solitude (or vice versa)",
+      "Isolation when you need team energy",
+      "Over-stimulation in highly social environments"
+    ],
+    "scale_labels": {
+      "low": "Independent Worker",
+      "medium": "Balanced Engagement",
+      "high": "Collaborative Enthusiast"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Physical Energy",
+    "definition": "Your natural activity level, preference for physical movement, and need for dynamic versus sedentary work environments.",
+    "extreme_low": "Prefers calm, sedentary work; minimal physical activity; thoughtful, measured pace",
+    "extreme_high": "High activity level; constantly moving; thrives in dynamic, fast-paced environments",
+    "usual_behavior_description": "Your typical energy level and preference for movement versus stillness in work",
+    "needs_description": "The amount of physical activity and environmental dynamism you require to stay engaged",
+    "stress_triggers": [
+      "Being confined to a desk when you need movement",
+      "Overly fast-paced environments when you prefer calm",
+      "Lack of variety in physical activity",
+      "Mismatch between your energy level and job demands"
+    ],
+    "scale_labels": {
+      "low": "Calm & Steady",
+      "medium": "Moderate Activity",
+      "high": "High Energy & Dynamic"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Emotional Energy",
+    "definition": "Your emotional expressiveness, intensity of feelings, and how you process and display emotions in professional settings.",
+    "extreme_low": "Reserved emotional expression; logical, detached approach; minimal emotional display",
+    "extreme_high": "Highly expressive; wears heart on sleeve; emotions visible and influential in decisions",
+    "usual_behavior_description": "How emotionally expressive you typically are and how much you let feelings influence your work",
+    "needs_description": "The degree of emotional authenticity and expression you need to feel comfortable and effective",
+    "stress_triggers": [
+      "Pressure to suppress authentic emotional responses",
+      "Overly emotional environments when you prefer logic",
+      "Dismissal of emotional considerations in decisions",
+      "Expectation to show emotions you don't naturally express"
+    ],
+    "scale_labels": {
+      "low": "Logical & Reserved",
+      "medium": "Balanced Expression",
+      "high": "Emotionally Expressive"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Self-Consciousness",
+    "definition": "Your level of self-awareness, concern about others' perceptions, and tendency toward introspection versus external focus.",
+    "extreme_low": "Low self-monitoring; unconcerned with others' opinions; acts naturally without overthinking",
+    "extreme_high": "Highly self-aware; carefully manages impression; deeply concerned with how others perceive actions",
+    "usual_behavior_description": "How much you monitor yourself and consider others' perceptions in your behavior",
+    "needs_description": "The level of self-reflection and awareness of social dynamics you require to feel secure",
+    "stress_triggers": [
+      "Public speaking or high-visibility situations (high self-consciousness)",
+      "Lack of feedback on how you're being perceived",
+      "Social situations without clear expectations",
+      "Pressure to 'not care' what others think when you naturally do"
+    ],
+    "scale_labels": {
+      "low": "Unselfconscious & Natural",
+      "medium": "Situationally Aware",
+      "high": "Highly Self-Aware"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Assertiveness",
+    "definition": "Your tendency to take charge, voice opinions directly, and drive decisions versus preferring to follow or facilitate.",
+    "extreme_low": "Passive; defers to others; avoids taking charge; prefers supporting roles",
+    "extreme_high": "Highly assertive; takes charge naturally; voices opinions directly; drives outcomes",
+    "usual_behavior_description": "How directly you communicate and how often you take the lead in situations",
+    "needs_description": "The degree of influence and control you need over decisions and direction to feel effective",
+    "stress_triggers": [
+      "Being forced to lead when you prefer to support",
+      "Lack of voice or influence when you need to drive outcomes",
+      "Overly passive teams when you need decisive action",
+      "Aggressive environments when you prefer collaborative decision-making"
+    ],
+    "scale_labels": {
+      "low": "Supportive & Facilitative",
+      "medium": "Situationally Assertive",
+      "high": "Direct & Decisive"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Insistence",
+    "definition": "Your preference for having things done your way, maintaining control over processes, and resisting others' influence on your approach.",
+    "extreme_low": "Highly flexible; easily accommodates others' methods; open to influence and change",
+    "extreme_high": "Strong preference for own methods; resists external control; insists on specific approaches",
+    "usual_behavior_description": "How much you prefer to maintain your own methods versus adapt to others' approaches",
+    "needs_description": "The degree of autonomy and control over your work methods you require to feel comfortable",
+    "stress_triggers": [
+      "Micromanagement or excessive oversight",
+      "Being forced to follow processes that don't match your style",
+      "Lack of structure when you need clear methods",
+      "Too much autonomy when you prefer guidance"
+    ],
+    "scale_labels": {
+      "low": "Adaptable & Flexible",
+      "medium": "Selective Preference",
+      "high": "Strong Conviction"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Incentives",
+    "definition": "Your motivation by external rewards, recognition, and competitive success versus intrinsic satisfaction and personal meaning.",
+    "extreme_low": "Intrinsically motivated; values personal meaning; unconcerned with external rewards or recognition",
+    "extreme_high": "Highly motivated by rewards, recognition, status, and competitive achievement",
+    "usual_behavior_description": "What drives you—external validation and rewards or internal satisfaction and purpose",
+    "needs_description": "The type and frequency of recognition or intrinsic fulfillment you need to stay motivated",
+    "stress_triggers": [
+      "Lack of recognition when you need external validation",
+      "Over-emphasis on competition when you value collaboration",
+      "Purely extrinsic rewards when you seek meaning",
+      "Lack of tangible incentives when they motivate you"
+    ],
+    "scale_labels": {
+      "low": "Intrinsically Motivated",
+      "medium": "Balanced Motivation",
+      "high": "Reward-Driven"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Restlessness",
+    "definition": "Your need for variety, change, and novelty versus preference for routine, stability, and predictability.",
+    "extreme_low": "Prefers routine and stability; uncomfortable with frequent change; values predictability",
+    "extreme_high": "Craves variety and novelty; bored by routine; constantly seeks new experiences and challenges",
+    "usual_behavior_description": "How much you seek out change and new experiences versus preferring familiar patterns",
+    "needs_description": "The amount of variety and novelty you require to stay engaged versus stability to feel secure",
+    "stress_triggers": [
+      "Excessive routine when you crave variety",
+      "Constant change when you need stability",
+      "Boredom from repetitive tasks",
+      "Unpredictability when you prefer clear patterns"
+    ],
+    "scale_labels": {
+      "low": "Stability-Seeking",
+      "medium": "Moderate Variety",
+      "high": "Change-Oriented"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Thought",
+    "definition": "Your preference for abstract, theoretical thinking versus concrete, practical application and hands-on problem-solving.",
+    "extreme_low": "Highly practical; prefers concrete tasks; learns by doing; focuses on immediate application",
+    "extreme_high": "Abstract thinker; enjoys theory and concepts; prefers understanding principles before application",
+    "usual_behavior_description": "How you approach problems—through abstract concepts or practical, hands-on methods",
+    "needs_description": "The balance of theoretical understanding versus practical application you need to learn and work effectively",
+    "stress_triggers": [
+      "Too much theory without practical application",
+      "Lack of conceptual framework when you need one",
+      "Pressure to theorize when you prefer hands-on work",
+      "Purely concrete tasks when you need intellectual stimulation"
+    ],
+    "scale_labels": {
+      "low": "Practical & Applied",
+      "medium": "Balanced Approach",
+      "high": "Theoretical & Conceptual"
+    }
+  }
+]

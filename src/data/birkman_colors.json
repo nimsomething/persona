@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Red",
+    "color_code": "#EF4444",
+    "role_name": "The Action-Oriented Doer",
+    "description": "Red personalities are direct, results-focused, and decisive. They thrive on taking action, solving problems quickly, and driving outcomes. They value efficiency, clear goals, and tangible results.",
+    "behavioral_examples": [
+      "Makes quick decisions and moves forward without hesitation",
+      "Prefers direct communication and getting to the point",
+      "Focuses on outcomes and measurable results",
+      "Takes charge in ambiguous or crisis situations",
+      "Values speed and efficiency over consensus"
+    ],
+    "strengths": [
+      "Decisive leadership in high-pressure situations",
+      "Ability to cut through complexity and focus on what matters",
+      "Strong drive to achieve tangible results",
+      "Comfortable taking calculated risks",
+      "Natural problem-solver who takes initiative"
+    ],
+    "work_focus": "Task-oriented, Extroverted",
+    "energy_direction": "Outward action and task completion",
+    "stress_pattern": "May become overly controlling or impatient when needs aren't met; can push too hard for results without considering team dynamics",
+    "spectrum_range": {
+      "min": 0,
+      "max": 100
+    }
+  },
+  {
+    "name": "Green",
+    "color_code": "#10B981",
+    "role_name": "The Analytical Thinker",
+    "description": "Green personalities are logical, systematic, and detail-oriented. They excel at analyzing information, solving complex problems, and ensuring accuracy. They value data, expertise, and thorough understanding.",
+    "behavioral_examples": [
+      "Analyzes situations thoroughly before making decisions",
+      "Seeks data and evidence to support conclusions",
+      "Prefers working independently on complex problems",
+      "Values accuracy, precision, and technical expertise",
+      "Takes time to understand systems and processes deeply"
+    ],
+    "strengths": [
+      "Exceptional analytical and critical thinking skills",
+      "High attention to detail and quality standards",
+      "Ability to see patterns and logical connections",
+      "Strong technical expertise in their domain",
+      "Thorough research and problem-solving approach"
+    ],
+    "work_focus": "Task-oriented, Introverted",
+    "energy_direction": "Inward reflection and analysis",
+    "stress_pattern": "May become overly critical or perfectionistic when stressed; can get lost in details and analysis paralysis",
+    "spectrum_range": {
+      "min": 0,
+      "max": 100
+    }
+  },
+  {
+    "name": "Yellow",
+    "color_code": "#F59E0B",
+    "role_name": "The Enthusiastic Collaborator",
+    "description": "Yellow personalities are outgoing, optimistic, and relationship-focused. They thrive on social interaction, collaboration, and creating positive energy. They value teamwork, recognition, and shared success.",
+    "behavioral_examples": [
+      "Energizes groups with enthusiasm and positivity",
+      "Builds relationships quickly and naturally",
+      "Prefers collaborative work over solo tasks",
+      "Seeks recognition and appreciation from others",
+      "Creates fun and engaging work environments"
+    ],
+    "strengths": [
+      "Exceptional interpersonal and communication skills",
+      "Ability to motivate and inspire teams",
+      "Natural networking and relationship-building",
+      "Creates positive, inclusive team culture",
+      "Adaptable and open to new ideas and people"
+    ],
+    "work_focus": "People-oriented, Extroverted",
+    "energy_direction": "Outward connection and collaboration",
+    "stress_pattern": "May avoid conflict or difficult conversations; can become overly concerned with others' opinions and need excessive validation",
+    "spectrum_range": {
+      "min": 0,
+      "max": 100
+    }
+  },
+  {
+    "name": "Blue",
+    "color_code": "#3B82F6",
+    "role_name": "The Supportive Stabilizer",
+    "description": "Blue personalities are calm, dependable, and service-oriented. They excel at supporting others, maintaining harmony, and ensuring processes run smoothly. They value stability, loyalty, and meaningful relationships.",
+    "behavioral_examples": [
+      "Provides steady, reliable support to team members",
+      "Listens carefully and shows genuine empathy",
+      "Prefers stable, predictable work environments",
+      "Values deep, authentic relationships over broad networks",
+      "Takes time to build trust and commitment"
+    ],
+    "strengths": [
+      "Exceptional listening and empathy skills",
+      "Reliable and consistent in following through",
+      "Creates calm, supportive work environments",
+      "Strong loyalty and commitment to team",
+      "Patient and thoughtful in decision-making"
+    ],
+    "work_focus": "People-oriented, Introverted",
+    "energy_direction": "Inward reflection and supportive connection",
+    "stress_pattern": "May become passive-aggressive or withdrawn when overwhelmed; can struggle with change and may resist necessary confrontation",
+    "spectrum_range": {
+      "min": 0,
+      "max": 100
+    }
+  }
+]

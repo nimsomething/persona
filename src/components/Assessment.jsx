@@ -5,7 +5,7 @@ import { calculateDimensionScores, determineArchetype, calculateStressDeltas, ca
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
 
-function Assessment({ userName, questions, onComplete }) {
+function Assessment({ userName, questions, onComplete, isUpgrade = false }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [startTime] = useState(Date.now());
@@ -17,7 +17,9 @@ function Assessment({ userName, questions, onComplete }) {
   const pageQuestions = questions.slice(currentPage * questionsPerPage, (currentPage + 1) * questionsPerPage);
   
   const progress = (Object.keys(answers).length / questions.length) * 100;
-  const estimatedTimeRemaining = Math.max(0, Math.ceil((questions.length - Object.keys(answers).length) * 0.25));
+  // Upgrade questions are faster (0.75 min per question), regular is 0.25 min
+  const timePerQuestion = isUpgrade ? 0.75 : 0.25;
+  const estimatedTimeRemaining = Math.max(0, Math.ceil((questions.length - Object.keys(answers).length) * timePerQuestion));
 
   // Auto-recover existing session on mount
   useEffect(() => {
@@ -70,27 +72,43 @@ function Assessment({ userName, questions, onComplete }) {
   };
 
   const handleSubmit = () => {
-    const scores = calculateDimensionScores(answers, questions);
-    const archetype = determineArchetype(scores);
-    const stressDeltas = calculateStressDeltas(scores);
-    const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
+    if (isUpgrade) {
+      // For upgrade mode, just pass the answers - parent will handle blending
+      logger.logAssessmentEvent('upgrade completed', userName, {
+        answersCount: Object.keys(answers).length,
+        completionTime: `${((Date.now() - startTime) / 1000).toFixed(2)}s`
+      });
+      onComplete(answers, null, true); // true indicates this is an upgrade
+    } else {
+      // Normal assessment - calculate scores
+      const scores = calculateDimensionScores(answers, questions);
+      const archetype = determineArchetype(scores);
+      const stressDeltas = calculateStressDeltas(scores);
+      const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
 
-    const results = {
-      scores,
-      archetype,
-      stressDeltas,
-      adaptabilityScore,
-      completionTime: Date.now() - startTime
-    };
+      const results = {
+        dimensions: scores,
+        archetype,
+        mbtiType: scores.mbtiType,
+        values_profile: scores.values_profile,
+        work_style_profile: scores.work_style_profile,
+        components: scores.components,
+        birkman_color: scores.birkman_color,
+        birkman_states: scores.birkman_states,
+        stressDeltas,
+        adaptabilityScore,
+        completionTime: Date.now() - startTime
+      };
 
-    logger.logAssessmentEvent('completed', userName, {
-      archetype: archetype.name,
-      adaptabilityScore,
-      completionTime: `${(results.completionTime / 1000).toFixed(2)}s`,
-      answersCount: Object.keys(answers).length
-    });
+      logger.logAssessmentEvent('completed', userName, {
+        archetype: archetype.name,
+        adaptabilityScore,
+        completionTime: `${(results.completionTime / 1000).toFixed(2)}s`,
+        answersCount: Object.keys(answers).length
+      });
 
-    onComplete(answers, results);
+      onComplete(answers, results, false);
+    }
   };
 
   const allQuestionsAnswered = questions.every(q => answers[q.id] !== undefined);
@@ -103,10 +121,10 @@ function Assessment({ userName, questions, onComplete }) {
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {userName}'s Assessment
+              {isUpgrade ? `Upgrading ${userName}'s Assessment to v3` : `${userName}'s Assessment`}
             </h2>
             <p className="text-gray-600">
-              Page {currentPage + 1} of {totalPages}
+              {isUpgrade ? 'Answer 20 questions to unlock v3 features' : `Page ${currentPage + 1} of ${totalPages}`}
             </p>
           </div>
 

@@ -5,7 +5,9 @@ import Results from './components/Results';
 import VersionFooter from './components/VersionFooter';
 import questionsData from './data/questions.json';
 import storageService from './services/storageService';
+import upgradeService from './services/upgradeService';
 import logger from './services/loggerService';
+import { isV2Assessment, isV3Assessment } from './utils/appMeta';
 
 function App() {
   const [stage, setStage] = useState('welcome');
@@ -14,10 +16,17 @@ function App() {
   const [results, setResults] = useState(null);
   const [recoveredAssessment, setRecoveredAssessment] = useState(null);
   const [storageError, setStorageError] = useState(null);
+  const [upgradeMode, setUpgradeMode] = useState(false);
+  const [upgradeQuestions, setUpgradeQuestions] = useState([]);
 
-  // Recover completed assessments on mount
+  // Recover completed assessments on mount and load upgrade questions
   useEffect(() => {
     try {
+      // Load upgrade questions (IDs 121-140)
+      const upgradableQuestions = questionsData.filter(q => q.upgrade_only === true);
+      setUpgradeQuestions(upgradableQuestions);
+      logger.info('Upgrade questions loaded', { count: upgradableQuestions.length }, 'app');
+
       const completedAssessments = storageService.getCompletedAssessments();
       if (completedAssessments.length > 0) {
         const mostRecent = completedAssessments[0];
@@ -28,7 +37,7 @@ function App() {
         }, 'app');
 
         // Check if the version is compatible
-        if (mostRecent.version && mostRecent.version.startsWith('2.')) {
+        if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
           setRecoveredAssessment(mostRecent);
         } else {
           logger.warn('Incompatible assessment version found', { version: mostRecent.version }, 'app');
@@ -49,16 +58,61 @@ function App() {
 
   const handleStart = (name) => {
     setUserName(name);
+    setUpgradeMode(false);
     setStage('assessment');
     logger.info('Assessment started', { userName: name }, 'app');
   };
 
-  const handleComplete = (finalAnswers, calculatedResults) => {
+  const handleStartUpgrade = () => {
+    if (recoveredAssessment && upgradeService.canUpgradeAssessment(recoveredAssessment)) {
+      setUserName(recoveredAssessment.userName);
+      setUpgradeMode(true);
+      setStage('assessment');
+      logger.info('Upgrade assessment started', { 
+        userName: recoveredAssessment.userName,
+        fromVersion: recoveredAssessment.version 
+      }, 'app');
+    }
+  };
+
+  const handleComplete = (finalAnswers, calculatedResults, isUpgrade = false) => {
     setAnswers(finalAnswers);
-    setResults(calculatedResults);
+    
+    if (isUpgrade && recoveredAssessment) {
+      // This is an upgraded assessment - blend with v2 data
+      try {
+        const blendedResults = upgradeService.upgradeV2toV3(
+          recoveredAssessment,
+          finalAnswers,
+          upgradeQuestions
+        );
+        setResults(blendedResults);
+        
+        // Save the upgraded assessment
+        storageService.upgradeAssessmentFromV2(recoveredAssessment, finalAnswers, blendedResults);
+        
+        logger.info('Upgrade completed successfully', {
+          userName: recoveredAssessment.userName,
+          fromVersion: recoveredAssessment.version,
+          toVersion: '3.0.0'
+        }, 'app');
+      } catch (error) {
+        logger.error('Failed to complete upgrade', { error: error.message }, 'app');
+        setStorageError({
+          type: 'upgrade',
+          message: 'Failed to upgrade your assessment. Please try again or start a new assessment.'
+        });
+        return;
+      }
+    } else {
+      // Normal assessment
+      setResults(calculatedResults);
+    }
+    
     setStage('results');
-    setRecoveredAssessment(null); // Clear recovered assessment when starting new one
+    setRecoveredAssessment(null); // Clear recovered assessment
     setStorageError(null);
+    setUpgradeMode(false);
   };
 
   const handleRestart = () => {
@@ -91,16 +145,19 @@ function App() {
       {stage === 'welcome' && (
         <Welcome
           onStart={handleStart}
+          onStartUpgrade={handleStartUpgrade}
           recoveredAssessment={recoveredAssessment}
           storageError={storageError}
           onViewRecoveredAssessment={handleViewRecoveredAssessment}
+          canUpgrade={recoveredAssessment && upgradeService.canUpgradeAssessment(recoveredAssessment)}
         />
       )}
       {stage === 'assessment' && (
         <Assessment
           userName={userName}
-          questions={questionsData}
+          questions={upgradeMode ? upgradeQuestions : questionsData.filter(q => !q.upgrade_only)}
           onComplete={handleComplete}
+          isUpgrade={upgradeMode}
         />
       )}
       {stage === 'results' && (

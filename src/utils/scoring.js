@@ -1,5 +1,6 @@
 import archetypesData from '../data/archetypes.json';
 import mbtiService from '../services/mbtiMappingService';
+import birkmanMappingService from '../services/birkmanMappingService';
 
 const ALL_DIMENSIONS = [
   'assertiveness', 'sociability', 'conscientiousness', 'flexibility', 'emotional_intelligence',
@@ -60,7 +61,17 @@ export function calculateDimensionScores(answers, questions) {
   const workStyleScores = calculateWorkStyleProfile(answers, questions);
   scores.work_style_profile = workStyleScores;
   
-  return scores;
+  // v3 enhancements: Calculate components, Birkman color, and internal states
+  const components = calculateComponentScores(scores, answers, questions);
+  const birkmanStates = calculateBirkmanStates(answers, questions);
+  const birkmanColor = calculateBirkmanColor(scores, birkmanStates);
+  
+  return {
+    ...scores,
+    components,
+    birkman_color: birkmanColor,
+    birkman_states: birkmanStates
+  };
 }
 
 export function calculateValuesProfile(answers, questions) {
@@ -288,4 +299,105 @@ export function calculateOverallResilience(deltas) {
     level: resilienceLevel,
     significantChanges
   };
+}
+
+/**
+ * Calculate 9 component scores from dimension scores
+ * @param {Object} dimensionScores - The dimension scores
+ * @param {Object} answers - User answers
+ * @param {Array} questions - All questions
+ * @returns {Object} - 9 component scores (0-100)
+ */
+export function calculateComponentScores(dimensionScores, answers, questions) {
+  return birkmanMappingService.calculateComponents(answers, questions, dimensionScores);
+}
+
+/**
+ * Calculate internal states (interests, usual_behavior, needs, stress_behavior)
+ * @param {Object} answers - User answers
+ * @param {Array} questions - All questions
+ * @returns {Object} - Internal states with color spectrums
+ */
+export function calculateBirkmanStates(answers, questions) {
+  return birkmanMappingService.calculateInternalStates(answers, questions);
+}
+
+/**
+ * Calculate Birkman color from dimension scores and states
+ * @param {Object} dimensionScores - The dimension scores
+ * @param {Object} birkmanStates - The internal states
+ * @returns {Object} - {primary, secondary, spectrum}
+ */
+export function calculateBirkmanColor(dimensionScores, birkmanStates) {
+  return birkmanMappingService.calculateBirkmanColor(dimensionScores, birkmanStates);
+}
+
+/**
+ * Blend v2 assessment results with upgrade answers to create v3 results
+ * @param {Object} v2Assessment - The v2 assessment
+ * @param {Object} upgradeAnswers - Answers to upgrade questions
+ * @param {Array} upgradeQuestions - The upgrade questions
+ * @returns {Object} - Blended v3 results
+ */
+export function blendV2withUpgradeAnswers(v2Assessment, upgradeAnswers, upgradeQuestions) {
+  try {
+    // Preserve v2 dimension scores
+    const v2Dimensions = v2Assessment.dimensionScores || v2Assessment.results?.dimensions || {};
+    
+    // Calculate components from upgrade answers
+    const upgradeComponents = birkmanMappingService.calculateComponentsFromUpgradeAnswers(
+      upgradeAnswers,
+      upgradeQuestions
+    );
+    
+    // Blend components with v2 dimensions
+    const blendedComponents = {
+      social_energy: Math.round((upgradeComponents.social_energy * 0.5) + ((v2Dimensions.sociability_usual || 50) * 0.5)),
+      physical_energy: upgradeComponents.physical_energy,
+      emotional_energy: Math.round((upgradeComponents.emotional_energy * 0.5) + ((v2Dimensions.emotional_intelligence_usual || 50) * 0.5)),
+      self_consciousness: upgradeComponents.self_consciousness,
+      assertiveness: Math.round((upgradeComponents.assertiveness * 0.4) + ((v2Dimensions.assertiveness_usual || 50) * 0.6)),
+      insistence: Math.round((upgradeComponents.insistence * 0.6) + ((v2Dimensions.conscientiousness_usual || 50) * 0.4)),
+      incentives: upgradeComponents.incentives,
+      restlessness: Math.round((upgradeComponents.restlessness * 0.5) + ((v2Dimensions.flexibility_usual || 50) * 0.5)),
+      thought: Math.round((upgradeComponents.thought * 0.4) + ((v2Dimensions.theoretical_orientation_usual || 50) * 0.6))
+    };
+    
+    // Calculate Birkman color
+    const birkmanColor = birkmanMappingService.calculateBirkmanColor(v2Dimensions);
+    
+    // Calculate internal states
+    const birkmanStates = birkmanMappingService.calculateInternalStates(upgradeAnswers, upgradeQuestions);
+    
+    return {
+      dimensions: v2Dimensions,
+      components: blendedComponents,
+      birkman_color: birkmanColor,
+      birkman_states: birkmanStates,
+      archetype: v2Assessment.archetype || v2Assessment.results?.archetype,
+      mbtiType: v2Assessment.mbtiType || v2Assessment.results?.mbtiType,
+      values_profile: v2Assessment.values_profile || v2Assessment.results?.values_profile,
+      work_style_profile: v2Assessment.work_style_profile || v2Assessment.results?.work_style_profile
+    };
+  } catch (error) {
+    console.error('Error blending v2 with upgrade answers:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get archetype with Birkman color mapping
+ * @param {Object} scores - All scores including Birkman color
+ * @returns {Object} - Enhanced archetype data
+ */
+export function getArchetypeFromScores(scores) {
+  const archetype = determineArchetype(scores);
+  
+  // Add Birkman color to archetype
+  if (scores.birkman_color) {
+    archetype.birkman_color = scores.birkman_color.primary;
+    archetype.birkman_secondary = scores.birkman_color.secondary;
+  }
+  
+  return archetype;
 }

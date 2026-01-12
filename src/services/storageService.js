@@ -83,7 +83,7 @@ class StorageService {
     logger.info('Session cleared', {}, 'storage');
   }
 
-  saveCompletedAssessment(userName, results) {
+  saveCompletedAssessment(userName, results, version = '3.0.0') {
     if (!this.isAvailable) return null;
 
     const completedAssessment = {
@@ -91,7 +91,21 @@ class StorageService {
       userName,
       results,
       completedAt: new Date().toISOString(),
-      version: '2.0.1'
+      version: version,
+      // v3 fields
+      dimensionScores: results.dimensions || results.dimensionScores,
+      archetype: results.archetype,
+      mbtiType: results.mbtiType,
+      values_profile: results.values_profile,
+      work_style_profile: results.work_style_profile,
+      // v3 enhancements
+      birkman_color: results.birkman_color,
+      components: results.components,
+      birkman_states: results.birkman_states,
+      // Upgrade metadata
+      upgradedFrom: results.upgradedFrom,
+      originalCompletedAt: results.originalCompletedAt,
+      upgradedAt: results.upgradedAt
     };
 
     try {
@@ -107,8 +121,10 @@ class StorageService {
       logger.info('Completed assessment saved', {
         userName,
         assessmentId: completedAssessment.id,
+        version: version,
         archetype: results?.archetype?.name,
-        totalAssessments: trimmed.length
+        totalAssessments: trimmed.length,
+        isUpgraded: !!results.upgradedFrom
       }, 'storage');
       this.clearSession();
       return completedAssessment;
@@ -118,6 +134,66 @@ class StorageService {
         userName,
         error: e.message,
         isQuotaExceeded: e.name === 'QuotaExceededError'
+      }, 'storage');
+      return null;
+    }
+  }
+
+  /**
+   * Upgrade a v2 assessment to v3
+   * @param {Object} v2Assessment - The v2 assessment to upgrade
+   * @param {Object} upgradeAnswers - Answers to upgrade questions
+   * @param {Object} blendedResults - The blended v3 results
+   * @returns {Object} - The upgraded assessment
+   */
+  upgradeAssessmentFromV2(v2Assessment, upgradeAnswers, blendedResults) {
+    if (!this.isAvailable) return null;
+
+    try {
+      // Create upgraded assessment
+      const upgradedAssessment = {
+        ...v2Assessment,
+        version: '3.0.0',
+        upgradedFrom: v2Assessment.version,
+        originalCompletedAt: v2Assessment.completedAt,
+        upgradedAt: new Date().toISOString(),
+        // Update results with v3 data
+        results: blendedResults,
+        // v3 fields at top level
+        dimensionScores: blendedResults.dimensions,
+        birkman_color: blendedResults.birkman_color,
+        components: blendedResults.components,
+        birkman_states: blendedResults.birkman_states
+      };
+
+      // Replace the v2 assessment in storage
+      const existing = this.getCompletedAssessments();
+      const index = existing.findIndex(a => a.id === v2Assessment.id);
+      
+      if (index !== -1) {
+        existing[index] = upgradedAssessment;
+      } else {
+        existing.unshift(upgradedAssessment);
+      }
+
+      // Keep only the last 5 completed assessments
+      const trimmed = existing.slice(0, 5);
+
+      const data = JSON.stringify(trimmed);
+      localStorage.setItem(STORAGE_KEY, data);
+      logger.logStorageOperation('upgrade', STORAGE_KEY, data.length, true);
+      logger.info('Assessment upgraded from v2 to v3', {
+        userName: upgradedAssessment.userName,
+        assessmentId: upgradedAssessment.id,
+        originalVersion: v2Assessment.version,
+        newVersion: '3.0.0'
+      }, 'storage');
+
+      return upgradedAssessment;
+    } catch (e) {
+      logger.error('Failed to upgrade assessment', {
+        error: e.message,
+        assessmentId: v2Assessment.id
       }, 'storage');
       return null;
     }

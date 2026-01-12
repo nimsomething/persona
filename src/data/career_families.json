@@ -1,0 +1,228 @@
+[
+  {
+    "id": "leadership_management",
+    "name": "Leadership & Management",
+    "birkman_alignment": ["Red", "Yellow"],
+    "description": "Roles focused on leading teams, driving organizational strategy, and achieving business results through people and processes.",
+    "typical_roles": [
+      "Executive Leadership (CEO, COO, CFO)",
+      "Department Head",
+      "Project Manager",
+      "Team Lead",
+      "Operations Manager"
+    ],
+    "work_environment": "Fast-paced, decision-focused, high accountability, people management, strategic planning",
+    "component_fit": {
+      "assertiveness": "high",
+      "social_energy": "medium-high",
+      "insistence": "high",
+      "incentives": "high",
+      "thought": "medium"
+    },
+    "industry_examples": [
+      "Corporate management",
+      "Consulting",
+      "Startups",
+      "Non-profits"
+    ]
+  },
+  {
+    "id": "analytical_technical",
+    "name": "Analytical & Technical",
+    "birkman_alignment": ["Green"],
+    "description": "Roles requiring deep technical expertise, analytical problem-solving, and systematic thinking to solve complex challenges.",
+    "typical_roles": [
+      "Software Engineer",
+      "Data Scientist",
+      "Research Scientist",
+      "Financial Analyst",
+      "Systems Architect",
+      "Quality Assurance Specialist"
+    ],
+    "work_environment": "Independent work, technical depth, problem-solving focus, accuracy-driven, innovation-oriented",
+    "component_fit": {
+      "thought": "high",
+      "social_energy": "low-medium",
+      "assertiveness": "low-medium",
+      "insistence": "high",
+      "restlessness": "medium"
+    },
+    "industry_examples": [
+      "Technology",
+      "Engineering",
+      "Finance",
+      "Healthcare",
+      "Research institutions"
+    ]
+  },
+  {
+    "id": "creative_design",
+    "name": "Creative & Design",
+    "birkman_alignment": ["Yellow", "Red"],
+    "description": "Roles centered on creative expression, visual or experiential design, and bringing innovative ideas to life.",
+    "typical_roles": [
+      "Graphic Designer",
+      "UX/UI Designer",
+      "Creative Director",
+      "Content Creator",
+      "Marketing Specialist",
+      "Brand Strategist"
+    ],
+    "work_environment": "Creative freedom, collaborative ideation, variety, aesthetic focus, iterative processes",
+    "component_fit": {
+      "emotional_energy": "high",
+      "restlessness": "high",
+      "thought": "medium-high",
+      "social_energy": "medium-high",
+      "insistence": "medium"
+    },
+    "industry_examples": [
+      "Advertising",
+      "Media & Entertainment",
+      "Tech (product design)",
+      "Fashion",
+      "Publishing"
+    ]
+  },
+  {
+    "id": "sales_business_development",
+    "name": "Sales & Business Development",
+    "birkman_alignment": ["Red", "Yellow"],
+    "description": "Roles focused on generating revenue, building client relationships, and driving business growth through persuasion and networking.",
+    "typical_roles": [
+      "Sales Executive",
+      "Account Manager",
+      "Business Development Manager",
+      "Customer Success Manager",
+      "Real Estate Agent"
+    ],
+    "work_environment": "Results-driven, relationship-focused, competitive, high autonomy, performance-based rewards",
+    "component_fit": {
+      "assertiveness": "high",
+      "social_energy": "high",
+      "incentives": "high",
+      "emotional_energy": "medium-high",
+      "restlessness": "high"
+    },
+    "industry_examples": [
+      "B2B/B2C sales",
+      "SaaS",
+      "Financial services",
+      "Real estate",
+      "Retail"
+    ]
+  },
+  {
+    "id": "helping_service",
+    "name": "Helping & Service",
+    "birkman_alignment": ["Blue", "Yellow"],
+    "description": "Roles dedicated to supporting, helping, and serving others—whether through healthcare, education, counseling, or social services.",
+    "typical_roles": [
+      "Nurse",
+      "Teacher",
+      "Counselor/Therapist",
+      "Social Worker",
+      "Customer Service Manager",
+      "Human Resources Specialist"
+    ],
+    "work_environment": "People-focused, empathy-driven, supportive culture, relationship-building, meaningful impact",
+    "component_fit": {
+      "emotional_energy": "medium-high",
+      "social_energy": "medium-high",
+      "assertiveness": "low-medium",
+      "incentives": "low",
+      "insistence": "low-medium"
+    },
+    "industry_examples": [
+      "Healthcare",
+      "Education",
+      "Non-profit",
+      "Social services",
+      "Hospitality"
+    ]
+  },
+  {
+    "id": "administrative_operational",
+    "name": "Administrative & Operational",
+    "birkman_alignment": ["Blue", "Green"],
+    "description": "Roles ensuring smooth operations, maintaining systems, and providing organizational support through structure and reliability.",
+    "typical_roles": [
+      "Executive Assistant",
+      "Operations Coordinator",
+      "Office Manager",
+      "Administrative Specialist",
+      "Compliance Officer",
+      "Process Improvement Analyst"
+    ],
+    "work_environment": "Structured, detail-oriented, supportive role, clear processes, reliability-focused",
+    "component_fit": {
+      "insistence": "medium",
+      "restlessness": "low",
+      "assertiveness": "low-medium",
+      "thought": "medium",
+      "social_energy": "medium"
+    },
+    "industry_examples": [
+      "Corporate offices",
+      "Government",
+      "Healthcare administration",
+      "Education administration"
+    ]
+  },
+  {
+    "id": "entrepreneurial_innovation",
+    "name": "Entrepreneurial & Innovation",
+    "birkman_alignment": ["Red", "Yellow"],
+    "description": "Roles focused on building new ventures, driving innovation, and creating value through risk-taking and vision.",
+    "typical_roles": [
+      "Entrepreneur/Founder",
+      "Product Manager",
+      "Innovation Lead",
+      "Strategy Consultant",
+      "Venture Capitalist"
+    ],
+    "work_environment": "High autonomy, fast-paced, ambiguous, risk-tolerant, vision-driven, outcome-focused",
+    "component_fit": {
+      "assertiveness": "high",
+      "restlessness": "high",
+      "incentives": "high",
+      "insistence": "high",
+      "thought": "high"
+    },
+    "industry_examples": [
+      "Startups",
+      "Venture capital",
+      "Innovation labs",
+      "Consulting"
+    ]
+  },
+  {
+    "id": "craft_trades",
+    "name": "Skilled Trades & Craftsmanship",
+    "birkman_alignment": ["Green", "Red"],
+    "description": "Roles requiring hands-on expertise, technical skill, and physical engagement to build, repair, or create tangible products.",
+    "typical_roles": [
+      "Electrician",
+      "Carpenter",
+      "Mechanic",
+      "Chef",
+      "Artist/Craftsperson",
+      "Manufacturing Specialist"
+    ],
+    "work_environment": "Hands-on, skill-focused, tangible outcomes, independent or small team work, craftsmanship",
+    "component_fit": {
+      "physical_energy": "high",
+      "thought": "low-medium",
+      "social_energy": "low-medium",
+      "insistence": "medium-high",
+      "restlessness": "medium"
+    },
+    "industry_examples": [
+      "Construction",
+      "Manufacturing",
+      "Culinary arts",
+      "Automotive",
+      "Arts & crafts"
+    ]
+  }
+]
