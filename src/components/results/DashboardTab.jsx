@@ -3,23 +3,31 @@ import DimensionScorecard from '../DimensionScorecard';
 import { diagnoseScoresIssues } from '../../utils/scoring';
 import logger from '../../services/loggerService';
 
-const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore, topStrengths, dimensions }) => {
+const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore, topStrengths, dimensions, scoresDiagnosis }) => {
   const isV3 = !!results.components;
 
-  // Render guard - ensure scores is valid
-  if (!scores || typeof scores !== 'object' || Object.keys(scores).length === 0) {
-    return <DashboardErrorDisplay scores={scores} isV3={isV3} />;
-  }
+  // Only guard against null/undefined; we still run full diagnosis for detailed errors.
+  const computedDiagnosis = diagnoseScoresIssues(scores, isV3);
+  const diagnosis = scoresDiagnosis
+    ? {
+        ...computedDiagnosis,
+        ...scoresDiagnosis,
+        metadata: { ...computedDiagnosis.metadata, ...scoresDiagnosis.metadata }
+      }
+    : computedDiagnosis;
 
-  // Diagnose and log any issues with scores (even if they don't prevent rendering)
-  const diagnosis = diagnoseScoresIssues(scores, isV3);
-  if (!diagnosis.isValid || diagnosis.warnings.length > 0) {
-    logger.warn('DashboardTab detected issues with scores', diagnosis, 'ui');
-  }
-
-  // Use diagnosis to determine if we should show error
-  if (diagnosis.issues.length > 0) {
+  if (scores === undefined || scores === null) {
+    logger.warn('DashboardTab received missing scores', { diagnosis }, 'ui');
     return <DashboardErrorDisplay diagnosis={diagnosis} scores={scores} isV3={isV3} />;
+  }
+
+  if (!diagnosis.isValid) {
+    logger.warn('DashboardTab detected invalid scores', { diagnosis }, 'ui');
+    return <DashboardErrorDisplay diagnosis={diagnosis} scores={scores} isV3={isV3} />;
+  }
+
+  if (diagnosis.warnings.length > 0) {
+    logger.warn('DashboardTab detected warnings in scores', { diagnosis }, 'ui');
   }
 
   return (
@@ -107,123 +115,131 @@ const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore,
  * Enhanced error display component for dashboard tab
  */
 const DashboardErrorDisplay = ({ scores, isV3, diagnosis }) => {
-  // Simple case: no scores at all
-  if (!scores || typeof scores !== 'object' || Object.keys(scores).length === 0) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <p className="text-red-700">Invalid scores data. Please refresh or restart the assessment.</p>
+  const effectiveDiagnosis = diagnosis || diagnoseScoresIssues(scores, isV3);
+
+  const issues = Array.isArray(effectiveDiagnosis.issues) ? effectiveDiagnosis.issues : [];
+  const warnings = Array.isArray(effectiveDiagnosis.warnings) ? effectiveDiagnosis.warnings : [];
+  const nextSteps = Array.isArray(effectiveDiagnosis.nextSteps) ? effectiveDiagnosis.nextSteps : [];
+  const metadata = effectiveDiagnosis.metadata && typeof effectiveDiagnosis.metadata === 'object' ? effectiveDiagnosis.metadata : {};
+
+  const scoreKeys = scores && typeof scores === 'object' ? Object.keys(scores) : [];
+
+  const defaultNextSteps = [
+    'Reload the page to see if saved results rehydrate correctly.',
+    'If the problem persists, start a new assessment to generate fresh results.'
+  ];
+
+  const stepsToShow = nextSteps.length > 0 ? nextSteps : defaultNextSteps;
+
+  return (
+    <div className="bg-red-50 border border-red-200 rounded-xl p-8">
+      <div className="flex items-start gap-4 mb-6">
+        <div className="text-3xl">❌</div>
+        <div>
+          <h2 className="text-2xl font-bold text-red-800 mb-2">Unable to Validate Assessment Results</h2>
+          <p className="text-red-700">We found issues in the saved results data that prevent this dashboard from loading reliably.</p>
+        </div>
       </div>
-    );
-  }
 
-  // If we have a diagnosis, show detailed error
-  if (diagnosis) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-xl p-8">
-        <div className="flex items-start gap-4 mb-6">
-          <div className="text-3xl">❌</div>
-          <div>
-            <h2 className="text-2xl font-bold text-red-800 mb-2">Unable to Load Assessment Results</h2>
-            <p className="text-red-700">The assessment data contains errors that prevent display.</p>
-          </div>
+      <div className="space-y-6">
+        {/* What went wrong */}
+        <div className="bg-white border border-red-100 rounded-lg p-6">
+          <h3 className="font-bold text-red-900 mb-3">Issues found:</h3>
+          <ul className="space-y-2">
+            {(issues.length > 0 ? issues : ['Unknown validation failure (no specific issues were reported).']).map((issue, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className="text-red-600 mt-1">•</span>
+                <span className="text-red-800 text-sm">{issue}</span>
+              </li>
+            ))}
+          </ul>
+
+          {warnings.length > 0 && (
+            <div className="mt-4 pt-4 border-t border-red-100">
+              <h4 className="font-medium text-yellow-800 mb-2">Warnings:</h4>
+              <ul className="space-y-1">
+                {warnings.map((warning, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-yellow-600 mt-1">⚠</span>
+                    <span className="text-yellow-700 text-sm">{warning}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-6">
-          {/* What went wrong */}
-          <div className="bg-white border border-red-100 rounded-lg p-6">
-            <h3 className="font-bold text-red-900 mb-3">What went wrong:</h3>
-            <ul className="space-y-2">
-              {diagnosis.issues.map((issue, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className="text-red-600 mt-1">•</span>
-                  <span className="text-red-800 text-sm">{issue}</span>
-                </li>
-              ))}
-            </ul>
-
-            {diagnosis.warnings.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-red-100">
-                <h4 className="font-medium text-yellow-800 mb-2">Warnings:</h4>
-                <ul className="space-y-1">
-                  {diagnosis.warnings.map((warning, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-yellow-600 mt-1">⚠</span>
-                      <span className="text-yellow-700 text-sm">{warning}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {/* Data summary (always visible) */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+          <h3 className="font-bold text-gray-900 mb-3">Data summary:</h3>
+          <ul className="text-sm text-gray-700 space-y-1">
+            <li><strong>Keys found:</strong> {metadata.keyCount ?? scoreKeys.length}</li>
+            {metadata.validCoreDimensions !== undefined && metadata.totalCoreDimensions !== undefined && (
+              <li><strong>Core dimensions present:</strong> {metadata.validCoreDimensions}/{metadata.totalCoreDimensions}</li>
             )}
-          </div>
-
-          {/* Why this happened (if we have metadata) */}
-          {diagnosis.metadata && (
-            <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-6">
-              <h3 className="font-bold text-indigo-900 mb-3">Why this happened:</h3>
-              <p className="text-indigo-800 text-sm">
-                {diagnosis.metadata.isLikelyV2 ? (
-                  <>
-                    This appears to be a v2 assessment (pre-3.0.0) that has been loaded into a v3 context.
-                    The data structure has changed between versions.
-                  </>
-                ) : (
-                  'The assessment data has been corrupted, partially lost, or saved from an incompatible version of the application.'
-                )}
-              </p>
-            </div>
-          )}
-
-          {/* What to try */}
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
-            <h3 className="font-bold text-blue-900 mb-3">What to try:</h3>
-            <ol className="space-y-2">
-              <li className="flex items-start gap-2 text-sm text-blue-800">
-                <span className="font-bold text-blue-600">1.</span>
-                <span>Try reloading the page to see if the data loads correctly.</span>
+            {Array.isArray(metadata.missingCoreDimensions) && metadata.missingCoreDimensions.length > 0 && (
+              <li>
+                <strong>Missing core dimensions:</strong> {metadata.missingCoreDimensions.join(', ')}
               </li>
-              <li className="flex items-start gap-2 text-sm text-blue-800">
-                <span className="font-bold text-blue-600">2.</span>
-                <span>Start a new assessment to generate fresh results.</span>
+            )}
+            {metadata.filteredOutCount > 0 && Array.isArray(metadata.filteredOutKeys) && (
+              <li>
+                <strong>Filtered out non-primitive keys:</strong>{' '}
+                {metadata.filteredOutKeys
+                  .slice(0, 8)
+                  .map(k => (typeof k === 'string' ? k : `${k.key} (${k.type})`))
+                  .join(', ')}
+                {metadata.filteredOutKeys.length > 8 ? ` (+${metadata.filteredOutKeys.length - 8} more)` : ''}
               </li>
-              {diagnosis.metadata?.isLikelyV2 && (
-                <li className="flex items-start gap-2 text-sm text-blue-800">
-                  <span className="font-bold text-blue-600">3.</span>
-                  <span>Go back to the Welcome screen and use the "Upgrade to v3" option to properly convert your old assessment.</span>
-                </li>
-              )}
-            </ol>
-          </div>
-
-          {/* Debug info */}
-          {logger.isDebugEnabled() && (
-            <div className="bg-gray-900 text-green-400 rounded-lg p-6 overflow-x-auto">
-              <h3 className="font-bold mb-3">Debug Info (visible in debug mode)</h3>
-              <pre className="text-xs whitespace-pre-wrap">
-{JSON.stringify({
-  hasDiagnosis: true,
-  scoresKeys: Object.keys(scores),
-  scoresCount: Object.keys(scores).length,
-  v3Expected: isV3,
-  metadata: diagnosis.metadata
-}, null, 2)}
-              </pre>
-            </div>
-          )}
+            )}
+          </ul>
         </div>
 
-        <div className="mt-6 p-4 bg-white border border-gray-200 rounded-lg">
-          <p className="text-sm text-gray-600">
-            <strong>Suggestion:</strong> {diagnosis.suggestion}
+        {/* Why this happened */}
+        <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-6">
+          <h3 className="font-bold text-indigo-900 mb-3">Likely cause:</h3>
+          <p className="text-indigo-800 text-sm">
+            {metadata.isLikelyV2
+              ? 'This looks like an older (v2) assessment loaded into the v3 app. The data format changed between versions.'
+              : 'The saved assessment data may be incomplete, partially corrupted, or from an incompatible app version.'}
           </p>
         </div>
-      </div>
-    );
-  }
 
-  // Fallback for unexpected cases
-  return (
-    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-      <p className="text-red-700">Invalid scores data. Please refresh or restart the assessment.</p>
+        {/* What to try */}
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
+          <h3 className="font-bold text-blue-900 mb-3">What to try next:</h3>
+          <ol className="space-y-2">
+            {stepsToShow.map((step, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-sm text-blue-800">
+                <span className="font-bold text-blue-600">{idx + 1}.</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Debug info */}
+        {logger.isDebugEnabled() && (
+          <div className="bg-gray-900 text-green-400 rounded-lg p-6 overflow-x-auto">
+            <h3 className="font-bold mb-3">Debug Info (visible in debug mode)</h3>
+            <pre className="text-xs whitespace-pre-wrap">
+{JSON.stringify({
+  hasDiagnosis: !!effectiveDiagnosis,
+  scoreKeys: scoreKeys.slice(0, 50),
+  scoreCount: scoreKeys.length,
+  v3Expected: isV3,
+  metadata
+}, null, 2)}
+            </pre>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 p-4 bg-white border border-gray-200 rounded-lg">
+        <p className="text-sm text-gray-700">
+          <strong>Suggestion:</strong> {effectiveDiagnosis.suggestion || 'Restart the assessment to generate complete results.'}
+        </p>
+      </div>
     </div>
   );
 };
