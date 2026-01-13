@@ -552,6 +552,21 @@ export function isValidNumericObject(obj) {
 }
 
 /**
+ * Validate that object contains only numeric values
+ * @param {Object} obj - Object to validate
+ * @returns {Boolean} - True if all values are numbers
+ */
+export function isValidNumericObject(obj) {
+  if (!obj || typeof obj !== 'object') return false;
+  
+  const nonNumericEntries = Object.entries(obj).filter(
+    ([, value]) => typeof value !== 'number' && value !== null
+  );
+  
+  return nonNumericEntries.length === 0;
+}
+
+/**
  * Validate components structure (9 components, all numbers)
  * @param {Object} components - Components object to validate
  * @returns {Boolean} - True if valid
