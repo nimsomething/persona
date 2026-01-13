@@ -100,6 +100,16 @@ const CareersTab = ({ results }) => {
     }).sort((a, b) => b.alignmentScore - a.alignmentScore);
   }, [birkmanColor, components]);
 
+  // Pre-calculate top career match info with safety checks
+  const topCareerInfo = useMemo(() => {
+    if (!careerAlignment || careerAlignment.length === 0) return null;
+    const top = careerAlignment[0];
+    return {
+      name: top.name,
+      workEnvironment: top.work_environment ? top.work_environment.toLowerCase() : 'collaborative environments'
+    };
+  }, [careerAlignment]);
+
   if (!birkmanColor || !components) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
@@ -196,7 +206,7 @@ const CareersTab = ({ results }) => {
             <div className="bg-indigo-800/50 rounded-xl p-5 border border-indigo-700">
               <h4 className="font-bold text-indigo-200 mb-2 uppercase text-xs tracking-widest">Work Environment</h4>
               <p className="text-sm">
-                You thrive best in environments that align with your <strong>{topMatches[0]?.name || 'Unknown'}</strong> profile, which typically offer <strong>{topMatches[0]?.work_environment?.toLowerCase() || 'varied'}</strong>.
+                You thrive best in environments that align with your <strong>{topCareerInfo?.name || 'Professional'}</strong> profile, which typically offer <strong>{topCareerInfo?.workEnvironment || 'collaborative environments'}</strong>.
               </p>
             </div>
           </div>
@@ -217,7 +227,7 @@ const CareersTab = ({ results }) => {
               </li>
               <li className="flex items-start gap-3 text-sm">
                 <span className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-[10px] shrink-0 mt-0.5">4</span>
-                <span>Explore the <strong>{topMatches[0].name}</strong> career family roles for your next career move.</span>
+                <span>Explore the <strong>{topCareerInfo?.name || 'Professional'}</strong> career family roles for your next career move.</span>
               </li>
             </ul>
           </div>
