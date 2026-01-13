@@ -220,6 +220,43 @@ class StorageService {
     }
   }
 
+  /**
+   * Save migrated assessments after data migration
+   * @param {Array} migratedAssessments - Migrated assessments array
+   * @param {Object} migrationStats - Statistics about the migration
+   * @returns {Boolean} - Success status
+   */
+  saveMigratedAssessments(migratedAssessments, migrationStats) {
+    if (!this.isAvailable) return false;
+
+    try {
+      // Keep only the last 5 assessments as per existing limit
+      const trimmed = migratedAssessments.slice(0, 5);
+      
+      const data = JSON.stringify(trimmed);
+      localStorage.setItem(STORAGE_KEY, data);
+      
+      logger.logStorageOperation('save', 'migrated', data.length, true);
+      logger.info('Migrated assessments saved', {
+        totalProcessed: migrationStats.totalAssessments,
+        legacyDetected: migrationStats.legacyDetected,
+        successfulMigrations: migrationStats.migrationSuccess,
+        failedMigrations: migrationStats.migrationFailed,
+        skipped: migrationStats.skipped,
+        totalAssessmentsAfterSave: trimmed.length
+      }, 'storage');
+
+      return true;
+    } catch (e) {
+      logger.logStorageOperation('save', 'migrated', 0, false, e);
+      logger.error('Failed to save migrated assessments', {
+        error: e.message,
+        isQuotaExceeded: e.name === 'QuotaExceededError'
+      }, 'storage');
+      return false;
+    }
+  }
+
   generateSessionId() {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }

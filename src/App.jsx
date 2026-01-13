@@ -7,6 +7,7 @@ import ErrorDisplay from './components/ErrorDisplay';
 import questionsData from './data/questions.json';
 import storageService from './services/storageService';
 import upgradeService from './services/upgradeService';
+import dataMigrationService from './services/dataMigrationService';
 import logger from './services/loggerService';
 import { isV2Assessment, isV3Assessment } from './utils/appMeta';
 import { useErrorLog } from './hooks/useErrorLog';
@@ -54,23 +55,56 @@ function App() {
       logger.info('Upgrade questions loaded', { count: upgradableQuestions.length }, 'app');
 
       const completedAssessments = storageService.getCompletedAssessments();
+      
+      // Run data migration if needed (for v3.0.0 and earlier data)
       if (completedAssessments.length > 0) {
-        const mostRecent = completedAssessments[0];
-        logger.info('Completed assessment recovered on mount', {
-          userName: mostRecent.userName,
-          completedAt: mostRecent.completedAt,
-          version: mostRecent.version
-        }, 'app');
-
-        // Check if the version is compatible
-        if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
-          setRecoveredAssessment(mostRecent);
+        // Check if any assessments need migration
+        const needsMigration = completedAssessments.some(assessment => 
+          dataMigrationService.hasLegacyData(assessment)
+        );
+        
+        if (needsMigration) {
+          logger.info('Legacy data detected, starting migration to v3.0.1', {}, 'app');
+          
+          const { migratedAssessments, migrationStats } = dataMigrationService.migrateAssessmentsToV3_0_1(completedAssessments);
+          
+          // Save migrated data back to storage
+          storageService.saveMigratedAssessments(migratedAssessments, migrationStats);
+          
+          logger.info('Data migration completed', migrationStats, 'app');
+          
+          // Continue with the most recent migrated assessment
+          if (migrationStats.migrationSuccess > 0 || (migrationStats.skipped > 0 && migratedAssessments.length > 0)) {
+            const mostRecent = migratedAssessments[0];
+            
+            if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
+              setRecoveredAssessment(mostRecent);
+            } else {
+              logger.warn('Incompatible assessment version found after migration', { version: mostRecent.version }, 'app');
+              setStorageError({
+                type: 'version',
+                message: 'A previous assessment was found but is from an incompatible version. Please take the assessment again.'
+              });
+            }
+          }
         } else {
-          logger.warn('Incompatible assessment version found', { version: mostRecent.version }, 'app');
-          setStorageError({
-            type: 'version',
-            message: 'A previous assessment was found but is from an incompatible version. Please take the assessment again.'
-          });
+          // No migration needed, proceed normally
+          const mostRecent = completedAssessments[0];
+          logger.info('Completed assessment recovered on mount', {
+            userName: mostRecent.userName,
+            completedAt: mostRecent.completedAt,
+            version: mostRecent.version
+          }, 'app');
+
+          if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
+            setRecoveredAssessment(mostRecent);
+          } else {
+            logger.warn('Incompatible assessment version found', { version: mostRecent.version }, 'app');
+            setStorageError({
+              type: 'version',
+              message: 'A previous assessment was found but is from an incompatible version. Please take the assessment again.'
+            });
+          }
         }
       }
     } catch (error) {
