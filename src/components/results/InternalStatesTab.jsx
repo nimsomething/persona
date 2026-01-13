@@ -3,7 +3,8 @@ import React from 'react';
 const InternalStatesTab = ({ results }) => {
   const states = results.birkman_states;
 
-  if (!states) {
+  // Render guard - ensure birkman_states is valid
+  if (!states || typeof states !== 'object' || !states.interests || !states.usual_behavior || !states.needs || !states.stress_behavior) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
         <p className="text-yellow-700">Internal States data is not available for this assessment version.</p>

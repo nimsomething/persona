@@ -120,7 +120,7 @@ function App() {
         logger.info('Upgrade completed successfully', {
           userName: recoveredAssessment.userName,
           fromVersion: recoveredAssessment.version,
-          toVersion: '3.0.0'
+          toVersion: '3.0.1'
         }, 'app');
       } catch (error) {
         logger.error('Failed to complete upgrade', { error: error.message }, 'app');

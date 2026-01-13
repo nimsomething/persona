@@ -1,6 +1,7 @@
 import archetypesData from '../data/archetypes.json';
 import mbtiService from '../services/mbtiMappingService';
 import birkmanMappingService from '../services/birkmanMappingService';
+import logger from '../services/loggerService';
 
 const ALL_DIMENSIONS = [
   'assertiveness', 'sociability', 'conscientiousness', 'flexibility', 'emotional_intelligence',
@@ -52,22 +53,32 @@ export function calculateDimensionScores(answers, questions) {
   scores.conscientiousness_usual = Math.round((scores.conscientiousness_usual + scores.conscientiousness_stress) / 2);
   scores.flexibility_usual = Math.round((scores.flexibility_usual + scores.flexibility_stress) / 2);
   scores.emotional_intelligence_usual = Math.round((scores.emotional_intelligence_usual + scores.emotional_intelligence_stress) / 2);
-  
-  // Calculate values profile
-  const valuesScores = calculateValuesProfile(answers, questions);
-  scores.values_profile = valuesScores;
-  
-  // Calculate work style profile
-  const workStyleScores = calculateWorkStyleProfile(answers, questions);
-  scores.work_style_profile = workStyleScores;
+
+  // Calculate values profile (stored separately, not in scores)
+  const valuesProfile = calculateValuesProfile(answers, questions);
+
+  // Calculate work style profile (stored separately, not in scores)
+  const workStyleProfile = calculateWorkStyleProfile(answers, questions);
   
   // v3 enhancements: Calculate components, Birkman color, and internal states
   const components = calculateComponentScores(scores, answers, questions);
   const birkmanStates = calculateBirkmanStates(answers, questions);
   const birkmanColor = calculateBirkmanColor(scores, birkmanStates);
-  
+
+  // Final validation: Ensure scores only contains primitive values
+  const primitiveScores = {};
+  Object.entries(scores).forEach(([key, value]) => {
+    if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
+      primitiveScores[key] = value;
+    } else {
+      logger.warn('scoring', `Filtered out non-primitive score: ${key}`, { type: typeof value });
+    }
+  });
+
   return {
-    ...scores,
+    ...primitiveScores,
+    values_profile: valuesProfile,
+    work_style_profile: workStyleProfile,
     components,
     birkman_color: birkmanColor,
     birkman_states: birkmanStates
@@ -309,7 +320,47 @@ export function calculateOverallResilience(deltas) {
  * @returns {Object} - 9 component scores (0-100)
  */
 export function calculateComponentScores(dimensionScores, answers, questions) {
-  return birkmanMappingService.calculateComponents(answers, questions, dimensionScores);
+  try {
+    const components = birkmanMappingService.calculateComponents(answers, questions, dimensionScores);
+
+    // Validate return type
+    if (!components || typeof components !== 'object') {
+      logger.error('scoring', 'calculateComponentScores returned invalid type', { type: typeof components });
+      return {
+        social_energy: 50,
+        physical_energy: 50,
+        emotional_energy: 50,
+        self_consciousness: 50,
+        assertiveness: 50,
+        insistence: 50,
+        incentives: 50,
+        restlessness: 50,
+        thought: 50
+      };
+    }
+
+    // Ensure all values are numbers
+    const numericComponents = {};
+    Object.entries(components).forEach(([key, value]) => {
+      numericComponents[key] = typeof value === 'number' ? value : 50;
+    });
+
+    logger.info('scoring', 'Component scores calculated successfully', { components: numericComponents });
+    return numericComponents;
+  } catch (error) {
+    logger.error('scoring', 'Error in calculateComponentScores', { error: error.message });
+    return {
+      social_energy: 50,
+      physical_energy: 50,
+      emotional_energy: 50,
+      self_consciousness: 50,
+      assertiveness: 50,
+      insistence: 50,
+      incentives: 50,
+      restlessness: 50,
+      thought: 50
+    };
+  }
 }
 
 /**
@@ -319,7 +370,45 @@ export function calculateComponentScores(dimensionScores, answers, questions) {
  * @returns {Object} - Internal states with color spectrums
  */
 export function calculateBirkmanStates(answers, questions) {
-  return birkmanMappingService.calculateInternalStates(answers, questions);
+  try {
+    const states = birkmanMappingService.calculateInternalStates(answers, questions);
+
+    // Validate return type
+    if (!states || typeof states !== 'object') {
+      logger.error('scoring', 'calculateBirkmanStates returned invalid type', { type: typeof states });
+      return {
+        interests: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+        usual_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+        needs: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+        stress_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+      };
+    }
+
+    // Validate required keys exist
+    const requiredStates = ['interests', 'usual_behavior', 'needs', 'stress_behavior'];
+    for (const stateKey of requiredStates) {
+      if (!states[stateKey] || typeof states[stateKey] !== 'object') {
+        logger.error('scoring', `Missing or invalid state: ${stateKey}`);
+        return {
+          interests: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+          usual_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+          needs: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+          stress_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+        };
+      }
+    }
+
+    logger.info('scoring', 'Birkman states calculated successfully');
+    return states;
+  } catch (error) {
+    logger.error('scoring', 'Error in calculateBirkmanStates', { error: error.message });
+    return {
+      interests: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+      usual_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+      needs: { Red: 25, Green: 25, Yellow: 25, Blue: 25 },
+      stress_behavior: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+    };
+  }
 }
 
 /**
@@ -329,7 +418,53 @@ export function calculateBirkmanStates(answers, questions) {
  * @returns {Object} - {primary, secondary, spectrum}
  */
 export function calculateBirkmanColor(dimensionScores, birkmanStates) {
-  return birkmanMappingService.calculateBirkmanColor(dimensionScores, birkmanStates);
+  try {
+    const birkmanColor = birkmanMappingService.calculateBirkmanColor(dimensionScores, birkmanStates);
+
+    // Validate return type
+    if (!birkmanColor || typeof birkmanColor !== 'object') {
+      logger.error('scoring', 'calculateBirkmanColor returned invalid type', { type: typeof birkmanColor });
+      return {
+        primary: 'Yellow',
+        secondary: 'Blue',
+        spectrum: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+      };
+    }
+
+    // Validate required keys
+    if (!birkmanColor.primary || typeof birkmanColor.primary !== 'string') {
+      logger.error('scoring', 'Missing or invalid primary color in birkmanColor');
+      return {
+        primary: 'Yellow',
+        secondary: 'Blue',
+        spectrum: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+      };
+    }
+
+    if (!birkmanColor.secondary || typeof birkmanColor.secondary !== 'string') {
+      logger.error('scoring', 'Missing or invalid secondary color in birkmanColor');
+      birkmanColor.secondary = 'Blue';
+    }
+
+    if (!birkmanColor.spectrum || typeof birkmanColor.spectrum !== 'object') {
+      logger.error('scoring', 'Missing or invalid spectrum in birkmanColor');
+      birkmanColor.spectrum = { Red: 25, Green: 25, Yellow: 25, Blue: 25 };
+    }
+
+    logger.info('scoring', 'Birkman color calculated successfully', {
+      primary: birkmanColor.primary,
+      secondary: birkmanColor.secondary
+    });
+
+    return birkmanColor;
+  } catch (error) {
+    logger.error('scoring', 'Error in calculateBirkmanColor', { error: error.message });
+    return {
+      primary: 'Yellow',
+      secondary: 'Blue',
+      spectrum: { Red: 25, Green: 25, Yellow: 25, Blue: 25 }
+    };
+  }
 }
 
 /**
@@ -392,12 +527,122 @@ export function blendV2withUpgradeAnswers(v2Assessment, upgradeAnswers, upgradeQ
  */
 export function getArchetypeFromScores(scores) {
   const archetype = determineArchetype(scores);
-  
+
   // Add Birkman color to archetype
   if (scores.birkman_color) {
     archetype.birkman_color = scores.birkman_color.primary;
     archetype.birkman_secondary = scores.birkman_color.secondary;
   }
-  
+
   return archetype;
+}
+
+/**
+ * Data validation helpers to prevent object rendering errors
+ */
+
+/**
+ * Validate that an object contains only numeric values
+ * @param {Object} obj - Object to validate
+ * @returns {Boolean} - True if all values are numbers
+ */
+export function isValidNumericObject(obj) {
+  if (!obj || typeof obj !== 'object') return false;
+  return Object.values(obj).every(val => typeof val === 'number');
+}
+
+/**
+ * Validate components structure (9 components, all numbers)
+ * @param {Object} components - Components object to validate
+ * @returns {Boolean} - True if valid
+ */
+export function isValidComponents(components) {
+  if (!components || typeof components !== 'object') return false;
+
+  const requiredComponents = [
+    'social_energy', 'physical_energy', 'emotional_energy', 'self_consciousness',
+    'assertiveness', 'insistence', 'incentives', 'restlessness', 'thought'
+  ];
+
+  // Check all required keys exist
+  for (const comp of requiredComponents) {
+    if (components[comp] === undefined || typeof components[comp] !== 'number') {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Validate Birkman color structure
+ * @param {Object} birkmanColor - Birkman color object to validate
+ * @returns {Boolean} - True if valid
+ */
+export function isValidBirkmanColor(birkmanColor) {
+  if (!birkmanColor || typeof birkmanColor !== 'object') return false;
+  if (!birkmanColor.primary || typeof birkmanColor.primary !== 'string') return false;
+  if (!birkmanColor.secondary || typeof birkmanColor.secondary !== 'string') return false;
+  if (!birkmanColor.spectrum || typeof birkmanColor.spectrum !== 'object') return false;
+
+  const validColors = ['Red', 'Green', 'Yellow', 'Blue'];
+  if (!validColors.includes(birkmanColor.primary)) return false;
+  if (!validColors.includes(birkmanColor.secondary)) return false;
+
+  // Validate spectrum has all 4 colors with numeric values
+  for (const color of validColors) {
+    if (birkmanColor.spectrum[color] === undefined || typeof birkmanColor.spectrum[color] !== 'number') {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Validate internal states structure
+ * @param {Object} birkmanStates - Internal states object to validate
+ * @returns {Boolean} - True if valid
+ */
+export function isValidBirkmanStates(birkmanStates) {
+  if (!birkmanStates || typeof birkmanStates !== 'object') return false;
+
+  const requiredStates = ['interests', 'usual_behavior', 'needs', 'stress_behavior'];
+  const validColors = ['Red', 'Green', 'Yellow', 'Blue'];
+
+  // Check all required states exist
+  for (const state of requiredStates) {
+    if (!birkmanStates[state] || typeof birkmanStates[state] !== 'object') {
+      return false;
+    }
+
+    // Validate each state has all 4 colors with numeric values
+    for (const color of validColors) {
+      if (birkmanStates[state][color] === undefined || typeof birkmanStates[state][color] !== 'number') {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Validate scores structure (dimension scores)
+ * @param {Object} scores - Scores object to validate
+ * @returns {Boolean} - True if valid
+ */
+export function isValidScores(scores) {
+  if (!scores || typeof scores !== 'object') return false;
+
+  // Filter out non-primitive values (objects, arrays, etc.)
+  const invalidEntries = Object.entries(scores).filter(
+    ([key, value]) => typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean'
+  );
+
+  if (invalidEntries.length > 0) {
+    return false;
+  }
+
+  return true;
 }
