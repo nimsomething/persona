@@ -1,4 +1,5 @@
 import React from 'react';
+import { APP_VERSION } from '../../utils/appMeta';
 
 const DownloadTab = ({ 
   userName, 
@@ -44,7 +45,7 @@ const DownloadTab = ({
                 <div className="text-4xl">📄</div>
                 <div>
                   <div className="text-sm font-bold text-gray-900">PDF Report</div>
-                  <div className="text-xs text-gray-500">v3.0.0 High-Resolution</div>
+                  <div className="text-xs text-gray-500">v{APP_VERSION} High-Resolution</div>
                 </div>
               </div>
               <p className="text-xs text-gray-600 leading-relaxed mb-6">
