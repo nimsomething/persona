@@ -48,6 +48,26 @@ function Results({ userName, results, answers, questions, onRestart }) {
     }
   });
 
+  // Debug logging for recovered assessments when debug mode is enabled
+  useEffect(() => {
+    if (logger.isDebugEnabled() && results && (results.recovered || results.previouslySaved)) {
+      logger.debug('results', '=== RECOVERED ASSESSMENT LOADED ===', {
+        isV3: isV3,
+        scoreKeys: Object.keys(scores),
+        scoreCount: Object.keys(scores).length,
+        resultsKeys: Object.keys(results),
+        hasComponents: !!results.components,
+        hasBirkmanColor: !!results.birkman_color,
+        hasStates: !!results.birkman_states,
+        versionMeta: {
+          detectedV3: !!results.components,
+          hasV2Values: !!scores.values_autonomy,
+          hasWorkStyle: !!scores.work_pace
+        }
+      });
+    }
+  }, [results, scores, isV3]);
+
   const archetype = results.archetype || { name: 'Professional', icon: '👤', shortDescription: 'Strategic professional', narrative: 'You are a balanced professional.' };
   const stressDeltas = results.stressDeltas || {};
   const adaptabilityScore = results.adaptabilityScore || 50;
@@ -265,7 +285,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
 
         {/* Version Info Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 text-xs">
-          Birkman-Style Personality Assessment V3.0.1 • Built for cto.new • Comprehensive Professional Report
+          Birkman-Style Personality Assessment V3.0.2 • Built for cto.new • Comprehensive Professional Report
         </div>
       </div>
     </div>

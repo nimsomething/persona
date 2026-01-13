@@ -651,3 +651,148 @@ export function isValidScores(scores) {
 
   return true;
 }
+
+/**
+ * Diagnose issues with assessment scores data
+ * @param {Object} scores - The scores object to diagnose
+ * @param {boolean} isV3Assessment - Whether this is expected to be a v3 assessment
+ * @returns {Object} - Diagnosis results with issues, warnings, and suggestions
+ */
+export function diagnoseScoresIssues(scores, isV3Assessment = false) {
+  const issues = [];
+  const warnings = [];
+
+  // Check 1: Scores is null/undefined
+  if (!scores) {
+    return {
+      isValid: false,
+      issues: ['scores is null or undefined'],
+      warnings: [],
+      suggestion: 'This assessment data is completely missing. Please restart the assessment to generate new results.'
+    };
+  }
+
+  // Check 2: Scores is not an object
+  if (typeof scores !== 'object') {
+    return {
+      isValid: false,
+      issues: [`scores is not an object (found ${typeof scores})`],
+      warnings: [],
+      suggestion: 'The assessment data is corrupted. Please restart the assessment.'
+    };
+  }
+
+  // Check 3: Scores is empty
+  if (Object.keys(scores).length === 0) {
+    return {
+      isValid: false,
+      issues: ['scores object is empty'],
+      warnings: [],
+      suggestion: 'The assessment data contains no results. Please restart the assessment.'
+    };
+  }
+
+  // Check 4: Verify only primitive values in scores
+  const nonPrimitiveEntries = Object.entries(scores).filter(([key, value]) => {
+    return typeof value === 'object' || typeof value === 'function' || Array.isArray(value);
+  });
+
+  for (const [key] of nonPrimitiveEntries) {
+    issues.push(`Invalid non-primitive value found for score key: "${key}" (should be a number, string, or boolean)`);
+  }
+
+  // Check 5: Expected dimension keys for v2 compatibility
+  const REQUIRED_CORE_DIMENSIONS = [
+    'assertiveness_usual',
+    'sociability_usual',
+    'conscientiousness_usual',
+    'flexibility_usual',
+    'emotional_intelligence_usual',
+    'creativity_usual',
+    'risk_appetite_usual',
+    'theoretical_orientation_usual'
+  ];
+
+  let validDimensions = 0;
+  const missingDimensions = [];
+
+  for (const dim of REQUIRED_CORE_DIMENSIONS) {
+    if (scores[dim] === undefined) {
+      missingDimensions.push(dim);
+    } else if (typeof scores[dim] !== 'number') {
+      issues.push(`Dimension "${dim}" has non-numeric value: ${typeof scores[dim]}`);
+    } else if (scores[dim] < 0 || scores[dim] > 100) {
+      warnings.push(`Dimension "${dim}" has out-of-range value: ${scores[dim]} (should be 0-100)`);
+    } else {
+      validDimensions++;
+    }
+  }
+
+  if (missingDimensions.length === REQUIRED_CORE_DIMENSIONS.length) {
+    issues.push('No valid core dimension scores found');
+  } else if (missingDimensions.length > 0) {
+    issues.push(`Missing core dimensions: ${missingDimensions.join(', ')}`);
+  }
+
+  // Check 6: For v3, also check stress dimension variants
+  if (validDimensions > 0) {
+    const stressDimensions = REQUIRED_CORE_DIMENSIONS.map(dim => dim.replace('_usual', '_stress'));
+    const missingStressDimensions = [];
+
+    for (const dim of stressDimensions) {
+      if (scores[dim] === undefined) {
+        missingStressDimensions.push(dim);
+      }
+    }
+
+    if (missingStressDimensions.length > 0 && missingStressDimensions.length < stressDimensions.length) {
+      warnings.push(`Partial stress dimension data: ${stressDimensions.length - missingStressDimensions.length}/${stressDimensions.length} found`);
+    } else if (missingStressDimensions.length === stressDimensions.length && isV3Assessment) {
+      warnings.push('No stress dimension scores found (v3 assessments should have these)');
+    }
+  }
+
+  // Check 7: v3-specific validations
+  if (isV3Assessment) {
+    // For v3, we expect components to exist in results (not scores)
+    // Warn if we're missing what should be v3 features
+    const v2Only = scores.values_autonomy !== undefined;
+    const v3Like = validDimensions > 0 && warnings.length === 0;
+
+    if (v2Only && !v3Like) {
+      warnings.push('v2 assessment structure detected in context expecting v3');
+    }
+  }
+
+  // Build summary suggestion
+  let suggestion;
+  if (missingDimensions.length > 0 && missingDimensions.length < 4) {
+    suggestion = 'The assessment data appears partially corrupted. Try refreshing the page. If issues persist, start a new assessment.';
+  } else if (missingDimensions.length >= 4) {
+    if (isV3Assessment && scores.values_autonomy !== undefined) {
+      suggestion = 'This appears to be a v2 assessment loaded in v3 context. Try upgrading the assessment through the main menu.';
+    } else {
+      suggestion = 'Critical assessment data is missing. Please start a new assessment to ensure accurate results.';
+    }
+  } else if (nonPrimitiveEntries.length > 0) {
+    suggestion = 'The assessment contains invalid data structures. This may happen with incompatible saved assessments. Try reloading or starting fresh.';
+  } else if (warnings.length > 0 && issues.length === 0) {
+    suggestion = 'The assessment data has some inconsistencies but may still be viewable. Some features may not display correctly.';
+  } else {
+    suggestion = 'Please restart the assessment to generate complete, valid results.';
+  }
+
+  return {
+    isValid: issues.length === 0,
+    issues,
+    warnings,
+    metadata: {
+      validDimensions,
+      totalDimensions: REQUIRED_CORE_DIMENSIONS.length,
+      nonPrimitiveCount: nonPrimitiveEntries.length,
+      missingStressDimensions: isV3Assessment ? warnings.filter(w => w.includes('stress dimension')).length : 0,
+      isLikelyV2: scores.values_autonomy !== undefined && isV3Assessment
+    },
+    suggestion
+  };
+}
