@@ -2,28 +2,45 @@ import logger from '../services/loggerService';
 
 /**
  * Debug utility for development and troubleshooting
- * Add ?debug=true to URL to enable localStorage debugging
+ * Debug mode is enabled by default in development.
+ * Use ?debug=false in URL to disable if needed.
  */
 
 // Check URL for debug flag
 const urlParams = new URLSearchParams(window.location.search);
-const debugEnabled = urlParams.has('debug');
+// Debug is enabled by default unless ?debug=false is specified
+let debugEnabledState = urlParams.get('debug') !== 'false';
 
-if (debugEnabled) {
+// Attach to logger so logger.isDebugEnabled() works throughout the app
+logger.isDebugEnabled = () => debugEnabledState;
+
+// Expose logger to window for console debugging - always available in dev
+window.__logger = logger;
+window.__toggleDebug = (enabled) => {
+  debugEnabledState = enabled;
+  logger.toggleLocalStorageDebugging(enabled);
+  logger.setLogLevel(enabled ? 'DEBUG' : 'INFO');
+  logger.info(`Debug ${enabled ? 'enabled' : 'disabled'}`, { 
+    debugEnabledState,
+    logLevel: enabled ? 'DEBUG' : 'INFO'
+  }, 'debug');
+};
+
+if (debugEnabledState) {
   logger.toggleLocalStorageDebugging(true);
   logger.setLogLevel('DEBUG');
-  logger.info('Debug mode enabled via URL parameter', {}, 'debug');
-
-  // Expose logger to window for console debugging
-  window.__logger = logger;
-  window.__toggleDebug = (enabled) => {
-    logger.toggleLocalStorageDebugging(enabled);
-    logger.setLogLevel(enabled ? 'DEBUG' : 'INFO');
-    logger.info(`Debug ${enabled ? 'enabled' : 'disabled'}`, {}, 'debug');
-  };
+  logger.info('Debug mode enabled by default', { 
+    localStorageDebugging: true,
+    logLevel: 'DEBUG',
+    howToDisable: 'Add ?debug=false to URL to disable'
+  }, 'debug');
+} else {
+  // If explicitly disabled, ensure logger is in INFO mode
+  logger.setLogLevel('INFO');
+  logger.toggleLocalStorageDebugging(false);
 }
 
-export const isDebugEnabled = debugEnabled;
+export const isDebugEnabled = () => debugEnabledState;
 
 /**
  * Helper to get debug logs from localStorage
