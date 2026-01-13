@@ -479,20 +479,32 @@ class StorageService {
   }
 
   getRawAnswersFromAssessment(assessment) {
-    const candidates = [
-      assessment?.answers,
-      assessment?.responses,
-      assessment?.rawAnswers,
-      assessment?.results?.answers,
-      assessment?.results?.responses,
-      assessment?.results?.rawAnswers
+    const locations = [
+      { source: 'assessment.answers', data: assessment?.answers },
+      { source: 'assessment.responses', data: assessment?.responses },
+      { source: 'assessment.rawAnswers', data: assessment?.rawAnswers },
+      { source: 'assessment.results.answers', data: assessment?.results?.answers },
+      { source: 'assessment.results.responses', data: assessment?.results?.responses },
+      { source: 'assessment.results.rawAnswers', data: assessment?.results?.rawAnswers },
     ];
 
-    for (const candidate of candidates) {
-      const normalized = this.normalizeAnswers(candidate);
-      if (normalized) return normalized;
+    for (const { source, data } of locations) {
+      const normalized = this.normalizeAnswers(data);
+      if (normalized) {
+        logger.info('Raw answers found', {
+          assessmentId: assessment.id,
+          userName: assessment.userName,
+          location: source,
+          answerCount: Object.keys(normalized).length,
+        }, 'recovery');
+        return normalized;
+      }
     }
 
+    logger.warn('No raw answers found for assessment', {
+      assessmentId: assessment.id,
+      userName: assessment.userName,
+    }, 'recovery');
     return null;
   }
 
@@ -519,6 +531,18 @@ class StorageService {
   }
 
   recalculateResultsFromAnswers(rawAnswers, expectedV3) {
+    logger.info('Recalculating scores from answers', {
+      answerCount: Object.keys(rawAnswers).length,
+      expectedV3,
+    }, 'recovery');
+
+    if (!rawAnswers || Object.keys(rawAnswers).length < 100) { // Basic sanity check
+      logger.error('Recalculation pre-flight check failed: Invalid or incomplete answers', {
+        answerCount: rawAnswers ? Object.keys(rawAnswers).length : 'null',
+      }, 'recovery');
+      return null;
+    }
+
     try {
       const scores = calculateDimensionScores(rawAnswers, questionsData);
       const archetype = determineArchetype(scores);
@@ -535,9 +559,11 @@ class StorageService {
         (!expectedV3 || (diagnosis?.metadata?.missingStressDimensions?.length || 0) === 0);
 
       if (!scoresValid) {
-        logger.logValidationError('storage', 'scoreRecovery', diagnosis, {
+        logger.logValidationError('recovery', 'scoreRecalculation', diagnosis, {
           issue: 'Recalculated scores failed validation',
-          keyCount: Object.keys(primitiveScores).length
+          keyCount: Object.keys(primitiveScores).length,
+          assessmentId: 'unknown', // No assessment ID at this point, but useful for context
+          userName: 'unknown',
         });
         return null;
       }
@@ -716,6 +742,100 @@ class StorageService {
 
   generateSessionId() {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  diagnosticRawAnswersOnLoad() {
+    if (!this.isAvailable) return { summary: 'localStorage not available', results: [] };
+
+    logger.info('Starting raw answers diagnostic', {}, 'recovery');
+    const assessments = this.getCompletedAssessments();
+    const diagnosticResults = [];
+    let recoverableCount = 0;
+    let unrecoverableCount = 0;
+
+    const diagnosticReport = {
+      timestamp: new Date().toISOString(),
+      version: `v${APP_VERSION}`,
+      totalAssessments: assessments.length,
+      assessments: diagnosticResults,
+    };
+
+    assessments.forEach(assessment => {
+      const result = {
+        id: assessment.id,
+        userName: assessment.userName,
+        version: assessment.version,
+        completedAt: assessment.completedAt,
+        rawAnswersFound: false,
+        rawAnswersLocation: 'NOT FOUND',
+        answerCount: 0,
+        hasNumericValues: false,
+        dataSizeBytes: 0,
+        isRecoverable: false,
+        assessment: assessment, // Include the original assessment for the recovery step
+      };
+
+      const locations = [
+        'assessment.answers',
+        'assessment.responses',
+        'assessment.rawAnswers',
+        'assessment.results.answers',
+        'assessment.results.responses',
+        'assessment.results.rawAnswers',
+      ];
+
+      for (const loc of locations) {
+        const path = loc.split('.');
+        let data = assessment;
+        for (const key of path.slice(1)) {
+          data = data ? data[key] : undefined;
+        }
+
+        const normalized = this.normalizeAnswers(data);
+        if (normalized) {
+          result.rawAnswersFound = true;
+          result.rawAnswersLocation = loc;
+          const answerKeys = Object.keys(normalized);
+          result.answerCount = answerKeys.length;
+          result.hasNumericValues = answerKeys.some(k => typeof normalized[k] === 'number');
+          try {
+            const jsonData = JSON.stringify(normalized);
+            result.dataSizeBytes = jsonData.length;
+          } catch (e) {
+            result.dataSizeBytes = -1; // Indicate an error
+          }
+          break; // Found answers, no need to check other locations
+        }
+      }
+
+      if (result.rawAnswersFound && result.answerCount > 0 && result.hasNumericValues) {
+        result.isRecoverable = true;
+        recoverableCount++;
+      } else {
+        unrecoverableCount++;
+      }
+      diagnosticResults.push(result);
+    });
+
+    try {
+      localStorage.setItem('personality_assessment_raw_answers_diagnostic', JSON.stringify(diagnosticReport));
+      logger.info('Raw answers diagnostic report saved to localStorage', {
+        totalAssessments: assessments.length,
+        recoverable: recoverableCount,
+        unrecoverable: unrecoverableCount,
+      }, 'recovery');
+    } catch (e) {
+      logger.error('Failed to save raw answers diagnostic report', { error: e.message }, 'recovery');
+    }
+
+    const summary = {
+      totalAssessments: assessments.length,
+      recoverableCount,
+      unrecoverableCount,
+      results: diagnosticResults,
+    };
+
+    return summary;
   }
 
   // Auto-save functionality
