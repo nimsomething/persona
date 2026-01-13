@@ -7,7 +7,8 @@ import {
   isValidScores,
   isValidComponents,
   isValidBirkmanColor,
-  isValidBirkmanStates
+  isValidBirkmanStates,
+  diagnoseScoresIssues
 } from '../utils/scoring';
 import { APP_VERSION } from '../utils/appMeta';
 import mbtiService from '../services/mbtiMappingService';
@@ -72,6 +73,25 @@ function Results({ userName, results, answers, questions, onRestart }) {
     }
   });
 
+  const filteredOutKeys = Object.entries(scores)
+    .filter(([, value]) => typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean')
+    .map(([key, value]) => ({
+      key,
+      type: Array.isArray(value) ? 'array' : value === null ? 'null' : typeof value
+    }));
+
+  const scoresDiagnosisBase = diagnoseScoresIssues(validatedScores, isV3);
+  const scoresDiagnosis = filteredOutKeys.length > 0
+    ? {
+        ...scoresDiagnosisBase,
+        metadata: {
+          ...scoresDiagnosisBase.metadata,
+          filteredOutKeys,
+          filteredOutCount: filteredOutKeys.length
+        }
+      }
+    : scoresDiagnosisBase;
+
   // Debug logging for recovered assessments when debug mode is enabled
   useEffect(() => {
     if (logger.isDebugEnabled() && results && (results.recovered || results.previouslySaved)) {
@@ -92,18 +112,49 @@ function Results({ userName, results, answers, questions, onRestart }) {
     }
   }, [results, scores, isV3]);
 
-  // Data validation - log if data is malformed
-  if (!isValidScores(validatedScores)) {
-    logger.warn('Invalid scores detected in results', { scores: validatedScores }, 'results');
+  // Data validation - capture diagnostics and persist validation failures
+  const primitiveScoresValid = isValidScores(validatedScores);
+
+  if (!primitiveScoresValid || !scoresDiagnosis.isValid) {
+    logger.logValidationError('results', 'scores', scoresDiagnosis, {
+      userName,
+      isV3,
+      primitiveScoresValid,
+      rawScoreKeyCount: scores && typeof scores === 'object' ? Object.keys(scores).length : 0,
+      validatedScoreKeyCount: Object.keys(validatedScores).length
+    });
+  } else if (scoresDiagnosis.warnings.length > 0) {
+    logger.warn('Scores validation warnings detected', { diagnosis: scoresDiagnosis }, 'results');
   }
+
   if (components && !isValidComponents(components)) {
-    logger.warn('Invalid components detected in results', { components }, 'results');
+    logger.logValidationError('results', 'components', {
+      isValid: false,
+      issues: ['components object is missing required keys or contains non-numeric values'],
+      warnings: [],
+      suggestion: 'Some v3 features may not display correctly. Consider starting a new assessment.',
+      metadata: { componentKeys: Object.keys(components || {}) }
+    }, { userName, isV3 });
   }
+
   if (birkmanColor && !isValidBirkmanColor(birkmanColor)) {
-    logger.warn('Invalid birkman_color detected in results', { birkmanColor }, 'results');
+    logger.logValidationError('results', 'birkman_color', {
+      isValid: false,
+      issues: ['birkman_color is missing required fields or contains invalid values'],
+      warnings: [],
+      suggestion: 'Color results may not display correctly. Consider starting a new assessment.',
+      metadata: { birkmanColor }
+    }, { userName, isV3 });
   }
+
   if (birkmanStates && !isValidBirkmanStates(birkmanStates)) {
-    logger.warn('Invalid birkman_states detected in results', { birkmanStates }, 'results');
+    logger.logValidationError('results', 'birkman_states', {
+      isValid: false,
+      issues: ['birkman_states is missing required fields or contains invalid values'],
+      warnings: [],
+      suggestion: 'Internal states may not display correctly. Consider starting a new assessment.',
+      metadata: { stateKeys: Object.keys(birkmanStates || {}) }
+    }, { userName, isV3 });
   }
 
   // Save completed assessment to localStorage on mount
@@ -204,6 +255,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
       results: { ...results, mbti, resilience, personalizedNarrative },
       archetype,
       scores: validatedScores,
+      scoresDiagnosis,
       adaptabilityScore,
       topStrengths,
       dimensions,

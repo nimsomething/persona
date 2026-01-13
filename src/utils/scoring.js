@@ -662,46 +662,6 @@ export function diagnoseScoresIssues(scores, isV3Assessment = false) {
   const issues = [];
   const warnings = [];
 
-  // Check 1: Scores is null/undefined
-  if (!scores) {
-    return {
-      isValid: false,
-      issues: ['scores is null or undefined'],
-      warnings: [],
-      suggestion: 'This assessment data is completely missing. Please restart the assessment to generate new results.'
-    };
-  }
-
-  // Check 2: Scores is not an object
-  if (typeof scores !== 'object') {
-    return {
-      isValid: false,
-      issues: [`scores is not an object (found ${typeof scores})`],
-      warnings: [],
-      suggestion: 'The assessment data is corrupted. Please restart the assessment.'
-    };
-  }
-
-  // Check 3: Scores is empty
-  if (Object.keys(scores).length === 0) {
-    return {
-      isValid: false,
-      issues: ['scores object is empty'],
-      warnings: [],
-      suggestion: 'The assessment data contains no results. Please restart the assessment.'
-    };
-  }
-
-  // Check 4: Verify only primitive values in scores
-  const nonPrimitiveEntries = Object.entries(scores).filter(([key, value]) => {
-    return typeof value === 'object' || typeof value === 'function' || Array.isArray(value);
-  });
-
-  for (const [key] of nonPrimitiveEntries) {
-    issues.push(`Invalid non-primitive value found for score key: "${key}" (should be a number, string, or boolean)`);
-  }
-
-  // Check 5: Expected dimension keys for v2 compatibility
   const REQUIRED_CORE_DIMENSIONS = [
     'assertiveness_usual',
     'sociability_usual',
@@ -713,19 +673,129 @@ export function diagnoseScoresIssues(scores, isV3Assessment = false) {
     'theoretical_orientation_usual'
   ];
 
+  const actualType = scores === null ? 'null' : Array.isArray(scores) ? 'array' : typeof scores;
+  const isObject = !!scores && typeof scores === 'object' && !Array.isArray(scores);
+  const scoreKeys = isObject ? Object.keys(scores) : [];
+
+  const metadata = {
+    expectedAssessmentVersion: isV3Assessment ? 'v3' : 'v2-or-v3',
+    actualType,
+    keyCount: scoreKeys.length,
+    scoreKeys: scoreKeys.slice(0, 100)
+  };
+
+  if (scores === null || scores === undefined) {
+    issues.push('scores is null or undefined');
+  }
+
+  if (Array.isArray(scores)) {
+    issues.push('scores is an array (expected an object keyed by dimension name)');
+  }
+
+  if (!isObject && scores !== null && scores !== undefined && !Array.isArray(scores)) {
+    issues.push(`scores is not an object (found ${actualType})`);
+  }
+
+  if (!isObject) {
+    const nextSteps = [
+      'Reload the page to see if saved results rehydrate correctly.',
+      'Return to the Welcome screen and start a new assessment to generate fresh results.'
+    ];
+
+    return {
+      isValid: false,
+      issues,
+      warnings,
+      metadata: {
+        ...metadata,
+        missingCoreDimensions: REQUIRED_CORE_DIMENSIONS
+      },
+      suggestion: 'The assessment score data is missing or corrupted, so results cannot be displayed reliably.',
+      nextSteps
+    };
+  }
+
+  if (scoreKeys.length === 0) {
+    issues.push('scores object is empty');
+  }
+
+  // Diagnose key/value-level issues
+  const nonPrimitiveKeys = [];
+  const nullValueKeys = [];
+  const nanValueKeys = [];
+  const invalidTypeKeys = [];
+
+  for (const [key, value] of Object.entries(scores)) {
+    if (value === null) {
+      nullValueKeys.push(key);
+      issues.push(`Score "${key}" is null (expected a number 0-100)`);
+      continue;
+    }
+
+    if (typeof value === 'number' && Number.isNaN(value)) {
+      nanValueKeys.push(key);
+      issues.push(`Score "${key}" is NaN (expected a number 0-100)`);
+      continue;
+    }
+
+    if (Array.isArray(value) || typeof value === 'object' || typeof value === 'function') {
+      nonPrimitiveKeys.push(key);
+      issues.push(`Invalid non-primitive value found for score key: "${key}" (expected number/string/boolean)`);
+      continue;
+    }
+
+    if (typeof value !== 'number' && typeof value !== 'string' && typeof value !== 'boolean') {
+      invalidTypeKeys.push(key);
+      issues.push(`Score "${key}" has unsupported type: ${typeof value}`);
+    }
+  }
+
+  if (nonPrimitiveKeys.length > 0) {
+    metadata.nonPrimitiveKeys = nonPrimitiveKeys.slice(0, 50);
+  }
+  if (nullValueKeys.length > 0) {
+    metadata.nullValueKeys = nullValueKeys.slice(0, 50);
+  }
+  if (nanValueKeys.length > 0) {
+    metadata.nanValueKeys = nanValueKeys.slice(0, 50);
+  }
+  if (invalidTypeKeys.length > 0) {
+    metadata.invalidTypeKeys = invalidTypeKeys.slice(0, 50);
+  }
+
+  // Validate presence + numeric validity of core dimensions
   let validDimensions = 0;
   const missingDimensions = [];
+  const outOfRangeDimensions = [];
 
   for (const dim of REQUIRED_CORE_DIMENSIONS) {
-    if (scores[dim] === undefined) {
+    const value = scores[dim];
+
+    if (value === undefined || value === null) {
       missingDimensions.push(dim);
-    } else if (typeof scores[dim] !== 'number') {
-      issues.push(`Dimension "${dim}" has non-numeric value: ${typeof scores[dim]}`);
-    } else if (scores[dim] < 0 || scores[dim] > 100) {
-      warnings.push(`Dimension "${dim}" has out-of-range value: ${scores[dim]} (should be 0-100)`);
-    } else {
-      validDimensions++;
+      continue;
     }
+
+    if (typeof value !== 'number' || Number.isNaN(value)) {
+      issues.push(`Dimension "${dim}" has non-numeric value: ${typeof value}`);
+      continue;
+    }
+
+    if (value < 0 || value > 100) {
+      outOfRangeDimensions.push({ key: dim, value });
+      warnings.push(`Dimension "${dim}" has out-of-range value: ${value} (expected 0-100)`);
+      continue;
+    }
+
+    validDimensions++;
+  }
+
+  metadata.validCoreDimensions = validDimensions;
+  metadata.totalCoreDimensions = REQUIRED_CORE_DIMENSIONS.length;
+  metadata.missingCoreDimensions = missingDimensions;
+
+  if (outOfRangeDimensions.length > 0) {
+    metadata.outOfRangeCoreDimensions = outOfRangeDimensions.slice(0, 25);
   }
 
   if (missingDimensions.length === REQUIRED_CORE_DIMENSIONS.length) {
@@ -734,50 +804,74 @@ export function diagnoseScoresIssues(scores, isV3Assessment = false) {
     issues.push(`Missing core dimensions: ${missingDimensions.join(', ')}`);
   }
 
-  // Check 6: For v3, also check stress dimension variants
-  if (validDimensions > 0) {
-    const stressDimensions = REQUIRED_CORE_DIMENSIONS.map(dim => dim.replace('_usual', '_stress'));
-    const missingStressDimensions = [];
+  // v2 vs v3 mismatch signals
+  const hasValuesDimensions = scoreKeys.some(k => k.startsWith('values_'));
+  const hasWorkStyleDimensions = scoreKeys.some(k => k.startsWith('work_'));
+  const unscopedCoreKeys = ALL_DIMENSIONS.filter(dim => scores[dim] !== undefined);
 
-    for (const dim of stressDimensions) {
-      if (scores[dim] === undefined) {
-        missingStressDimensions.push(dim);
-      }
-    }
+  metadata.hasValuesDimensions = hasValuesDimensions;
+  metadata.hasWorkStyleDimensions = hasWorkStyleDimensions;
 
-    if (missingStressDimensions.length > 0 && missingStressDimensions.length < stressDimensions.length) {
-      warnings.push(`Partial stress dimension data: ${stressDimensions.length - missingStressDimensions.length}/${stressDimensions.length} found`);
-    } else if (missingStressDimensions.length === stressDimensions.length && isV3Assessment) {
-      warnings.push('No stress dimension scores found (v3 assessments should have these)');
+  if (unscopedCoreKeys.length > 0) {
+    warnings.push(
+      `Found unscoped core dimension keys (${unscopedCoreKeys.join(', ')}). Expected keys like "assertiveness_usual" / "assertiveness_stress".`
+    );
+    metadata.unscopedCoreKeys = unscopedCoreKeys;
+  }
+
+  // Stress dimension checks
+  const stressDimensions = REQUIRED_CORE_DIMENSIONS.map(dim => dim.replace('_usual', '_stress'));
+  const missingStressDimensions = [];
+  let stressFound = 0;
+
+  for (const dim of stressDimensions) {
+    if (scores[dim] === undefined || scores[dim] === null) {
+      missingStressDimensions.push(dim);
+    } else {
+      stressFound++;
     }
   }
 
-  // Check 7: v3-specific validations
-  if (isV3Assessment) {
-    // For v3, we expect components to exist in results (not scores)
-    // Warn if we're missing what should be v3 features
-    const v2Only = scores.values_autonomy !== undefined;
-    const v3Like = validDimensions > 0 && warnings.length === 0;
+  metadata.stressDimensionsFound = stressFound;
+  metadata.missingStressDimensions = missingStressDimensions;
 
-    if (v2Only && !v3Like) {
-      warnings.push('v2 assessment structure detected in context expecting v3');
-    }
+  if (stressFound > 0 && missingStressDimensions.length > 0) {
+    warnings.push(`Partial stress dimension data: ${stressFound}/${stressDimensions.length} found`);
+  } else if (stressFound === 0 && isV3Assessment) {
+    warnings.push('No stress dimension scores found (v3 assessments typically include *_stress variants)');
   }
 
-  // Build summary suggestion
+  const isLikelyV2 = isV3Assessment && (hasValuesDimensions || hasWorkStyleDimensions) && stressFound === 0;
+  metadata.isLikelyV2 = isLikelyV2;
+
+  if (isLikelyV2) {
+    warnings.push('v2-like score structure detected in a context expecting v3');
+  }
+
+  // Contextual recovery steps + summary suggestion
+  const nextSteps = ['Reload the page to rehydrate saved results.'];
+
+  if (isLikelyV2) {
+    nextSteps.push('Return to the Welcome screen and use the "Upgrade to v3" option for older saved assessments.');
+  }
+
+  if (issues.some(i => i.includes('non-primitive'))) {
+    nextSteps.push('If this assessment was saved on an older version, retake the assessment (or clear saved results) to avoid incompatible data structures.');
+  }
+
+  nextSteps.push('If this keeps happening, start a new assessment to generate fresh results.');
+
   let suggestion;
   if (missingDimensions.length > 0 && missingDimensions.length < 4) {
-    suggestion = 'The assessment data appears partially corrupted. Try refreshing the page. If issues persist, start a new assessment.';
+    suggestion = 'Some core dimension scores are missing. This often happens when saved data is partially corrupted.';
   } else if (missingDimensions.length >= 4) {
-    if (isV3Assessment && scores.values_autonomy !== undefined) {
-      suggestion = 'This appears to be a v2 assessment loaded in v3 context. Try upgrading the assessment through the main menu.';
-    } else {
-      suggestion = 'Critical assessment data is missing. Please start a new assessment to ensure accurate results.';
-    }
-  } else if (nonPrimitiveEntries.length > 0) {
-    suggestion = 'The assessment contains invalid data structures. This may happen with incompatible saved assessments. Try reloading or starting fresh.';
+    suggestion = isLikelyV2
+      ? 'This looks like an older (v2) assessment loaded into the v3 app. Use the upgrade flow to convert it.'
+      : 'Many required scores are missing, so results cannot be reliably displayed.';
+  } else if (nonPrimitiveKeys.length > 0 || nullValueKeys.length > 0 || nanValueKeys.length > 0) {
+    suggestion = 'The score data contains invalid values. This can happen with incompatible saved assessments or interrupted saves.';
   } else if (warnings.length > 0 && issues.length === 0) {
-    suggestion = 'The assessment data has some inconsistencies but may still be viewable. Some features may not display correctly.';
+    suggestion = 'The score data has minor inconsistencies. Results may still be viewable, but some features could be incomplete.';
   } else {
     suggestion = 'Please restart the assessment to generate complete, valid results.';
   }
@@ -786,13 +880,8 @@ export function diagnoseScoresIssues(scores, isV3Assessment = false) {
     isValid: issues.length === 0,
     issues,
     warnings,
-    metadata: {
-      validDimensions,
-      totalDimensions: REQUIRED_CORE_DIMENSIONS.length,
-      nonPrimitiveCount: nonPrimitiveEntries.length,
-      missingStressDimensions: isV3Assessment ? warnings.filter(w => w.includes('stress dimension')).length : 0,
-      isLikelyV2: scores.values_autonomy !== undefined && isV3Assessment
-    },
-    suggestion
+    metadata,
+    suggestion,
+    nextSteps
   };
 }

@@ -234,6 +234,27 @@ class LoggerService {
     return this.log('ERROR', message, context, category);
   }
 
+  /**
+   * Log a validation failure with consistent structure.
+   * This logs to the console and persists to the localStorage error log.
+   */
+  logValidationError(category = 'validation', validationType, diagnosis = {}, details = {}) {
+    const safeDiagnosis = diagnosis && typeof diagnosis === 'object' ? diagnosis : {};
+
+    const context = {
+      validationType,
+      issues: Array.isArray(safeDiagnosis.issues) ? safeDiagnosis.issues : [],
+      warnings: Array.isArray(safeDiagnosis.warnings) ? safeDiagnosis.warnings : [],
+      suggestion: safeDiagnosis.suggestion,
+      nextSteps: safeDiagnosis.nextSteps,
+      metadata: safeDiagnosis.metadata,
+      ...details
+    };
+
+    const message = `Validation failed: ${validationType}`;
+    return this.error(message, context, category);
+  }
+
   // Specialized logging methods for common operations
   logStorageOperation(operation, key, dataSize, success, error = null) {
     if (success) {
