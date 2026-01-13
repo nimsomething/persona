@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import careerFamiliesData from '../../data/career_families.json';
+import logger from '../../services/loggerService';
 
 // Utility function for emoji mapping
 const getCareerEmoji = (careerId) => {
@@ -20,20 +21,25 @@ const getHighestComponent = (components) => {
   if (!components || typeof components !== 'object') {
     return { name: 'Unknown', score: 0 };
   }
-  
+
   try {
-    const sortedEntries = Object.entries(components).sort(([,a], [,b]) => b - a);
-    if (sortedEntries.length === 0) {
+    // Filter to ensure we only have numeric values
+    const numericEntries = Object.entries(components).filter(
+      ([key, value]) => typeof value === 'number' && !isNaN(value)
+    );
+
+    if (numericEntries.length === 0) {
       return { name: 'Unknown', score: 0 };
     }
-    
+
+    const sortedEntries = numericEntries.sort(([,a], [,b]) => b - a);
     const [name, score] = sortedEntries[0];
     return {
       name: name.replace(/_/g, ' '),
       score: score || 0
     };
   } catch (error) {
-    console.error('Error getting highest component:', error);
+    logger.error('careers', 'Error getting highest component', { error: error.message });
     return { name: 'Unknown', score: 0 };
   }
 };
@@ -48,7 +54,17 @@ const CareersTab = ({ results }) => {
   }, [components]);
 
   const careerAlignment = useMemo(() => {
-    if (!birkmanColor || !components) return [];
+    // Safety checks for inputs
+    if (!birkmanColor || typeof birkmanColor !== 'object' ||
+        !birkmanColor.primary || !birkmanColor.spectrum ||
+        !components || typeof components !== 'object') {
+      return [];
+    }
+
+    // Validate birkmanColor has valid spectrum
+    if (!birkmanColor.spectrum || typeof birkmanColor.spectrum !== 'object') {
+      return [];
+    }
 
     return careerFamiliesData.map(family => {
       let score = 0;
@@ -70,12 +86,13 @@ const CareersTab = ({ results }) => {
 
       // 2. Component alignment (60% of score)
       const componentWeight = 60;
-      const componentKeys = Object.keys(family.component_fit);
-      const weightPerComponent = componentWeight / componentKeys.length;
+      const componentFit = family.component_fit || {};
+      const componentKeys = Object.keys(componentFit);
+      const weightPerComponent = componentKeys.length > 0 ? componentWeight / componentKeys.length : 0;
 
       componentKeys.forEach(key => {
-        const target = family.component_fit[key];
-        const userValue = components[key] || 50;
+        const target = componentFit[key];
+        const userValue = typeof components[key] === 'number' ? components[key] : 50;
         maxScore += weightPerComponent;
 
         let match = 0;

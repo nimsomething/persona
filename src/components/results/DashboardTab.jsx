@@ -4,6 +4,15 @@ import DimensionScorecard from '../DimensionScorecard';
 const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore, topStrengths, dimensions }) => {
   const isV3 = !!results.components;
 
+  // Render guard - ensure scores is valid
+  if (!scores || typeof scores !== 'object' || Object.keys(scores).length === 0) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <p className="text-red-700">Invalid scores data. Please refresh or restart the assessment.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 animate-fadeIn">
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-100">

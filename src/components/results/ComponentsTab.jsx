@@ -4,11 +4,24 @@ import componentsData from '../../data/components.json';
 const ComponentsTab = ({ results }) => {
   const components = results.components;
 
-  if (!components) {
+  // Render guard - ensure components is valid
+  if (!components || typeof components !== 'object' || Object.keys(components).length === 0) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
         <p className="text-yellow-700">9-Component data is not available for this assessment version.</p>
         <p className="text-sm text-yellow-600 mt-2">Upgrade to v3.0 to unlock behavioral component analysis.</p>
+      </div>
+    );
+  }
+
+  // Additional guard - ensure all values are numbers
+  const invalidEntries = Object.entries(components).filter(
+    ([key, value]) => typeof value !== 'number'
+  );
+  if (invalidEntries.length > 0) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <p className="text-red-700">Invalid component data detected. Please refresh or restart the assessment.</p>
       </div>
     );
   }

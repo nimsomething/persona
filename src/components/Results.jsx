@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import DimensionScorecard from './DimensionScorecard';
 import { generatePDFV3 as generatePDF } from '../utils/pdfGeneratorV3';
-import { calculateOverallResilience, generateCBPersonalizedNarrative } from '../utils/scoring';
+import { calculateOverallResilience, generateCBPersonalizedNarrative, isValidScores, isValidComponents, isValidBirkmanColor, isValidBirkmanStates } from '../utils/scoring';
 import mbtiService from '../services/mbtiMappingService';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
@@ -37,6 +37,17 @@ function Results({ userName, results, answers, questions, onRestart }) {
 
   // Handle both v2 and v3 result structures
   const scores = results.dimensions || results.scores || {};
+
+  // Validate scores - filter out any non-primitive values that could cause rendering errors
+  const validatedScores = {};
+  Object.entries(scores).forEach(([key, value]) => {
+    // Only include primitive values (numbers, strings, booleans)
+    // Skip objects like values_profile, work_style_profile that are in the results object
+    if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
+      validatedScores[key] = value;
+    }
+  });
+
   const archetype = results.archetype || { name: 'Professional', icon: '👤', shortDescription: 'Strategic professional', narrative: 'You are a balanced professional.' };
   const stressDeltas = results.stressDeltas || {};
   const adaptabilityScore = results.adaptabilityScore || 50;
@@ -44,6 +55,20 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const components = results.components;
   const birkmanStates = results.birkman_states;
   const isV3 = !!components;
+
+  // Data validation - log if data is malformed
+  if (!isValidScores(validatedScores)) {
+    logger.warn('Invalid scores detected in results', { scores: validatedScores }, 'results');
+  }
+  if (components && !isValidComponents(components)) {
+    logger.warn('Invalid components detected in results', { components }, 'results');
+  }
+  if (birkmanColor && !isValidBirkmanColor(birkmanColor)) {
+    logger.warn('Invalid birkman_color detected in results', { birkmanColor }, 'results');
+  }
+  if (birkmanStates && !isValidBirkmanStates(birkmanStates)) {
+    logger.warn('Invalid birkman_states detected in results', { birkmanStates }, 'results');
+  }
 
   // Save completed assessment to localStorage on mount
   useEffect(() => {
@@ -123,7 +148,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
   const topStrengths = dimensions
     .map(dim => ({
       ...dim,
-      score: scores[`${dim.key}_usual`] || 50
+      score: validatedScores[`${dim.key}_usual`] || 50
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
@@ -142,7 +167,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
       userName,
       results: { ...results, mbti, resilience, personalizedNarrative },
       archetype,
-      scores,
+      scores: validatedScores,
       adaptabilityScore,
       topStrengths,
       dimensions,
@@ -240,7 +265,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
 
         {/* Version Info Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 text-xs">
-          Birkman-Style Personality Assessment V3.0 • Built for cto.new • Comprehensive Professional Report
+          Birkman-Style Personality Assessment V3.0.1 • Built for cto.new • Comprehensive Professional Report
         </div>
       </div>
     </div>

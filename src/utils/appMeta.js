@@ -1,6 +1,6 @@
 import packageJson from '../../package.json';
 
-export const APP_VERSION = packageJson.version; // "3.0.0"
+export const APP_VERSION = packageJson.version; // "3.0.1"
 export const APP_NAME = 'Birkman Personality Assessment';
 export const APP_DESCRIPTION = 'Discover your personality strengths and career fit';
 export const APP_VERSION_LABEL = `v${APP_VERSION}`;
