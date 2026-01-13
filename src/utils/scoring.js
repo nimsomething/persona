@@ -542,16 +542,6 @@ export function getArchetypeFromScores(scores) {
  */
 
 /**
- * Validate that an object contains only numeric values
- * @param {Object} obj - Object to validate
- * @returns {Boolean} - True if all values are numbers
- */
-export function isValidNumericObject(obj) {
-  if (!obj || typeof obj !== 'object') return false;
-  return Object.values(obj).every(val => typeof val === 'number');
-}
-
-/**
  * Validate that object contains only numeric values
  * @param {Object} obj - Object to validate
  * @returns {Boolean} - True if all values are numbers
