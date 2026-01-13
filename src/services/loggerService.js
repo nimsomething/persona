@@ -161,7 +161,7 @@ class LoggerService {
     }
 
     const logEntry = this.formatMessage(level, message, category, context);
-    const categoryTag = category ? `[${category.toUpperCase()}]` : '';
+    const categoryTag = category && typeof category === 'string' ? `[${category.toUpperCase()}]` : '';
 
     // Console output with styling
     const style = `color: ${levelConfig.color}; font-weight: bold;`;
@@ -184,7 +184,7 @@ class LoggerService {
   formatMessage(level, message, category, context = {}) {
     const levelConfig = LOG_LEVELS[level];
     const timestamp = this.formatTimestamp();
-    const categoryTag = category ? `[${category.toUpperCase()}]` : '';
+    const categoryTag = category && typeof category === 'string' ? `[${category.toUpperCase()}]` : '';
     const versionTag = `v${APP_VERSION}`;
 
     return {

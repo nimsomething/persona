@@ -51,76 +51,88 @@ function App() {
     let isMounted = true;
 
     const initialize = async () => {
+      if (!isMounted) return;
+
       try {
-        // Load upgrade questions (IDs 121-140)
+        // Load upgrade questions
         const upgradableQuestions = questionsData.filter(q => q.upgrade_only === true);
-        if (isMounted) {
-          setUpgradeQuestions(upgradableQuestions);
-        }
+        setUpgradeQuestions(upgradableQuestions);
         logger.info('Upgrade questions loaded', { count: upgradableQuestions.length }, 'app');
 
-        // Load + auto-recover saved assessments (recalculates empty/invalid scores when answers exist)
-        const completedAssessments = await storageService.loadCompletedAssessments();
+        // Run diagnostics and recovery
+        const diagnosticSummary = storageService.diagnosticRawAnswersOnLoad();
+        let assessmentsToPersist = [];
+        let recoveredCount = 0;
+        let unrecoverableCount = 0;
 
-        if (!isMounted) return;
+        if (diagnosticSummary.totalAssessments > 0) {
+          const updatedAssessments = diagnosticSummary.results.map(result => {
+            if (result.isRecoverable) {
+              const rawAnswers = storageService.getRawAnswersFromAssessment(result.assessment);
+              const isV3 = storageService.isAssessmentExpectedV3(result.assessment);
+              const recalculatedResults = storageService.recalculateResultsFromAnswers(rawAnswers, isV3);
 
-        // Run data migration if needed (for v3.0.0 and earlier data)
-        if (completedAssessments.length > 0) {
-          // Check if any assessments need migration
-          const needsMigration = completedAssessments.some(assessment => 
-            dataMigrationService.hasLegacyData(assessment)
-          );
-          
-          if (needsMigration) {
-            logger.info('Legacy data detected, starting migration', { targetVersion: APP_VERSION }, 'app');
-            
-            const { migratedAssessments, migrationStats } = dataMigrationService.migrateAssessmentsToV3_0_1(completedAssessments);
-            
-            // Save migrated data back to storage
-            storageService.saveMigratedAssessments(migratedAssessments, migrationStats);
-            
-            logger.info('Data migration completed', migrationStats, 'app');
-            
-            // Continue with the most recent migrated assessment
-            if (migrationStats.migrationSuccess > 0 || (migrationStats.skipped > 0 && migratedAssessments.length > 0)) {
-              const mostRecent = migratedAssessments[0];
-              
-              if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
-                setRecoveredAssessment(mostRecent);
-              } else {
-                logger.warn('Incompatible assessment version found after migration', { version: mostRecent.version }, 'app');
-                setStorageError({
-                  type: 'version',
-                  message: 'A previous assessment was found but is from an incompatible version. Please take the assessment again.'
-                });
+              if (recalculatedResults) {
+                recoveredCount++;
+                return storageService.applyRecoveredResultsToAssessment(
+                  result.assessment,
+                  recalculatedResults,
+                  { method: 'recalculatedFromAnswers', recoveredByVersion: APP_VERSION },
+                  isV3
+                );
               }
             }
-          } else {
-            // No migration needed, proceed normally
-            const mostRecent = completedAssessments[0];
-            logger.info('Completed assessment recovered on mount', {
-              userName: mostRecent.userName,
-              completedAt: mostRecent.completedAt,
-              version: mostRecent.version
-            }, 'app');
+            // Mark as unrecoverable
+            unrecoverableCount++;
+            return {
+              ...result.assessment,
+              recoveryAttempted: true,
+              rawAnswersNotFound: !result.rawAnswersFound,
+            };
+          });
 
-            if (mostRecent.version && (isV2Assessment(mostRecent.version) || isV3Assessment(mostRecent.version))) {
-              setRecoveredAssessment(mostRecent);
-            } else {
-              logger.warn('Incompatible assessment version found', { version: mostRecent.version }, 'app');
-              setStorageError({
-                type: 'version',
-                message: 'A previous assessment was found but is from an incompatible version. Please take the assessment again.'
-              });
+          storageService.persistCompletedAssessments(updatedAssessments, {
+            operation: 'diagnosticRecovery',
+            recovered: recoveredCount,
+            unrecoverable: unrecoverableCount,
+          });
+          assessmentsToPersist = updatedAssessments;
+
+          // Log and display summary
+          const summaryMessage = `Recovery complete. Total: ${diagnosticSummary.totalAssessments}, Recovered: ${recoveredCount}, Unrecoverable: ${unrecoverableCount}`;
+          logger.info(summaryMessage, diagnosticSummary, 'recovery');
+          addError({
+            id: 'recovery-summary',
+            message: summaryMessage,
+            category: 'recovery',
+            level: 'INFO',
+          });
+          toggleVisibility(); // Open the panel to show the summary
+        }
+
+        // After recovery, check for data migration needs
+        if (assessmentsToPersist.length > 0) {
+          const needsMigration = assessmentsToPersist.some(assessment => dataMigrationService.hasLegacyData(assessment));
+          if (needsMigration) {
+            logger.info('Legacy data detected, starting migration', { targetVersion: APP_VERSION }, 'app');
+            const { migratedAssessments, migrationStats } = dataMigrationService.migrateAssessmentsToV3_0_1(assessmentsToPersist);
+            storageService.saveMigratedAssessments(migratedAssessments, migrationStats);
+            logger.info('Data migration completed', migrationStats, 'app');
+            if (migratedAssessments.length > 0) {
+              setRecoveredAssessment(migratedAssessments[0]);
             }
+          } else {
+            const mostRecent = assessmentsToPersist[0];
+            setRecoveredAssessment(mostRecent);
           }
         }
+
       } catch (error) {
-        logger.error('Failed to recover completed assessment', { error: error.message }, 'app');
+        logger.error('Failed during app initialization', { error: error.message, stack: error.stack }, 'app');
         if (isMounted) {
           setStorageError({
-            type: 'recovery',
-            message: 'Unable to load your previous assessment. Please take the assessment again.'
+            type: 'initialization',
+            message: 'An error occurred while initializing the application. Please try again.',
           });
         }
       }
@@ -131,7 +143,7 @@ function App() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [addError, toggleVisibility]);
 
   const handleStart = (name) => {
     setUserName(name);
