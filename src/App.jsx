@@ -3,11 +3,13 @@ import Welcome from './components/Welcome';
 import Assessment from './components/Assessment';
 import Results from './components/Results';
 import VersionFooter from './components/VersionFooter';
+import ErrorDisplay from './components/ErrorDisplay';
 import questionsData from './data/questions.json';
 import storageService from './services/storageService';
 import upgradeService from './services/upgradeService';
 import logger from './services/loggerService';
 import { isV2Assessment, isV3Assessment } from './utils/appMeta';
+import { useErrorLog } from './hooks/useErrorLog';
 
 function App() {
   const [stage, setStage] = useState('welcome');
@@ -18,6 +20,30 @@ function App() {
   const [storageError, setStorageError] = useState(null);
   const [upgradeMode, setUpgradeMode] = useState(false);
   const [upgradeQuestions, setUpgradeQuestions] = useState([]);
+
+  // Error logging hook
+  const {
+    errors,
+    isVisible: isErrorPanelVisible,
+    addError,
+    clearErrors,
+    toggleVisibility: toggleErrorPanel,
+    dismissError,
+    copyErrorsToClipboard
+  } = useErrorLog();
+
+  // Keyboard shortcut for toggling error panel (Shift+E)
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.shiftKey && event.key === 'E') {
+        event.preventDefault();
+        toggleErrorPanel();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleErrorPanel]);
 
   // Recover completed assessments on mount and load upgrade questions
   useEffect(() => {
@@ -170,6 +196,16 @@ function App() {
         />
       )}
       <VersionFooter />
+      
+      {/* Error Display Panel */}
+      <ErrorDisplay
+        errors={errors}
+        isVisible={isErrorPanelVisible}
+        onToggle={toggleErrorPanel}
+        onClear={clearErrors}
+        onDismiss={dismissError}
+        onCopyToClipboard={copyErrorsToClipboard}
+      />
     </div>
   );
 }
