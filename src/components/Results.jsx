@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
 import DimensionScorecard from './DimensionScorecard';
 import { generatePDFV3 as generatePDF } from '../utils/pdfGeneratorV3';
-import { calculateOverallResilience, generateCBPersonalizedNarrative, isValidScores, isValidComponents, isValidBirkmanColor, isValidBirkmanStates } from '../utils/scoring';
+import {
+  calculateOverallResilience,
+  generateCBPersonalizedNarrative,
+  isValidScores,
+  isValidComponents,
+  isValidBirkmanColor,
+  isValidBirkmanStates
+} from '../utils/scoring';
+import { APP_VERSION } from '../utils/appMeta';
 import mbtiService from '../services/mbtiMappingService';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
@@ -38,6 +46,22 @@ function Results({ userName, results, answers, questions, onRestart }) {
   // Handle both v2 and v3 result structures
   const scores = results.dimensions || results.scores || {};
 
+  // Common result fields (v2 + v3)
+  const archetype = results.archetype || {
+    name: 'Professional',
+    icon: '👤',
+    shortDescription: 'Strategic professional',
+    narrative: 'You are a balanced professional.'
+  };
+  const stressDeltas = results.stressDeltas || {};
+  const adaptabilityScore = results.adaptabilityScore || 50;
+
+  // v3-only fields
+  const birkmanColor = results.birkman_color;
+  const components = results.components;
+  const birkmanStates = results.birkman_states;
+  const isV3 = !!components;
+
   // Validate scores - filter out any non-primitive values that could cause rendering errors
   const validatedScores = {};
   Object.entries(scores).forEach(([key, value]) => {
@@ -67,14 +91,6 @@ function Results({ userName, results, answers, questions, onRestart }) {
       });
     }
   }, [results, scores, isV3]);
-
-  const archetype = results.archetype || { name: 'Professional', icon: '👤', shortDescription: 'Strategic professional', narrative: 'You are a balanced professional.' };
-  const stressDeltas = results.stressDeltas || {};
-  const adaptabilityScore = results.adaptabilityScore || 50;
-  const birkmanColor = results.birkman_color;
-  const components = results.components;
-  const birkmanStates = results.birkman_states;
-  const isV3 = !!components;
 
   // Data validation - log if data is malformed
   if (!isValidScores(validatedScores)) {
@@ -285,7 +301,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
 
         {/* Version Info Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 text-xs">
-          Birkman-Style Personality Assessment V3.0.2 • Built for cto.new • Comprehensive Professional Report
+          Birkman-Style Personality Assessment V{APP_VERSION} • Built for cto.new • Comprehensive Professional Report
         </div>
       </div>
     </div>
