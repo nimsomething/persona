@@ -1,28 +1,30 @@
 import React from 'react';
 import componentsData from '../../data/components.json';
+import { isValidComponents } from '../../utils/scoring';
+import logger from '../../services/loggerService';
 
 const ComponentsTab = ({ results }) => {
   const components = results.components;
 
   // Render guard - ensure components is valid
   if (!components || typeof components !== 'object' || Object.keys(components).length === 0) {
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-        <p className="text-yellow-700">9-Component data is not available for this assessment version.</p>
-        <p className="text-sm text-yellow-600 mt-2">Upgrade to v3.0 to unlock behavioral component analysis.</p>
-      </div>
-    );
+    return <ComponentsErrorDisplay missingComponents={true} />;
   }
 
-  // Additional guard - ensure all values are numbers
-  const invalidEntries = Object.entries(components).filter(
-    ([key, value]) => typeof value !== 'number'
-  );
-  if (invalidEntries.length > 0) {
+  // Additional guard - ensure all values are numbers and validate structure
+  if (!isValidComponents(components)) {
+    const invalidEntries = Object.entries(components).filter(([key, value]) => typeof value !== 'number');
+    const expectedKeys = ['social_energy', 'physical_energy', 'emotional_energy', 'self_consciousness', 'assertiveness', 'insistence', 'incentives', 'restlessness', 'thought'];
+    const actualKeys = Object.keys(components);
+    const missingKeys = expectedKeys.filter(key => !actualKeys.includes(key));
+    
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <p className="text-red-700">Invalid component data detected. Please refresh or restart the assessment.</p>
-      </div>
+      <ComponentsErrorDisplay 
+        missingComponents={false} 
+        invalidEntries={invalidEntries}
+        missingKeys={missingKeys}
+        actualKeys={actualKeys}
+      />
     );
   }
 
@@ -126,6 +128,94 @@ const ComponentsTab = ({ results }) => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+/**
+ * Enhanced error display component for components tab
+ */
+const ComponentsErrorDisplay = ({ missingComponents, invalidEntries, missingKeys, actualKeys }) => {
+  if (missingComponents) {
+    return (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-8">
+        <div className="flex items-center gap-4 mb-4">
+          <span className="text-2xl">⚠️</span>
+          <h3 className="text-xl font-bold text-yellow-900">9-Component Data Unavailable</h3>
+        </div>
+        <p className="text-yellow-800 mb-4">This assessment version does not include the 9-Component analysis.</p>
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+          <h4 className="font-bold text-blue-900 mb-2">What to try:</h4>
+          <ol className="space-y-1 text-sm text-blue-800">
+            <li>1. If this is a v2 assessment, upgrade to v3.0 to unlock behavioral component analysis</li>
+            <li>2. Complete a new assessment to get v3.0 results with all features</li>
+          </ol>
+        </div>
+        <p className="text-sm text-yellow-700 mt-4 italic">
+          Expected 9 components but found: {actualKeys ? actualKeys.length : 0} keys.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-red-50 border border-red-200 rounded-xl p-8">
+      <div className="flex items-start gap-4 mb-6">
+        <span className="text-2xl">❌</span>
+        <div>
+          <h3 className="text-xl font-bold text-red-900 mb-2">Invalid Component Data</h3>
+          <p className="text-red-700">The component data in this assessment is malformed.</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {(invalidEntries && invalidEntries.length > 0) && (
+          <div className="bg-white border border-red-100 rounded-lg p-4">
+            <h4 className="font-bold text-red-900 mb-2">Invalid entries:</h4>
+            <ul className="space-y-1">
+              {invalidEntries.map(([key, value], idx) => (
+                <li key={idx} className="text-red-800 text-sm">
+                  • {key}: {typeof value} (expected: number, got: {typeof value})
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {(missingKeys && missingKeys.length > 0) && (
+          <div className="bg-white border border-yellow-100 rounded-lg p-4">
+            <h4 className="font-bold text-yellow-800 mb-2">Missing components:</h4>
+            <p className="text-yellow-700 text-sm">Missing these 9 required components:</p>
+            <ul className="mt-2 space-y-1 text-sm text-yellow-700">
+              {missingKeys.map((key, idx) => (
+                <li key={idx} className="ml-4">• {key}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+          <h4 className="font-bold text-blue-900 mb-2">What to try:</h4>
+          <ul className="space-y-1 text-sm text-blue-800">
+            <li>• Start a new assessment to generate complete v3.0 results</li>
+            <li>• If this is a recovered/v2 assessment, return to the Welcome screen and try upgrading</li>
+          </ul>
+        </div>
+      </div>
+
+      {logger.isDebugEnabled() && (
+        <div className="mt-4 bg-gray-900 text-green-400 rounded-lg p-4 overflow-x-auto">
+          <h4 className="font-bold mb-2">Debug Info</h4>
+          <pre className="text-xs whitespace-pre-wrap">
+{JSON.stringify({
+  actualKeys,
+  invalidCount: invalidEntries?.length || 0,
+  missingCount: missingKeys?.length || 0,
+  totalKeys: actualKeys?.length || 0
+}, null, 2)}
+          </pre>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React from 'react';
 import birkmanColorsData from '../../data/birkman_colors.json';
+import { isValidBirkmanColor } from '../../utils/scoring';
+import logger from '../../services/loggerService';
 
 const BirkmanColorsTab = ({ results }) => {
   const birkmanColor = results.birkman_color;
@@ -7,12 +9,26 @@ const BirkmanColorsTab = ({ results }) => {
   // Render guard - ensure birkman_color is valid
   if (!birkmanColor || typeof birkmanColor !== 'object' ||
       !birkmanColor.primary || !birkmanColor.secondary || !birkmanColor.spectrum) {
-    return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-        <p className="text-yellow-700">Birkman Color data is not available for this assessment version.</p>
-        <p className="text-sm text-yellow-600 mt-2">Upgrade to v3.0 to unlock color analysis.</p>
-      </div>
-    );
+    return <BirkmanColorErrorDisplay missingColor={true} />;
+  }
+
+  // Additional validation using the scoring utility
+  if (!isValidBirkmanColor(birkmanColor)) {
+    const invalidParts = [];
+    if (typeof birkmanColor.primary !== 'string') invalidParts.push('primary (must be a string)');
+    if (typeof birkmanColor.secondary !== 'string') invalidParts.push('secondary (must be a string)');
+    if (typeof birkmanColor.spectrum !== 'object') invalidParts.push('spectrum (must be an object with color percentages)');
+    else {
+      const colors = ['Red', 'Green', 'Yellow', 'Blue'];
+      colors.forEach(color => {
+        const value = birkmanColor.spectrum?.[color];
+        if (typeof value !== 'number' || value < 0 || value > 100) {
+          invalidParts.push(`spectrum.${color} (must be a number 0-100, got ${typeof value}: ${value})`);
+        }
+      });
+    }
+
+    return <BirkmanColorErrorDisplay invalidParts={invalidParts} />;
   }
 
   const primaryColorData = birkmanColorsData.find(c => c.name === birkmanColor.primary) || birkmanColorsData[0];

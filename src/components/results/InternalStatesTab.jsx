@@ -1,4 +1,6 @@
 import React from 'react';
+import { isValidBirkmanStates } from '../../utils/scoring';
+import logger from '../../services/loggerService';
 
 const InternalStatesTab = ({ results }) => {
   const states = results.birkman_states;
@@ -6,10 +8,44 @@ const InternalStatesTab = ({ results }) => {
   // Render guard - ensure birkman_states is valid
   if (!states || typeof states !== 'object' || !states.interests || !states.usual_behavior || !states.needs || !states.stress_behavior) {
     return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-        <p className="text-yellow-700">Internal States data is not available for this assessment version.</p>
-        <p className="text-sm text-yellow-600 mt-2">Upgrade to v3.0 to unlock Interests, Needs, and Stress analysis.</p>
+      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-8">
+        <div className="flex items-center gap-4 mb-4">
+          <span className="text-2xl">⚠️</span>
+          <h3 className="text-xl font-bold text-yellow-900">Internal States Data Unavailable</h3>
+        </div>
+        <p className="text-yellow-800 mb-4">This assessment version does not include detailed Interests, Needs, and Stress behavior analysis.</p>
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+          <h4 className="font-bold text-blue-900 mb-2">What to try:</h4>
+          <ul className="space-y-1 text-sm text-blue-800">
+            <li>• Complete a v3.0 assessment to unlock detailed state analysis</li>
+            <li>• Upgrade from v2 if you have a previous assessment saved</li>
+          </ul>
+        </div>
       </div>
+    );
+  }
+
+  // Additional validation using the scoring utility
+  if (!isValidBirkmanStates(states)) {
+    const expectedStates = ['interests', 'usual_behavior', 'needs', 'stress_behavior'];
+    const actualStates = Object.keys(states);
+    const missingStates = expectedStates.filter(key => !actualStates.includes(key));
+    
+    const invalidStates = actualStates.filter(state => {
+      if (!states[state] || typeof states[state] !== 'object') return true;
+      const colors = ['Red', 'Green', 'Yellow', 'Blue'];
+      return colors.some(color => {
+        const value = states[state]?.[color];
+        return typeof value !== 'number' || value < 0 || value > 100;
+      });
+    });
+
+    return (
+      <InternalStatesErrorDisplay 
+        missingStates={missingStates}
+        invalidStates={invalidStates}
+        actualStates={actualStates}
+      />
     );
   }
 
@@ -136,6 +172,76 @@ const InternalStatesTab = ({ results }) => {
           </p>
         </div>
       </div>
+    </div>
+  );
+};
+
+/**
+ * Enhanced error display component for internal states tab
+ */
+const InternalStatesErrorDisplay = ({ missingStates, invalidStates, actualStates }) => {
+  return (
+    <div className="bg-red-50 border border-red-200 rounded-xl p-8">
+      <div className="flex items-start gap-4 mb-6">
+        <span className="text-2xl">❌</span>
+        <div>
+          <h3 className="text-xl font-bold text-red-900 mb-2">Invalid Internal States Data</h3>
+          <p className="text-red-700">The internal states data in this assessment is malformed.</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {(missingStates && missingStates.length > 0) && (
+          <div className="bg-white border border-red-100 rounded-lg p-4">
+            <h4 className="font-bold text-red-900 mb-2">Missing state categories:</h4>
+            <ul className="space-y-1">
+              {missingStates.map((state, idx) => (
+                <li key={idx} className="text-red-800 text-sm">
+                  • {state}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {(invalidStates && invalidStates.length > 0) && (
+          <div className="bg-white border border-red-100 rounded-lg p-4">
+            <h4 className="font-bold text-red-900 mb-2">Invalid state data:</h4>
+            <p className="text-red-800 text-sm mb-2">These states contain invalid color spectrum data:</p>
+            <ul className="space-y-1 text-sm text-red-800">
+              {invalidStates.map((state, idx) => (
+                <li key={idx} className="ml-4">• {state.replace('_', ' ')}</li>
+              ))}
+            </ul>
+            <p className="text-xs text-red-700 mt-2">
+              Each state should have numeric values for: Red, Green, Yellow, Blue (0-100)
+            </p>
+          </div>
+        )}
+
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+          <h4 className="font-bold text-blue-900 mb-2">What to try:</h4>
+          <ul className="space-y-1 text-sm text-blue-800">
+            <li>• Complete a v3.0 assessment to unlock detailed state analysis</li>
+            <li>• If this is a recovered/v2 assessment, upgrade to v3.0</li>
+            <li>• Start a new assessment to generate complete v3.0 results</li>
+          </ul>
+        </div>
+      </div>
+
+      {logger.isDebugEnabled() && (
+        <div className="mt-4 bg-gray-900 text-green-400 rounded-lg p-4 overflow-x-auto">
+          <h4 className="font-bold mb-2">Debug Info</h4>
+          <pre className="text-xs whitespace-pre-wrap">
+{JSON.stringify({
+  expectedStates: ['interests', 'usual_behavior', 'needs', 'stress_behavior'],
+  actualStates: actualStates,
+  missingCount: missingStates?.length || 0,
+  invalidCount: invalidStates?.length || 0
+}, null, 2)}
+          </pre>
+        </div>
+      )}
     </div>
   );
 };
