@@ -1,9 +1,51 @@
 import React, { useMemo } from 'react';
 import careerFamiliesData from '../../data/career_families.json';
 
+// Utility function for emoji mapping
+const getCareerEmoji = (careerId) => {
+  const emojiMap = {
+    leadership_management: '📈',
+    analytical_technical: '💻',
+    creative_design: '🎨',
+    sales_business_development: '💰',
+    helping_service: '🤝',
+    administrative_operational: '⚙️',
+    entrepreneurial_innovation: '🚀'
+  };
+  return emojiMap[careerId] || '🛠️';
+};
+
+// Utility function to safely get highest component
+const getHighestComponent = (components) => {
+  if (!components || typeof components !== 'object') {
+    return { name: 'Unknown', score: 0 };
+  }
+  
+  try {
+    const sortedEntries = Object.entries(components).sort(([,a], [,b]) => b - a);
+    if (sortedEntries.length === 0) {
+      return { name: 'Unknown', score: 0 };
+    }
+    
+    const [name, score] = sortedEntries[0];
+    return {
+      name: name.replace(/_/g, ' '),
+      score: score || 0
+    };
+  } catch (error) {
+    console.error('Error getting highest component:', error);
+    return { name: 'Unknown', score: 0 };
+  }
+};
+
 const CareersTab = ({ results }) => {
-  const birkmanColor = results.birkman_color;
-  const components = results.components;
+  const birkmanColor = results?.birkman_color;
+  const components = results?.components;
+
+  // Pre-calculate highest component with safety checks
+  const highestComponent = useMemo(() => {
+    return getHighestComponent(components);
+  }, [components]);
 
   const careerAlignment = useMemo(() => {
     if (!birkmanColor || !components) return [];
@@ -92,13 +134,7 @@ const CareersTab = ({ results }) => {
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="text-4xl">
-                  {career.id === 'leadership_management' ? '📈' : 
-                   career.id === 'analytical_technical' ? '💻' :
-                   career.id === 'creative_design' ? '🎨' :
-                   career.id === 'sales_business_development' ? '💰' :
-                   career.id === 'helping_service' ? '🤝' :
-                   career.id === 'administrative_operational' ? '⚙️' :
-                   career.id === 'entrepreneurial_innovation' ? '🚀' : '🛠️'}
+                  {getCareerEmoji(career.id)}
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-black text-gray-900">{career.alignmentScore}%</div>
@@ -128,13 +164,7 @@ const CareersTab = ({ results }) => {
           {otherMatches.map(career => (
             <div key={career.id} className="flex items-center gap-6 p-4 rounded-xl hover:bg-gray-50 transition">
               <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl">
-                {career.id === 'leadership_management' ? '📈' : 
-                 career.id === 'analytical_technical' ? '💻' :
-                 career.id === 'creative_design' ? '🎨' :
-                 career.id === 'sales_business_development' ? '💰' :
-                 career.id === 'helping_service' ? '🤝' :
-                 career.id === 'administrative_operational' ? '⚙️' :
-                 career.id === 'entrepreneurial_innovation' ? '🚀' : '🛠️'}
+                {getCareerEmoji(career.id)}
               </div>
               <div className="flex-1">
                 <h4 className="font-bold text-gray-900">{career.name}</h4>
@@ -160,13 +190,13 @@ const CareersTab = ({ results }) => {
             <div className="bg-indigo-800/50 rounded-xl p-5 border border-indigo-700">
               <h4 className="font-bold text-indigo-200 mb-2 uppercase text-xs tracking-widest">Key Growth Area</h4>
               <p className="text-sm">
-                Focus on leveraging your <strong>{birkmanColor.primary}</strong> strengths while being mindful of your <strong>{Object.entries(components).sort(([,a], [,b]) => b - a)[0][0].replace('_', ' ')}</strong> score of <strong>{Object.entries(components).sort(([,a], [,b]) => b - a)[0][1]}</strong>.
+                Focus on leveraging your <strong>{birkmanColor?.primary || 'Unknown'}</strong> strengths while being mindful of your <strong>{highestComponent.name}</strong> score of <strong>{highestComponent.score}</strong>.
               </p>
             </div>
             <div className="bg-indigo-800/50 rounded-xl p-5 border border-indigo-700">
               <h4 className="font-bold text-indigo-200 mb-2 uppercase text-xs tracking-widest">Work Environment</h4>
               <p className="text-sm">
-                You thrive best in environments that align with your <strong>{topMatches[0].name}</strong> profile, which typically offer <strong>{topMatches[0].work_environment.toLowerCase()}</strong>.
+                You thrive best in environments that align with your <strong>{topMatches[0]?.name || 'Unknown'}</strong> profile, which typically offer <strong>{topMatches[0]?.work_environment?.toLowerCase() || 'varied'}</strong>.
               </p>
             </div>
           </div>

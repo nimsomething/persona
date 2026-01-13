@@ -11,44 +11,174 @@ class LoggerService {
   constructor() {
     this.currentLevel = LOG_LEVELS.DEBUG.value;
     this.enableLocalStorageDebugging = false;
+    this.errorQueue = [];
+    this.errorSubscriptions = [];
+    this.maxErrorQueue = 50;
     this.setupGlobalErrorHandler();
   }
 
   setupGlobalErrorHandler() {
     if (typeof window !== 'undefined') {
+      // Capture window.onerror
       window.addEventListener('error', (event) => {
-        this.error('Global error caught', {
+        this.captureError('Global error caught', {
           message: event.message,
           filename: event.filename,
           lineno: event.lineno,
           colno: event.colno,
-          error: event.error?.stack
+          error: event.error?.stack,
+          type: 'window.error'
         }, 'global');
       });
 
+      // Capture unhandled promise rejections
       window.addEventListener('unhandledrejection', (event) => {
-        this.error('Unhandled promise rejection', {
+        this.captureError('Unhandled promise rejection', {
           reason: event.reason,
-          stack: event.reason?.stack
+          stack: event.reason?.stack,
+          type: 'unhandledrejection'
         }, 'global');
       });
     }
   }
 
-  setLogLevel(level) {
-    if (typeof level === 'string') {
-      this.currentLevel = LOG_LEVELS[level.toUpperCase()]?.value ?? LOG_LEVELS.INFO.value;
-    } else {
-      this.currentLevel = level;
+  captureError(message, context = {}, category = null) {
+    const errorEntry = this.formatErrorEntry('ERROR', message, context, category);
+    
+    // Add to error queue
+    this.errorQueue.push(errorEntry);
+    if (this.errorQueue.length > this.maxErrorQueue) {
+      this.errorQueue.shift(); // Remove oldest error
+    }
+
+    // Save to localStorage
+    this.saveErrorToLocalStorage(errorEntry);
+
+    // Notify subscribers
+    this.notifyErrorSubscribers(errorEntry);
+
+    return errorEntry;
+  }
+
+  formatErrorEntry(level, message, context = {}, category = null) {
+    const levelConfig = LOG_LEVELS[level];
+    const timestamp = new Date().toISOString();
+    
+    return {
+      id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp,
+      level,
+      category: category || 'unknown',
+      message,
+      context,
+      version: `v${APP_VERSION}`,
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown'
+    };
+  }
+
+  saveErrorToLocalStorage(errorEntry) {
+    try {
+      const errorKey = 'personality_assessment_errors';
+      const existingErrors = JSON.parse(localStorage.getItem(errorKey) || '[]');
+      existingErrors.push(errorEntry);
+
+      // Keep only last 20 errors in localStorage
+      if (existingErrors.length > 20) {
+        existingErrors.splice(0, existingErrors.length - 20);
+      }
+
+      localStorage.setItem(errorKey, JSON.stringify(existingErrors));
+    } catch (e) {
+      // Silently fail to avoid infinite loops
     }
   }
 
-  toggleLocalStorageDebugging(enabled) {
-    this.enableLocalStorageDebugging = enabled;
+  notifyErrorSubscribers(errorEntry) {
+    this.errorSubscriptions.forEach(callback => {
+      try {
+        callback(errorEntry);
+      } catch (e) {
+        // Prevent subscription callback errors from breaking the logger
+      }
+    });
   }
 
-  formatTimestamp() {
-    return new Date().toISOString();
+  // Error log management methods
+  getErrorLog() {
+    return [...this.errorQueue];
+  }
+
+  clearErrorLog() {
+    this.errorQueue = [];
+    try {
+      localStorage.removeItem('personality_assessment_errors');
+    } catch (e) {
+      // Silently fail
+    }
+  }
+
+  loadErrorsFromLocalStorage() {
+    try {
+      const errorKey = 'personality_assessment_errors';
+      const storedErrors = JSON.parse(localStorage.getItem(errorKey) || '[]');
+      
+      // Load up to 20 most recent errors
+      const recentErrors = storedErrors.slice(-20);
+      this.errorQueue = recentErrors;
+      
+      return recentErrors;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Subscription methods
+  subscribeToErrors(callback) {
+    if (typeof callback === 'function') {
+      this.errorSubscriptions.push(callback);
+      
+      // Return unsubscribe function
+      return () => {
+        const index = this.errorSubscriptions.indexOf(callback);
+        if (index > -1) {
+          this.errorSubscriptions.splice(index, 1);
+        }
+      };
+    }
+  }
+
+  unsubscribeFromErrors(callback) {
+    const index = this.errorSubscriptions.indexOf(callback);
+    if (index > -1) {
+      this.errorSubscriptions.splice(index, 1);
+    }
+  }
+
+  log(level, message, context = {}, category = null) {
+    const levelConfig = LOG_LEVELS[level];
+    if (!levelConfig || levelConfig.value < this.currentLevel) {
+      return;
+    }
+
+    const logEntry = this.formatMessage(level, message, category, context);
+    const categoryTag = category ? `[${category.toUpperCase()}]` : '';
+
+    // Console output with styling
+    const style = `color: ${levelConfig.color}; font-weight: bold;`;
+    const prefix = `%c${levelConfig.icon} ${logEntry.timestamp} [${level}]${categoryTag ? ` ${categoryTag}` : ''}`;
+    console.log(prefix, style, message, context || '');
+
+    // Capture errors in error queue
+    if (level === 'ERROR') {
+      this.captureError(message, context, category);
+    }
+
+    // localStorage debugging for storage operations
+    if (this.enableLocalStorageDebugging && category === 'storage') {
+      this.saveToLocalStorageDebug(logEntry);
+    }
+
+    return logEntry;
   }
 
   formatMessage(level, message, category, context = {}) {
@@ -67,26 +197,8 @@ class LoggerService {
     };
   }
 
-  log(level, message, context = {}, category = null) {
-    const levelConfig = LOG_LEVELS[level];
-    if (!levelConfig || levelConfig.value < this.currentLevel) {
-      return;
-    }
-
-    const logEntry = this.formatMessage(level, message, category, context);
-    const categoryTag = category ? `[${category.toUpperCase()}]` : '';
-
-    // Console output with styling
-    const style = `color: ${levelConfig.color}; font-weight: bold;`;
-    const prefix = `%c${levelConfig.icon} ${logEntry.timestamp} [${level}]${categoryTag ? ` ${categoryTag}` : ''}`;
-    console.log(prefix, style, message, context || '');
-
-    // localStorage debugging for storage operations
-    if (this.enableLocalStorageDebugging && category === 'storage') {
-      this.saveToLocalStorageDebug(logEntry);
-    }
-
-    return logEntry;
+  formatTimestamp() {
+    return new Date().toISOString();
   }
 
   saveToLocalStorageDebug(logEntry) {
@@ -172,6 +284,18 @@ class LoggerService {
       this.error(`${label} failed`, { duration: `${duration.toFixed(2)}ms`, error: error.message }, category);
       throw error;
     }
+  }
+
+  setLogLevel(level) {
+    if (typeof level === 'string') {
+      this.currentLevel = LOG_LEVELS[level.toUpperCase()]?.value ?? LOG_LEVELS.INFO.value;
+    } else {
+      this.currentLevel = level;
+    }
+  }
+
+  toggleLocalStorageDebugging(enabled) {
+    this.enableLocalStorageDebugging = enabled;
   }
 }
 
