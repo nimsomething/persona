@@ -98,13 +98,14 @@ class StorageService {
     logger.info('Session cleared', {}, 'storage');
   }
 
-  saveCompletedAssessment(userName, results, version = APP_VERSION) {
+  saveCompletedAssessment(userName, results, rawAnswers, version = APP_VERSION) {
     if (!this.isAvailable) return null;
 
     const completedAssessment = {
       id: this.generateSessionId(),
       userName,
       results,
+      rawAnswers,
       completedAt: new Date().toISOString(),
       version: version,
       // v3 fields

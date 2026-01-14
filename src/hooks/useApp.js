@@ -61,7 +61,7 @@ export const useApp = () => {
         };
         initialize();
         return () => { isMounted = false; };
-    }, [addError, toggleErrorPanel]);
+    }, []);
 
     const handleStart = (name) => {
         setUserName(name);
