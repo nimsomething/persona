@@ -136,21 +136,21 @@ src/
 │   ├── ProgressBar.jsx  # Progress indicator
 │   ├── Results.jsx      # Results display with error handling
 │   ├── Welcome.jsx      # Welcome screen with recovery UI
-│   ├── DimensionScorecard.jsx  # Score visualization
 │   └── VersionFooter.jsx      # Version display
 ├── services/            # Business logic and services
+│   ├── appService.js           # App metadata and debug utilities
 │   ├── loggerService.js        # Centralized logging system
+│   ├── pdfService.js           # PDF generation
+│   ├── personalityService.js   # Scoring and personality logic
 │   ├── storageService.js       # localStorage management
-│   └── mbtiMappingService.js   # MBTI calculation
+│   └── versioningService.js    # Data migration and versioning
 ├── data/               # JSON data files
 │   ├── questions.json              # Question bank
 │   ├── archetypes.json             # Archetype definitions
 │   └── dimensionDescriptions.json  # Dimension content
-├── utils/              # Utility functions
-│   ├── scoring.js      # Scoring logic
-│   ├── pdfGeneratorV2.js # PDF generation with error handling
-│   ├── appMeta.js      # App version metadata
-│   └── debug.js        # Debug utilities
+├── hooks/              # Custom React hooks
+│   ├── useApp.js        # Main application logic
+│   └── useErrorLog.js   # Error logging and display
 ├── App.jsx             # Main app component with recovery logic
 ├── main.jsx            # Entry point
 └── index.css           # Global styles
