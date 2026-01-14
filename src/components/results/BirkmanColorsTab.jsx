@@ -1,6 +1,6 @@
 import React from 'react';
 import birkmanColorsData from '../../data/birkman_colors.json';
-import { isValidBirkmanColor } from '../../utils/scoring';
+import { isValidBirkmanColor } from '../../services/personalityService';
 import logger from '../../services/loggerService';
 
 const BirkmanColorsTab = ({ results }) => {

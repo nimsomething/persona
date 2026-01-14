@@ -1,4 +1,4 @@
-import { APP_NAME, APP_VERSION_LABEL } from '../utils/appMeta';
+import { APP_NAME, APP_VERSION_LABEL } from '../services/appService';
 
 function VersionFooter() {
   return (

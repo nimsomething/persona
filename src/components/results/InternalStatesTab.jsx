@@ -1,5 +1,5 @@
 import React from 'react';
-import { isValidBirkmanStates } from '../../utils/scoring';
+import { isValidBirkmanStates } from '../../services/personalityService';
 import logger from '../../services/loggerService';
 
 const InternalStatesTab = ({ results }) => {

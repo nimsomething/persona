@@ -1,4 +1,4 @@
-import { APP_VERSION } from '../utils/appMeta';
+import { APP_VERSION } from './appService';
 
 const LOG_LEVELS = {
   DEBUG: { value: 0, color: '#9CA3AF', icon: '🔍' },

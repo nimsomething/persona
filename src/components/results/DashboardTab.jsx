@@ -1,6 +1,6 @@
 import React from 'react';
 import DimensionScorecard from '../DimensionScorecard';
-import { diagnoseScoresIssues } from '../../utils/scoring';
+import { diagnoseScoresIssues } from '../../services/personalityService';
 import logger from '../../services/loggerService';
 
 const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore, topStrengths, dimensions, scoresDiagnosis }) => {

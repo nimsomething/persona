@@ -1,5 +1,5 @@
 import React from 'react';
-import { APP_VERSION } from '../../utils/appMeta';
+import { APP_VERSION } from '../../services/appService';
 
 const DownloadTab = ({ 
   userName, 

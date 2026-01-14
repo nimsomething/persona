@@ -494,3 +494,95 @@ export function calculateMBTI(scores) {
         profile: MBTI_TYPES[mbtiType] || MBTI_TYPES['INTJ']
     };
 }
+
+export function diagnoseScoresIssues(scores, isV3 = false) {
+    const issues = [];
+    const warnings = [];
+    const REQUIRED = ['assertiveness_usual', 'sociability_usual', 'conscientiousness_usual', 'flexibility_usual', 'emotional_intelligence_usual', 'creativity_usual', 'risk_appetite_usual', 'theoretical_orientation_usual'];
+    if (!scores || typeof scores !== 'object' || Array.isArray(scores)) {
+        issues.push('Scores is not a valid object.');
+        return { isValid: false, issues, warnings };
+    }
+    REQUIRED.forEach(dim => {
+        if (scores[dim] === undefined || scores[dim] === null) {
+            issues.push();
+        } else if (typeof scores[dim] !== 'number' || isNaN(scores[dim]) || scores[dim] < 0 || scores[dim] > 100) {
+            warnings.push();
+        }
+    });
+    return { isValid: issues.length === 0, issues, warnings };
+}
+
+export function isValidScores(scores) {
+    if (!scores || typeof scores !== 'object') return false;
+    return Object.values(scores).every(v => ['number', 'string', 'boolean'].includes(typeof v));
+}
+
+export function isValidComponents(components) {
+    if (!components || typeof components !== 'object') return false;
+    const required = ['social_energy', 'physical_energy', 'emotional_energy', 'self_consciousness', 'assertiveness', 'insistence', 'incentives', 'restlessness', 'thought'];
+    return required.every(comp => typeof components[comp] === 'number');
+}
+
+export function isValidBirkmanColor(color) {
+    if (!color || typeof color !== 'object') return false;
+    const validColors = ['Red', 'Green', 'Yellow', 'Blue'];
+    return typeof color.primary === 'string' && validColors.includes(color.primary) &&
+           typeof color.secondary === 'string' && validColors.includes(color.secondary) &&
+           typeof color.spectrum === 'object' && validColors.every(c => typeof color.spectrum[c] === 'number');
+}
+
+export function isValidBirkmanStates(states) {
+    if (!states || typeof states !== 'object') return false;
+    const required = ['interests', 'usual_behavior', 'needs', 'stress_behavior'];
+    const validColors = ['Red', 'Green', 'Yellow', 'Blue'];
+    return required.every(state =>
+        typeof states[state] === 'object' &&
+        validColors.every(c => typeof states[state][c] === 'number')
+    );
+}
+
+export function isValidNumericObject(obj) {
+    if (!obj || typeof obj !== 'object') return false;
+    return Object.values(obj).every(value => typeof value === 'number' || value === null);
+}
+
+export function calculateOverallResilience(deltas) {
+    const adaptability = calculateAdaptabilityScore(deltas || {});
+    const significantChanges = Object.values(deltas || {}).filter(delta => Math.abs(delta) > 25).length;
+    let resilienceLevel;
+    if (adaptability >= 80 && significantChanges <= 1) {
+        resilienceLevel = 'High';
+    } else if (adaptability >= 60 && significantChanges <= 3) {
+        resilienceLevel = 'Medium';
+    } else {
+        resilienceLevel = 'Developing';
+    }
+    return {
+        score: adaptability,
+        level: resilienceLevel,
+        significantChanges
+    };
+}
+
+export function generateCBPersonalizedNarrative(archetype, scores, mbti) {
+    const narrative = [];
+    const primArchetype = archetype?.name || 'Professional';
+    const valuesProfile = scores?.values_profile || {};
+    narrative.push(`As a ${primArchetype}, your assertiveness (${scores?.assertiveness_usual ?? 50}th percentile) drives you to take charge when needed.`);
+    const topValues = Object.entries(valuesProfile).sort(([, a], [, b]) => b - a).slice(0, 2).map(([value]) => value);
+    if (topValues.includes('autonomy') && topValues.includes('mastery')) {
+        narrative.push("You're particularly driven by autonomy and mastery—seeking freedom to choose your approach while developing deep expertise.");
+    }
+    const workStyle = scores?.work_style_profile || {};
+    if (workStyle.pace > 70) {
+        narrative.push("Fast-paced environments energize you, where rapid changes and urgent priorities keep you engaged.");
+    }
+    const theoretical = scores?.theoretical_orientation_usual ?? 50;
+    if (theoretical > 70) {
+        narrative.push("You naturally gravitate toward understanding underlying principles and developing conceptual frameworks.");
+    } else if (theoretical < 30) {
+        narrative.push("You prefer learning through hands-on practice, focusing on practical application over abstract theory.");
+    }
+    return narrative.join(" ");
+}

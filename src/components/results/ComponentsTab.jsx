@@ -1,6 +1,6 @@
 import React from 'react';
 import componentsData from '../../data/components.json';
-import { isValidComponents } from '../../utils/scoring';
+import { isValidComponents } from '../../services/personalityService';
 import logger from '../../services/loggerService';
 
 const ComponentsTab = ({ results }) => {
