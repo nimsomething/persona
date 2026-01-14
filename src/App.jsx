@@ -107,7 +107,7 @@ function App() {
             category: 'recovery',
             level: 'INFO',
           });
-          toggleVisibility(); // Open the panel to show the summary
+          toggleErrorPanel(); // Open the panel to show the summary
         }
 
         // After recovery, check for data migration needs
@@ -143,7 +143,7 @@ function App() {
     return () => {
       isMounted = false;
     };
-  }, [addError, toggleVisibility]);
+  }, [addError, toggleErrorPanel]);
 
   const handleStart = (name) => {
     setUserName(name);
