@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { APP_VERSION_LABEL } from '../utils/appMeta';
+import { APP_VERSION_LABEL } from '../services/appService';
 
 function Welcome({ onStart, onStartUpgrade, recoveredAssessment, storageError, onViewRecoveredAssessment, canUpgrade }) {
   const [name, setName] = useState('');

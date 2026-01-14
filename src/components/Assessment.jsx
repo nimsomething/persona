@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProgressBar from './ProgressBar';
 import Question from './Question';
-import { calculateDimensionScores, determineArchetype, calculateStressDeltas, calculateAdaptabilityScore } from '../utils/scoring';
+import { calculateDimensionScores, determineArchetype, calculateStressDeltas, calculateAdaptabilityScore } from '../services/personalityService';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
 
@@ -73,31 +73,24 @@ function Assessment({ userName, questions, onComplete, isUpgrade = false }) {
 
   const handleSubmit = () => {
     if (isUpgrade) {
-      // For upgrade mode, just pass the answers - parent will handle blending
       logger.logAssessmentEvent('upgrade completed', userName, {
         answersCount: Object.keys(answers).length,
         completionTime: `${((Date.now() - startTime) / 1000).toFixed(2)}s`
       });
-      onComplete(answers, null, true); // true indicates this is an upgrade
+      onComplete(answers, null, true);
     } else {
-      // Normal assessment - calculate scores
-      const scores = calculateDimensionScores(answers, questions);
-      const archetype = determineArchetype(scores);
-      const stressDeltas = calculateStressDeltas(scores);
+      const scoresAndProfiles = calculateDimensionScores(answers, questions);
+      const archetype = determineArchetype(scoresAndProfiles);
+      const stressDeltas = calculateStressDeltas(scoresAndProfiles);
       const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
 
       const results = {
-        dimensions: scores,
+        ...scoresAndProfiles,
         archetype,
-        mbtiType: scores.mbtiType,
-        values_profile: scores.values_profile,
-        work_style_profile: scores.work_style_profile,
-        components: scores.components,
-        birkman_color: scores.birkman_color,
-        birkman_states: scores.birkman_states,
         stressDeltas,
         adaptabilityScore,
-        completionTime: Date.now() - startTime
+        completionTime: Date.now() - startTime,
+        dimensions: scoresAndProfiles
       };
 
       logger.logAssessmentEvent('completed', userName, {

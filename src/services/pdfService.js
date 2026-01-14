@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import logger from '../services/loggerService';
+import logger from './loggerService';
 import birkmanColorsData from '../data/birkman_colors.json';
 import componentsData from '../data/components.json';
 import careerFamiliesData from '../data/career_families.json';
@@ -188,7 +188,7 @@ class PDFV3Generator {
     this.pdf.text(lines, MARGIN, 70);
 
     this.addPage();
-    this.addFooter();
+
     this.pdf.setFontSize(18);
     this.pdf.text('Key Insights', MARGIN, 40);
     
@@ -197,7 +197,7 @@ class PDFV3Generator {
       `Your primary Birkman color is ${this.results.birkman_color?.primary || 'Unknown'}, indicating a focus on ${this.getColorFocus(this.results.birkman_color?.primary)}.`,
       `You show high adaptability with a score of ${this.results.adaptabilityScore || 50}/100.`,
       `Your top behavioral component is ${this.getTopComponent()}.`,
-      `Your MBTI secondary layer is identified as ${this.results.mbti || 'N/A'}.`,
+      `Your MBTI secondary layer is identified as ${this.results.mbti?.type || 'N/A'}.`,
       `Your overall resilience is categorized as ${this.results.resilience?.level || 'N/A'}.`
     ];
 
@@ -232,7 +232,7 @@ class PDFV3Generator {
     this.pdf.text(descLines, MARGIN, 105);
 
     this.addPage(); 
-    this.addFooter();
+
     this.pdf.setFontSize(18);
     this.pdf.text('Secondary & Blend', MARGIN, 40);
     
@@ -250,7 +250,7 @@ class PDFV3Generator {
     }
 
     this.addPage(); 
-    this.addFooter();
+
     this.pdf.setFontSize(18);
     this.pdf.setTextColor(15, 23, 42);
     this.pdf.text('Color Spectrum Visualization', MARGIN, 40);
@@ -268,7 +268,7 @@ class PDFV3Generator {
     });
 
     this.addPage(); 
-    this.addFooter();
+
     this.pdf.setFontSize(18);
     this.pdf.text('Workplace Dynamics', MARGIN, 40);
     
@@ -301,7 +301,7 @@ class PDFV3Generator {
     });
 
     this.addPage(); 
-    this.addFooter();
+
     y = 40;
     Object.entries(components).slice(4, 8).forEach(([key, value]) => {
       this.addComponentVisual(key, value, y);
@@ -309,7 +309,7 @@ class PDFV3Generator {
     });
 
     this.addPage(); 
-    this.addFooter();
+
     y = 40;
     Object.entries(components).slice(8, 9).forEach(([key, value]) => {
       this.addComponentVisual(key, value, y);
@@ -318,7 +318,7 @@ class PDFV3Generator {
 
     for(let i=0; i<3; i++) {
         this.addPage();
-        this.addFooter();
+
         this.pdf.setFontSize(18);
         this.pdf.text(`Behavioral Component Insights - Part ${i+1}`, MARGIN, 40);
         this.pdf.setFontSize(11);
@@ -350,7 +350,7 @@ class PDFV3Generator {
     
     for (let i = 0; i < 4; i++) {
       this.addPage(); 
-      this.addFooter();
+
       const stateKeys = Object.keys(states);
       const currentKey = stateKeys[i] || 'interests';
       const spectrum = states[currentKey] || { Red: 25, Green: 25, Yellow: 25, Blue: 25 };
@@ -386,7 +386,7 @@ class PDFV3Generator {
     const careers = careerFamiliesData.slice(0, 4);
     for (let i = 0; i < 4; i++) {
       this.addPage(); 
-      this.addFooter();
+
       const career = careers[i];
       this.pdf.setFontSize(24);
       this.pdf.text('Career Guidance', MARGIN, 40);
@@ -418,7 +418,7 @@ class PDFV3Generator {
     ];
     for (let i = 0; i < 3; i++) {
       this.addPage(); 
-      this.addFooter();
+
       this.pdf.setFontSize(24);
       this.pdf.text(`Action Plan: ${plans[i]}`, MARGIN, 40);
       
@@ -443,7 +443,7 @@ class PDFV3Generator {
         ['Primary Color', this.results.birkman_color?.primary],
         ['Secondary Color', this.results.birkman_color?.secondary],
         ['Adaptability', this.results.adaptabilityScore],
-        ['MBTI Type', this.results.mbti],
+        ['MBTI Type', this.results.mbti?.type],
         ['Resilience', this.results.resilience?.level],
         ['Archetype', this.results.archetype?.name]
       ]
@@ -458,7 +458,7 @@ class PDFV3Generator {
 
     for (let i = 0; i < 4; i++) {
       this.addPage(); 
-      this.addFooter();
+
       this.pdf.setFontSize(24);
       this.pdf.text('Detailed Dimension Analysis', MARGIN, 40);
       
@@ -521,5 +521,7 @@ class PDFV3Generator {
   }
 }
 
-const generator = new PDFV3Generator();
-export const generatePDFV3 = (userName, results) => generator.generate(userName, results);
+export async function generatePDF(userName, results) {
+    const generator = new PDFV3Generator();
+    return generator.generate(userName, results);
+}

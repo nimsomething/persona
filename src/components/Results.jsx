@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import DimensionScorecard from './DimensionScorecard';
-import { generatePDFV3 as generatePDF } from '../utils/pdfGeneratorV3';
+import { generatePDF } from '../services/pdfService';
 import {
   calculateOverallResilience,
   generateCBPersonalizedNarrative,
@@ -9,9 +9,8 @@ import {
   isValidBirkmanColor,
   isValidBirkmanStates,
   diagnoseScoresIssues
-} from '../utils/scoring';
-import { APP_VERSION } from '../utils/appMeta';
-import mbtiService from '../services/mbtiMappingService';
+} from '../services/personalityService';
+import { APP_VERSION } from '../services/appService';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
 
@@ -186,8 +185,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
     { key: 'theoretical_orientation', name: 'Theoretical vs Practical' }
   ];
 
-  // Calculate additional v2 features
-  const mbti = mbtiService.calculateMBTI(scores);
+  const mbti = results.mbti || {};
   const resilience = calculateOverallResilience(stressDeltas);
   const personalizedNarrative = generateCBPersonalizedNarrative(archetype, scores, mbti);
 
