@@ -19,7 +19,7 @@ The app will open at `http://localhost:5173`
 ## 3. Take a Test Assessment
 
 1. Enter your name (e.g., "Test User")
-2. Answer all 90 questions
+2. Answer all 140 questions (120 core + 20 if upgrading from v2)
 3. View your results
 4. Generate and download the PDF report
 

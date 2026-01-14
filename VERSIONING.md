@@ -10,19 +10,72 @@ This project follows semantic versioning (SemVer) with the format `MAJOR.MINOR.P
 - **MINOR**: New functionality added in a backward-compatible manner
 - **PATCH**: Bug fixes and small improvements
 
-### Current Version: 3.0.0
+### Current Version: 3.0.7
 
+- **3.0.7**: Latest stable release with comprehensive bug fixes and stability improvements
+- **3.0.6**: Enhanced recovery diagnostics and data migration improvements
+- **3.0.5**: PDF generation stability fixes
+- **3.0.4**: Scoring validation and edge case handling
+- **3.0.3**: Storage service optimizations
+- **3.0.2**: Component calculation fixes and performance improvements
+- **3.0.1**: Critical v3.0 bug fixes for component scoring and data validation
 - **3.0.0**: Major v3 release with Birkman color model, 9 components, and 32-page report
 - **2.0.1**: Bug fixes and improvements to persistence, logging, and error handling
 - **2.0.0**: Initial v2 release with enhanced features
 
-### Version History
+### Release Notes (3.0.1 - 3.0.7)
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 3.0.0 | Current | • Birkman Color Model (Red, Green, Yellow, Blue)<br>• 9 Personality Components<br>• Internal States (Interests, Needs, Stress)<br>• Career Guidance & Alignment<br>• Expanded 32-page PDF report<br>• v2→v3 upgrade path (20 questions)<br>• Full backward compatibility with v2 |
-| 2.0.1 | Previous | • Fixed localStorage persistence bug<br>• Added centralized logging service<br>• Improved error handling and user messaging<br>• Enhanced version tracking |
-| 2.0.0 | Previous | • Major v2 release with dual profiles<br>• MBTI integration<br>• PDF generation<br>• Enhanced scoring |
+**3.0.7 (Current)**
+- Enhanced scoring diagnostics and recovery mechanisms
+- Improved localStorage quota management
+- Enhanced error handling for data integrity issues
+- Optimized assessment recovery workflows
+- Better validation for component and dimension scores
+
+**3.0.6**
+- Improved recovery for corrupted assessment data
+- Enhanced automatic data migration on app load
+- Added diagnostic tools for troubleshooting score issues
+- Better handling of v3 assessment structure edge cases
+- Enhanced logging for recovery operations
+
+**3.0.5**
+- PDF generation stability improvements
+- Fixed edge cases in v3 report generation
+- Enhanced version 2 compatibility layer
+- Improved error handling for PDF creation
+- Optimized PDF page layout and formatting
+
+**3.0.4**
+- Comprehensive scoring validation system
+- Fixed edge cases in Birkman color calculations
+- Enhanced component score calculations
+- Improved stress/delta calculations
+- Added validation helpers for all score types
+
+**3.0.3**
+- Storage service optimizations and bug fixes
+- Enhanced session auto-save mechanism
+- Improved completed assessment management
+- Better data persistence and recovery
+- Optimized localStorage usage
+
+**3.0.2**
+- Component calculation algorithm refinements
+- Enhanced gap analysis calculations
+- Improved internal state mappings
+- Better performance for large assessments
+- Fixed minor UI rendering issues
+
+**3.0.1 (Initial v3.0 Bug Fix)**
+- Fixed critical component scoring issue (non-deterministic results)
+- Added validation to prevent object rendering errors in React
+- Separated primitive values from nested objects in scores
+- Enhanced scores validation (isValidScores, isValidNumericObject)
+- Fixed Birkman color calculation edge cases
+- Improved internal states spectrum calculation
+- Enhanced recovery diagnostics for v2→v3 upgrades
+- Better error boundaries for render guards
 
 ## Logging System
 
