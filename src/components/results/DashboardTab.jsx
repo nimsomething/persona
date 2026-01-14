@@ -92,7 +92,7 @@ const DashboardTab = ({ userName, results, archetype, scores, adaptabilityScore,
         <div className="grid md:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
             <div className="text-sm text-gray-500 uppercase font-bold tracking-wider mb-1">MBTI Layer</div>
-            <div className="text-2xl font-bold text-indigo-600">{results.mbti || 'N/A'}</div>
+            <div className="text-2xl font-bold text-indigo-600">{results.mbti?.type || 'N/A'}</div>
             <div className="text-xs text-gray-600 mt-1">Cognitive style snapshot</div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
