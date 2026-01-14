@@ -44,7 +44,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
   }
 
   // Handle both v2 and v3 result structures
-  const scores = results.dimensions || results.scores || {};
+  const scores = results.scores || {};
 
   // Common result fields (v2 + v3)
   const archetype = results.archetype || {
