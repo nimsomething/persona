@@ -1,5 +1,3 @@
-import { getScoreColor } from '../utils/scoring';
-
 function DimensionScorecard({ scores, dimensions }) {
   return (
     <div className="bg-white rounded-xl border-2 border-gray-200 p-6">

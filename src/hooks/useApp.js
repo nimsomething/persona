@@ -3,7 +3,7 @@ import questionsData from '../data/questions.json';
 import storageService from '../services/storageService';
 import { migrateAssessments, canUpgradeAssessment, upgradeV2toV3 } from '../services/versioningService';
 import logger from '../services/loggerService';
-import { APP_VERSION } from '../services/appService';
+import { APP_VERSION } from '../utils/appMeta';
 import { useErrorLog } from './useErrorLog';
 
 export const useApp = () => {

@@ -7,10 +7,10 @@ import {
   isValidScores,
   isValidComponents,
   isValidBirkmanColor,
-  isValidBirkmanStates,
-  diagnoseScoresIssues
+  isValidBirkmanStates
 } from '../services/personalityService';
-import { APP_VERSION } from '../services/appService';
+import { diagnoseScoresIssues } from '../utils/scoring.js';
+import { APP_VERSION } from '../utils/appMeta';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
 
