@@ -15,10 +15,17 @@ describe('Assessment', () => {
     );
 
     // Answer all questions
-    const answerButtons = within(container).getAllByText('Strongly Agree');
-    answerButtons.forEach((button) => {
-      fireEvent.click(button);
-    });
+    for (let i = 0; i < 28; i++) {
+      const answerButtons = within(container).getAllByText('Strongly Agree');
+      answerButtons.forEach((button) => {
+        fireEvent.click(button);
+      });
+
+      if (i < 27) {
+        const nextButton = getByText('Next');
+        fireEvent.click(nextButton);
+      }
+    }
 
     // Submit the assessment
     const completeButton = getByText('Complete Assessment');
