@@ -261,7 +261,8 @@ function Results({ userName, results, answers, questions, onRestart }) {
       dimensions,
       generating,
       onGeneratePDF: handleGeneratePDF,
-      isV3
+      isV3,
+      birkman_color: birkmanColor,
     };
 
     switch (activeTab) {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import logger from '../services/loggerService';
 
 export const useErrorLog = () => {
@@ -35,24 +35,24 @@ export const useErrorLog = () => {
     return unsubscribe;
   }, []);
 
-  const addError = (message, context = {}, category = 'app') => {
+  const addError = useCallback((message, context = {}, category = 'app') => {
     logger.error(message, context, category);
-  };
+  }, []);
 
-  const clearErrors = () => {
+  const clearErrors = useCallback(() => {
     setErrors([]);
     logger.clearErrorLog();
-  };
+  }, []);
 
-  const toggleVisibility = () => {
+  const toggleVisibility = useCallback(() => {
     setIsVisible(prev => !prev);
-  };
+  }, []);
 
-  const dismissError = (errorId) => {
+  const dismissError = useCallback((errorId) => {
     setErrors(prevErrors => prevErrors.filter(error => error.id !== errorId));
-  };
+  }, []);
 
-  const copyErrorsToClipboard = async () => {
+  const copyErrorsToClipboard = useCallback(async () => {
     try {
       const errorsJson = JSON.stringify(errors, null, 2);
       await navigator.clipboard.writeText(errorsJson);
@@ -61,7 +61,7 @@ export const useErrorLog = () => {
       console.error('Failed to copy errors to clipboard:', error);
       return false;
     }
-  };
+  }, [errors]);
 
   return {
     errors,
