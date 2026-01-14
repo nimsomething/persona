@@ -85,12 +85,11 @@ function Assessment({ userName, questions, onComplete, isUpgrade = false }) {
       const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
 
       const results = {
-        ...scoresAndProfiles,
         archetype,
         stressDeltas,
         adaptabilityScore,
         completionTime: Date.now() - startTime,
-        dimensions: scoresAndProfiles
+        scores: scoresAndProfiles
       };
 
       logger.logAssessmentEvent('completed', userName, {
