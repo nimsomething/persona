@@ -9,10 +9,11 @@ import {
   isValidComponents,
   isValidBirkmanColor,
   isValidBirkmanStates,
-  isValidNumericObject,
-  diagnoseScoresIssues
+  isValidNumericObject
 } from './personalityService.js';
-import { APP_VERSION, isV3Assessment } from './appService.js';
+import { diagnoseScoresIssues } from '../utils/scoring.js';
+import { APP_VERSION } from '../utils/appMeta.js';
+import { isV3Assessment } from './appService.js';
 
 const STORAGE_KEY = 'personality_assessment_v2';
 const SESSION_KEY = 'assessment_session';

@@ -494,3 +494,51 @@ export function calculateMBTI(scores) {
         profile: MBTI_TYPES[mbtiType] || MBTI_TYPES['INTJ']
     };
 }
+
+export function isValidScores(scores) {
+  if (!scores || typeof scores !== 'object') return false;
+  const coreDimensions = ['assertiveness_usual', 'sociability_usual', 'conscientiousness_usual'];
+  return coreDimensions.every(dim => typeof scores[dim] === 'number');
+}
+
+export function isValidComponents(components) {
+  if (!components || typeof components !== 'object') return false;
+  const componentKeys = [
+    'social_energy', 'physical_energy', 'emotional_energy', 'self_consciousness',
+    'assertiveness', 'insistence', 'incentives', 'restlessness', 'thought'
+  ];
+  return componentKeys.every(key => typeof components[key] === 'number');
+}
+
+export function isValidBirkmanColor(color) {
+  return color && typeof color.primary === 'string' && typeof color.secondary === 'string' && typeof color.spectrum === 'object';
+}
+
+export function isValidBirkmanStates(states) {
+  if (!states || typeof states !== 'object') return false;
+  const stateKeys = ['interests', 'usual_behavior', 'needs', 'stress_behavior'];
+  return stateKeys.every(key => states[key] && typeof states[key] === 'object');
+}
+
+export function isValidNumericObject(obj) {
+    if (!obj || typeof obj !== 'object') return false;
+    return Object.values(obj).every(value => typeof value === 'number');
+}
+
+export function calculateOverallResilience(stressDeltas) {
+  if (!stressDeltas || typeof stressDeltas !== 'object') {
+    return { level: 'medium', score: 50 };
+  }
+  const adaptabilityScore = calculateAdaptabilityScore(stressDeltas);
+  let level = 'medium';
+  if (adaptabilityScore >= 75) {
+    level = 'high';
+  } else if (adaptabilityScore <= 40) {
+    level = 'low';
+  }
+  return { level, score: adaptabilityScore };
+}
+
+export function generateCBPersonalizedNarrative(archetype, scores, mbti) {
+  return `As a ${archetype.name}, you are a balanced professional. Your MBTI type is ${mbti.type}.`;
+}

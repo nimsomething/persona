@@ -1,6 +1,6 @@
 import logger from './loggerService';
 import { calculateComponentsFromUpgradeAnswers, calculateBirkmanColor, calculateBirkmanStates } from './personalityService';
-import { APP_VERSION } from './appService';
+import { APP_VERSION } from '../utils/appMeta';
 
 // --- Private Helper Functions ---
 

@@ -1,12 +1,8 @@
-import packageJson from '../../package.json';
 import logger from './loggerService';
+import { APP_VERSION, APP_NAME, APP_DESCRIPTION, APP_VERSION_LABEL } from '../utils/appMeta';
 
-// --- App Metadata ---
-
-export const APP_VERSION = packageJson.version;
-export const APP_NAME = 'Birkman Personality Assessment';
-export const APP_DESCRIPTION = 'Discover your personality strengths and career fit';
-export const APP_VERSION_LABEL = `v${APP_VERSION}`;
+// Re-export for convenience
+export { APP_VERSION, APP_NAME, APP_DESCRIPTION, APP_VERSION_LABEL };
 
 // --- Versioning ---
 
