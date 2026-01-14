@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { APP_VERSION_LABEL } from '../utils/appMeta';
+import LocalStorageDebug from './LocalStorageDebug';
 
 function Welcome({ onStart, onStartUpgrade, recoveredAssessment, storageError, onViewRecoveredAssessment, canUpgrade }) {
   const [name, setName] = useState('');
@@ -123,6 +124,9 @@ function Welcome({ onStart, onStartUpgrade, recoveredAssessment, storageError, o
                 View Previous Results
               </button>
             )}
+            <div className="mt-4">
+              <LocalStorageDebug />
+            </div>
           </div>
         )}
 

@@ -13,6 +13,7 @@ import { diagnoseScoresIssues } from '../utils/scoring.js';
 import { APP_VERSION } from '../utils/appMeta';
 import storageService from '../services/storageService';
 import logger from '../services/loggerService';
+import LocalStorageDebug from './LocalStorageDebug';
 
 // v3 Tab Components
 import DashboardTab from './results/DashboardTab';
@@ -299,6 +300,7 @@ function Results({ userName, results, answers, questions, onRestart }) {
             >
               Get Report
             </button>
+            <LocalStorageDebug />
           </div>
         </div>
 
